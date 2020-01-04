@@ -1,0 +1,61 @@
+
+
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Title Page</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+    </head>
+    <body>
+        <h1 class="text-center">www.paacab.com</h1>
+
+        <script>
+            function geoFindMe() {
+            function success(position) {
+              const latitude  = position.coords.latitude;
+              const longitude = position.coords.longitude;
+             // alert(latitude);
+              //console.log(position)
+              $.post('/cust/geoplace',{lat:latitude,lng:longitude},function(data){
+                  console.log(data);
+                  if(data=='India'){
+                    ////////Redirect to India////
+                    window.location='/india/login?lat='+latitude+'&lng='+longitude+'';
+
+                  }else{
+                    if(data=='United Kingdom'){
+                         ////////Redirect to uk////
+                        
+                         window.location='/uk'
+                     } else{
+                         if(data=='Bangladesh'){
+                             /////// Redirect to Bangladesh////
+                             window.location='/bangladesh'
+                         }
+                     }
+                      
+                  }
+              })
+            }
+            
+            function error() {
+              status.textContent = 'Unable to retrieve your location';
+            }
+            
+            if (!navigator.geolocation) {
+              status.textContent = 'Geolocation is not supported by your browser';
+            } else {
+              status.textContent = 'Locating…';
+              navigator.geolocation.getCurrentPosition(success, error);
+            }
+            
+            }
+            
+            geoFindMe();
+            </script>
+    </body>
+</html>

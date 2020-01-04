@@ -1,0 +1,27 @@
+{
+  "name": "paacab",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "engines": {
+    "node": "10.18.0"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "bcrypt": "^3.0.7",
+    "dotenv": "^8.2.0",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "express-fileupload": "^1.1.1-alpha.2",
+    "express-session": "^1.15.6",
+    "http-errors": "~1.6.3",
+    "mongojs": "^3.1.0",
+    "mongoose": "^5.0.0",
+    "mongoose-auto-increment": "^5.0.1",
+    "morgan": "~1.9.1",
+    "socket.io": "^2.3.0"
+  }
+}

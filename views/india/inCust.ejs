@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Passenger</title>
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/india/stylesheets/instyle.css" />
+        <link rel="stylesheet" type="text/css" href="/index/stylesheets/sidebar.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script src="/india/javascripts/inCustMapjs.js"></script>
+        <script src="/india/javascripts/inCustjs.js"></script>
+        <script src="/index/javascripts/sidebar.js"></script>
+        <script src="/index/javascripts/socket.io.js"></script>
+       
+    </head>
+    <body>
+        <div id="sidebar-waper">
+            <div class="togle-btn" onclick="sidebartoggle()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="sidebar-menue">
+            <li class="Dashboard"><a href="/business"> <i class="fa fa-dashboard" aria-hidden="true"></i><span> Dashboard</span></a></li>
+            <li class="Profile">
+              <a href="#ProfileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                  <i class="fa fa-cogs"></i>
+                  <span>Profile</span>
+              </a>
+              <ul class="collapse " id="ProfileSubmenu">
+                  <li><a href="/business/profile#ppi">Ppi Upload</a></li>
+                  <li><a href="/business/profile#ppi">Return Address Update</a></li>
+                  <li><a href="/business/profile#ppi">Add Balance</a></li>
+                  <li><a href="/business/profile#ppi">Delivered Order</a></li>
+                  <li><a href="/business/profile#ppi">Add Sale Channel</a></li>
+                  </ul>
+            </li>
+            <li class="Logout"><a href="/india/logout/cust"> <span> Logout</span></a></li>
+            </ul>
+        </div>
+        
+        <div id="main-content">
+            <!-- Search Place from map      -->
+        <div id="placesearch">                           
+            <span id="closall" onclick="CloseAll('placesearch')">Back </span>
+            <form action="" method="POST" class="form-horizontal" role="form">
+                    <div class="form-group">
+                        <div class="col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1">
+                            <input onkeydown="searchdown()"  onkeyup="searchup()" type="text" class="form-control" id="searchPlace" placeholder="Search Address" >
+                            <img class="searchGif" src="/india/images/gif/378.gif">
+                            <input type="hidden" id="searchMode">
+                            
+                        </div>
+                    </div>
+                    
+                    <div id="placeList" class="col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1 list-group">
+                            
+                        <a onclick="CloseAll('placesearch')"  class="list-group-item active"><i class="fa fa-map-marker" aria-hidden="true"></i>&nbsp; OK Select From Map</a>
+                        
+                    </div>
+
+               </form>
+               
+    </div>
+    <!-- End Search Place from map      -->
+
+            <div id="mapcontent">
+                <div id="map"></div>
+                <div id="content-pickup">
+                    Pickup Location
+                </div>
+                <div id="content-drop">
+                    Pickup Location
+                </div>
+            </div>
+
+            <div id="footer">
+                
+            
+                    <div id="traval-mod">
+                        <div id="traval-mod-item">
+                            <div id="timee1" class="modeContenttime"></div>
+                            <span id="gif1" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
+                            <img onclick="changeModeofTravel(1)" id="modeImg1" class="modeImg" src="/india/images/tm1.png">
+                            <div id="tm1" class="modeContentprice">120</div>
+                            <input id="tmPrice1" type="hidden">
+                           
+
+                        </div>
+
+                        <div id="traval-mod-item">
+                            <div id="timee2" class="modeContenttime">12 min</div>
+                            <span id="gif2" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
+                            <img onclick="changeModeofTravel(2)" id="modeImg2" class="modeImg" src="/india/images/tm2.png">
+                            <div id="tm2" class="modeContentprice">120</div>
+                            <input id="tmPrice2" type="hidden">
+                            
+
+
+                        </div>
+
+                        <div id="traval-mod-item">
+                            <div id="timee3" class="modeContenttime">12 min</div>
+                            <span id="gif3" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
+                            <img onclick="changeModeofTravel(3)" id="modeImg3" class="modeImg" src="/india/images/tm3.png">
+                            <div id="tm3" class="modeContentprice">120</div>
+                            <input id="tmPrice3" type="hidden">
+                          
+
+                        </div>
+
+                        <div id="traval-mod-item">
+                            <div id="timee4" class="modeContenttime">12 min</div>
+                            <span id="gif4" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
+                            <img onclick="changeModeofTravel(4)" id="modeImg4" class="modeImg" src="/india/images/tm4.png">
+                            <div id="tm4" class="modeContentprice">120</div>
+                            <input id="tmPrice4" type="hidden">
+                           
+                        </div>
+
+                       
+                        
+                    </div>
+                   <div id="footer-content">
+                       <!-- Session Declare -->
+                       <input name="ModeofTravel" id="ModeofTravel" type="hidden" value="1">
+                       <input name="ModeofSearch" id="ModeofSearch" type="hidden" value="0">
+                       <div class="row" id="location">
+                           <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+                            <div class="form-group">
+                               
+                                    <input name="picuplocation"  onclick="pickupsearch(1)" type="text" class="form-control" id="picuplocation" placeholder="Pick up Address" readonly>
+                                   
+                            </div> 
+                           </div>
+
+                           <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+                            <div class="form-group">
+                                
+                                    <input name="droplocation" onclick="pickupsearch(2)" type="text" class="form-control" id="droplocation" placeholder="Drop Adderss" readonly>
+                     
+                            </div>
+                           </div>
+                           <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+                            <div class="form-group">                               
+                               
+                               <button id="naxtBtn" type="button" class="btn btn-large btn-block btn-primary">Continue</button>
+                                    
+                     
+                            </div>
+                           </div>
+                       </div>
+                       
+                        
+                       
+                   </div> 
+                    
+            </div>
+              
+        </div>    
+        <!-- jQuery -->
+        <script>
+         AlldrivingModeNearestTime();
+        </script>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script async defer   
+        src="https://maps.googleapis.com/maps/api/js?key=<%=YOUR_API_KEY%>&callback=initMap">
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+
+
