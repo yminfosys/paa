@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Passenger</title>
         <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="/india/stylesheets/instyle.css" />
         <link rel="stylesheet" type="text/css" href="/index/stylesheets/sidebar.css" />
@@ -90,8 +91,8 @@
                     <div id="traval-mod">
                         <div id="traval-mod-item">
                             <div id="timee1" class="modeContenttime"></div>
-                            <span id="gif1" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
-                            <img onclick="changeModeofTravel(1)" id="modeImg1" class="modeImg" src="/india/images/tm1.png">
+                            <span id="gif1" class="modeContenwait "><img src="/india/images/paadot.gif"></span>
+                            <img onclick="changeModeofTravel(1)" id="modeImg1" class="modeImg img-circle" src="/india/images/tm1.png">
                             <div id="tm1" class="modeContentprice">120</div>
                             <input id="tmPrice1" type="hidden">
                            
@@ -101,7 +102,7 @@
                         <div id="traval-mod-item">
                             <div id="timee2" class="modeContenttime">12 min</div>
                             <span id="gif2" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
-                            <img onclick="changeModeofTravel(2)" id="modeImg2" class="modeImg" src="/india/images/tm2.png">
+                            <img onclick="changeModeofTravel(2)" id="modeImg2" class="modeImg img-circle" src="/india/images/tm2.png">
                             <div id="tm2" class="modeContentprice">120</div>
                             <input id="tmPrice2" type="hidden">
                             
@@ -112,7 +113,7 @@
                         <div id="traval-mod-item">
                             <div id="timee3" class="modeContenttime">12 min</div>
                             <span id="gif3" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
-                            <img onclick="changeModeofTravel(3)" id="modeImg3" class="modeImg" src="/india/images/tm3.png">
+                            <img onclick="changeModeofTravel(3)" id="modeImg3" class="modeImg img-circle" src="/india/images/tm3.png">
                             <div id="tm3" class="modeContentprice">120</div>
                             <input id="tmPrice3" type="hidden">
                           
@@ -122,7 +123,7 @@
                         <div id="traval-mod-item">
                             <div id="timee4" class="modeContenttime">12 min</div>
                             <span id="gif4" class="modeContenwait"><img src="/india/images/paadot.gif"></span>
-                            <img onclick="changeModeofTravel(4)" id="modeImg4" class="modeImg" src="/india/images/tm4.png">
+                            <img onclick="changeModeofTravel(4)" id="modeImg4" class="modeImg img-circle" src="/india/images/tm4.png">
                             <div id="tm4" class="modeContentprice">120</div>
                             <input id="tmPrice4" type="hidden">
                            
@@ -135,7 +136,7 @@
                        <!-- Session Declare -->
                        <input name="ModeofTravel" id="ModeofTravel" type="hidden" value="1">
                        <input name="ModeofSearch" id="ModeofSearch" type="hidden" value="0">
-                       <div class="row" id="location">
+                       <div class="row" id="footer-content">
                            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
                             <div class="form-group">
                                
@@ -159,6 +160,60 @@
                      
                             </div>
                            </div>
+
+                           <!-- <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+                            
+                            <div style="border-bottom: 1px solid #000; height: 25%;" class="row">
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <img onclick="changeModeofTravel(2)" id="modeImg2" class="modeImg img-rounded" src="/india/images/tm2.png">
+                                   
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <div class="form-group"> 
+                                   <input type="text" class="form-control" placeholder="Cupon Code" >
+                                   </div>
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    <div id="totalAmt">20</div>
+                                </div>
+                            </div>
+
+                            <div style="border-bottom: 1px solid #000; height: 25%;" class="row">
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                <p><strong><i class="fa fa-money" aria-hidden="true"></i> Payment</strong></p>  
+                                   
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" value="">
+                                            Cash
+                                        </label>
+                                    </div>
+                                    
+                                </div>
+                                <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                    
+                                    <p><i class="fa fa-google-wallet" aria-hidden="true"></i> Walet</p>
+                                    
+                                </div>
+                            </div>
+
+                            <div style=" height: 25%; margin-top: 5px;" class="row">
+                                
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                    
+                                    
+                                    <button id="confrmBtn" type="button" class="btn btn-large btn-block btn-primary">Confrm PaaCab</button>
+                                    
+                                    
+                                </div>
+                            </div>
+                            
+                            
+                           </div> -->
+
                        </div>
                        
                         

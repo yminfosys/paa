@@ -97,7 +97,7 @@
 #traval-mod-item{width: 25%; height: 100%;  float: left;}
 .modeContenttime {width: 100%; height: 15px; text-align:center; font-size:small; display: none; }
 .modeContenwait{width: 50%; height: 15px; margin-left: 20%;}
-.modeImg{width: 60%; height:45px; margin-left: 20%; margin-top: 2px; border: 1px solid #000; border-radius: 60%;}
+.modeImg{width: 60%; height:45px; margin-left: 20%; margin-top: 2px; border: 1px solid #000; }
 .modeContentprice{width: 100%; height: 15px; margin-top: 2px; text-align:center; font-size:small; display: none;}
 
 
