@@ -139,12 +139,12 @@ directionsService.route({
         
       });
     circle.bindTo('center', centerMarker, 'position')
-    map.setZoom(12);
+    map.setZoom(14);
             
       }else{
         centerMarker.setPosition(pos);
         map.setCenter(pos)
-        map.setZoom(12); 
+        map.setZoom(14); 
         circle.setRadius(position.coords.accuracy);
 
         // $("#centerLocation").val(''+position.coords.latitude+','+position.coords.longitude+'');
