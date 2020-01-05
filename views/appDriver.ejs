@@ -20,7 +20,7 @@
               const longitude = position.coords.longitude;
              // alert(latitude);
               //console.log(position)
-              $.post('/cust/geoplace',{lat:latitude,lng:longitude},function(data){
+              $.post('/geoplace',{lat:latitude,lng:longitude},function(data){
                   console.log(data);
                   if(data=='India'){
                     ////////Redirect to India////
