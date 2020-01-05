@@ -1,14 +1,14 @@
 var CenterChange='Enable';
 var confrmContent='<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">\
 <div style="border-bottom: 1px solid #000; height: 25%;" class="row">\
-<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
 <img onclick="changeModeofTravel(2)" id="modeImg2" class="modeImg img-rounded" src="/india/images/tm2.png"></div>\
-<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
         <div class="form-group">\
         <input type="text" class="form-control" placeholder="Cupon Code" >\
        </div>\
     </div>\
-    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
     <div id="totalAmt">&#8377; 20</div>\
     </div>\
 </div>\
