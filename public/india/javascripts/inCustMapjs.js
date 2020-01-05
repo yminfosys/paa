@@ -5,7 +5,7 @@ var confrmContent='<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-of
 <img onclick="changeModeofTravel(2)" id="modeImg2" class="modeImg img-rounded" src="/india/images/tm2.png"></div>\
 <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
         <div class="form-group">\
-        <input type="text" class="form-control" placeholder="Cupon Code" >\
+        <input type="text" class="form-control" placeholder="Coupon Code" >\
        </div>\
     </div>\
     <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
@@ -24,11 +24,11 @@ var confrmContent='<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-of
         </div>\
     </div>\
     <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
-    <p><i class="fa fa-google-wallet" aria-hidden="true"></i> &#8377; <br> Walet(0.00)</p></div>\
+    <p><i class="fa fa-google-wallet" aria-hidden="true"></i> &#8377; <br> Wallet(0.00)</p></div>\
 </div>\
 <div style=" height: 25%; margin-top: 5px;" class="row">\
 <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-<button id="confrmBtn" type="button" class="btn btn-large btn-block btn-primary">Confrm PaaCab</button>\
+<button id="confrmBtn" type="button" class="btn btn-large btn-block btn-primary">Confirm PaaCab</button>\
 </div>\
 </div></div>'
 function initMap() {
