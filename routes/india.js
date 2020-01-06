@@ -288,18 +288,96 @@ router.post('/getprice', function(req, res, next) {
 ///////////////////////////////////////
 router.get('/drv', function(req, res, next) {
   //res.send('respond with a resource I am INDIA');
-  if(req.cookies.CustID){
-    res.render('india/inDriver',{YOUR_API_KEY:process.env.API_KEY})
+  if(req.cookies.pilotID){
+    database.pilot.findOne({completereg:'Active',pilotID:req.cookies.pilotID},function(err,data){
+      if(data){
+        res.render('india/inDriver',{YOUR_API_KEY:process.env.API_KEY});
+      }else{
+        res.render('india/inDriverReg',{YOUR_API_KEY:process.env.API_KEY});
+      }
+     
+    });
+    
   }else{
     res.redirect('/india/drv/login')
   }
 })
 
   router.get('/drv/login', function(req, res, next) {
-    //res.send('respond with a resource I am INDIA');
-    res.send("driver login")
+    res.render('india/inDriverLogin',{msg:req.query.msg,lat:req.query.lat,lng:req.query.lng})
+   
   });
 
+  ///////////Check Mobile in our system////////////
+router.post('/drv/checkMobileExist', function(req, res, next) {
+  console.log(req.body)
+
+  database.pilot.findOne({mobileNumber:req.body.mobile,isdCode:'+91'},function(err,data){
+    console.log(data)
+    
+    if(data){
+
+      res.send('exist');
+    }else{
+      res.send('notexist');
+    }
+  });
+  
+});
+
+
+///////Login Driver////////
+router.post('/drv/login', function(req, res, next) {
+  database.pilot.findOne({mobileNumber:req.body.mobile},function(err,user){
+    if(user){
+    bcrypt.compare(req.body.password, user.password, function(err, pass) {
+       console.log(pass)
+         if(pass){
+          res.cookie("pilotID", user.pilotID,{maxAge: 30*24*60*60*1000 }); 
+          /////check Prise manager///////          
+          res.send('success');
+         }else{
+           //////Worng Password//////
+           res.send('worngpassword')
+         }
+         });
+        }
+      });
+  });
+
+  ///////////OTP////////////
+router.post('/drv/otpSend', function(req, res, next) {
+  //   googleApi.otpsend({  
+  //   apikey : 'mWdlAOiE5nY-dlNUZ6linXXcgKhTCMq1MzoQJPAerf',
+  //   message : 'Your One Time Password : '+req.body.otp+' to very PaaCab. Kindly do not share with anyone.',
+  //   numbers : req.body.mobile,
+  //   sender : 'TXTLCL'
+  // },function(data){
+  // console.log(data);
+  // res.send(data);
+  // })
+  
+  res.send({status: 'success'})
+  });
+
+  ///////Register New Driver////////
+router.post('/drv/driverReg', function(req, res, next) {
+  bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+    database.pilot({
+      name: req.body.name,
+      email :req.body.email,    
+      password: hash,    
+      mobileNumber:req.body.mobile,
+      isdCode:'+91',
+      location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+      //location:{type:'Point',coordinates:[1.00001, 1.0001]}
+    }).save(function(err){
+      
+      res.redirect('/india/drv/login?msg=Registration Success');
+        }); 
+    }); 
+
+  });
 
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////

@@ -11,6 +11,7 @@ var indexRouter = require('./routes/index');
 var indiaRouter = require('./routes/india');
 var bangladeshRouter = require('./routes/bangladesh');
 var ukRouter = require('./routes/uk');
+var adminRouter = require('./routes/admin');
 
 var app = express();
 
@@ -18,7 +19,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 // view engine setup
-app.set('views', [path.join(__dirname, 'views'),path.join(__dirname, 'views/india'),path.join(__dirname, 'views/bangladesh'),path.join(__dirname, 'views/uk')]);
+app.set('views', [path.join(__dirname, 'views'),path.join(__dirname, 'views/india'),path.join(__dirname, 'views/bangladesh'),path.join(__dirname, 'views/uk'),path.join(__dirname, 'views/admin')]);
 app.set('view engine', 'ejs');
 
 app.use(function(req, res, next){
@@ -39,6 +40,7 @@ app.use('/', indexRouter);
 app.use('/india', indiaRouter);
 app.use('/bangladesh', bangladeshRouter);
 app.use('/uk', ukRouter);
+app.use('/admin', adminRouter);
 
 
 // catch 404 and forward to error handler
