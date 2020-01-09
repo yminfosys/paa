@@ -304,8 +304,11 @@ router.get('/drv', function(req, res, next) {
 })
 
   router.get('/drv/login', function(req, res, next) {
-    res.render('india/inDriverLogin',{msg:req.query.msg,lat:req.query.lat,lng:req.query.lng})
-   
+    if(req.cookies.pilotID){
+      res.redirect('/india/drv')
+    }else{
+      res.render('india/inDriverLogin',{msg:req.query.msg,lat:req.query.lat,lng:req.query.lng})
+    }
   });
 
   ///////////Check Mobile in our system////////////

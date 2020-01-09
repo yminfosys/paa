@@ -75,7 +75,31 @@
         <div id="main-content">
 
         </div>
-        
+        <script>
+        // The wake lock sentinel.
+let wakeLock = null;
+
+// Function that attempts to request a wake lock.
+const requestWakeLock = async () => {
+  try {
+    wakeLock =  navigator.wakeLock.request('screen');
+    wakeLock.addEventListener('release', () => {
+      console.log('Wake Lock was released');
+    });
+    console.log('Wake Lock is active');
+  } catch (err) {
+    console.error(`${err.name}, ${err.message}`);
+  }
+};
+
+// Request a wake lock…
+ requestWakeLock();
+// …and release it again after 5s.
+window.setTimeout(() => {
+  wakeLock.release();
+  wakeLock = null;
+}, 5000);
+        </script>
 
         <!-- jQuery -->
         <script src="/index/javascripts/sidebar.js"></script>
