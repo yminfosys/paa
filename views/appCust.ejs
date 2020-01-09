@@ -22,23 +22,25 @@
               //console.log(position)
               $.post('/geoplace',{lat:latitude,lng:longitude},function(data){
                   console.log(data);
-                  if(data=='India'){
-                    ////////Redirect to India////
-                    window.location='/india/login?lat='+latitude+'&lng='+longitude+'';
+                  // if(data=='India'){
+                  //   ////////Redirect to India////
+                  //   window.location='/india/login?lat='+latitude+'&lng='+longitude+'';
 
-                  }else{
-                    if(data=='United Kingdom'){
-                         ////////Redirect to uk////
+                  // }else{
+                  //   if(data=='United Kingdom'){
+                  //        ////////Redirect to uk////
                         
-                         window.location='/uk'
-                     } else{
-                         if(data=='Bangladesh'){
-                             /////// Redirect to Bangladesh////
-                             window.location='/bangladesh'
-                         }
-                     }
+                  //        window.location='/uk'
+                  //    } else{
+                  //        if(data=='Bangladesh'){
+                  //            /////// Redirect to Bangladesh////
+                  //            window.location='/bangladesh'
+                  //        }
+                  //    }
                       
-                  }
+                  // }
+                  window.location='/india/login?lat='+latitude+'&lng='+longitude+'';
+
               })
             }
             
