@@ -7,5 +7,6 @@ router.get('/sub', function(req, res, next) {
 
     res.render('admin/appAdminSub', { title: 'Paacab' });
   });
+  
 
 module.exports = router;

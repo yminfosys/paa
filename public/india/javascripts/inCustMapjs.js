@@ -70,7 +70,9 @@ directionsService.route({
     origin: {lat:Number(orgn.lat) ,lng: Number(orgn.lng)},
     destination: {lat:Number(dist.lat) ,lng: Number( dist.lng)},
 
-    travelMode: 'DRIVING'
+    travelMode: 'DRIVING',
+    avoidHighways: true,
+    avoidTolls: true
   }, function(response, status) {
     if (status === 'OK') {
       //console.log(response)
