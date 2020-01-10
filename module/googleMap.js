@@ -106,7 +106,13 @@ function placeByaddress(inp,cb){
 function DistanceCalculation(inp,cb){
  // https://maps.googleapis.com/maps/api/distancematrix/json?units=METRIC&origins=40.6655101,-73.89188969999998&destinations=40.598566%2C-73.7527626&mode=driving&departure_time=now&traffic_model=optimistic&key=AIzaSyBaHL_xr6DPd0f4-ypUtPzTf5-hMQTygRo
  
- var url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=METRIC&origins='+inp.origins+'&destinations='+inp.destinations+'&mode=driving&departure_time=now&traffic_model=optimistic&key='+inp.apik+'';
+ //var url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=METRIC&origins='+inp.origins+'&destinations='+inp.destinations+'&mode=driving&departure_time=now&traffic_model=optimistic&key='+inp.apik+'';
+ if(inp.travelmod=='1'){
+  var url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=METRIC&origins='+inp.origins+'&destinations='+inp.destinations+'&mode=walking&departure_time=now&key='+inp.apik+'';
+ }else{
+  var url = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=METRIC&origins='+inp.origins+'&destinations='+inp.destinations+'&mode=driving&departure_time=now&traffic_model=optimistic&key='+inp.apik+''; 
+ }
+ 
  var req = https.request(url, function (res) {
  var str = "";  
    res.on('data', function (chunk) {

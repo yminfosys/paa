@@ -209,7 +209,7 @@ function loginprocess(){
                 //////// Call time distance/////
                 var orig=''+Number(pickup.lat)+','+Number(pickup.lng)+'';
                 var diste=''+Number(resul.data[0].location.coordinates[1])+','+Number( resul.data[0].location.coordinates[0])+'';
-                $.post('/india/distbtwntime',{orig:orig,diste:diste,count:resul.count},function(outp){
+                $.post('/india/distbtwntime',{travelmod:j,orig:orig,diste:diste,count:resul.count},function(outp){
                      //alert(outp.rows[0].elements[0].duration.text)
                   $("#timee"+outp.count+"").css({"display":"block"}); 
                   $("#timee"+outp.count+"").text(outp.data.rows[0].elements[0].duration.text)   

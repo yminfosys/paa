@@ -233,7 +233,8 @@ router.post('/distbtwnActive', function(req, res, next) {
   googleApi.distance({
     origins:req.body.orig,
     destinations:req.body.diste,
-    apik:process.env.API_KEY
+    apik:process.env.API_KEY,
+    travelmod:req.body.travelmod
 },function(result){
   //console.log(JSON.stringify(result) )
   res.send(result)
@@ -246,7 +247,8 @@ router.post('/distbtwntime', function(req, res, next) {
   googleApi.distance({
     origins:req.body.orig,
     destinations:req.body.diste,
-    apik:process.env.API_KEY
+    apik:process.env.API_KEY,
+    travelmod:req.body.travelmod
 },function(result){
   //console.log(JSON.stringify(result) )
   res.send({data:result,count:req.body.count})
@@ -259,10 +261,11 @@ router.post('/getDistance', function(req, res, next) {
   googleApi.distance({
     origins:req.body.orig,
     destinations:req.body.diste,
-    apik:process.env.API_KEY
+    apik:process.env.API_KEY,
+    travelmod:req.body.travelmod
 },function(result){
   //console.log(JSON.stringify(result) )
-  res.send(result)
+  res.send({result:result,travelmod:req.body.travelmod})
   //console.log('Result',result.rows[0].elements[0].distance.value);
   
 });

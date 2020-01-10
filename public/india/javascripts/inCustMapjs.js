@@ -34,7 +34,7 @@ var confrmContent='<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-of
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer({
-         polylineOptions:{strokeColor:"#4a4a4a",strokeWeight:2}, 
+         polylineOptions:{strokeColor:"#36301e",strokeWeight:2}, 
          suppressMarkers:true 
         });
     var map = new google.maps.Map(document.getElementById('map'), {
@@ -43,6 +43,12 @@ function initMap() {
           mapTypeId: 'roadmap',
           disableDefaultUI: true
         });
+      //   directionsDisplay.setOptions({
+      //   polylineOptions: {
+      //     strokeColor: '#e21b25'
+      //   },
+      //   draggable: true
+      // });
         directionsDisplay.setMap(map);
 
     var centerMarker;
@@ -63,19 +69,32 @@ function initMap() {
     }
 
 ///////////////Direction rood Service/////
-function directionRooteService(orgn,dist){
-directionsService.route({
-    // origin: document.getElementById('start').value,
-    // destination: document.getElementById('end').value,
-    origin: {lat:Number(orgn.lat) ,lng: Number(orgn.lng)},
-    destination: {lat:Number(dist.lat) ,lng: Number( dist.lng)},
+function directionRooteService(orgn,dist,mode){
+  if(mode=='1'){
+    var reqst={
+      origin: {lat:Number(orgn.lat) ,lng: Number(orgn.lng)},
+      destination: {lat:Number(dist.lat) ,lng: Number( dist.lng)},
+      travelMode: 'WALKING',
+      unitSystem: google.maps.UnitSystem.METRIC
+    }
 
-    travelMode: 'DRIVING',
-    avoidHighways: true,
-    avoidTolls: true
-  }, function(response, status) {
+  }else{
+    var reqst={
+      origin: {lat:Number(orgn.lat) ,lng: Number(orgn.lng)},
+      destination: {lat:Number(dist.lat) ,lng: Number( dist.lng)},
+      travelMode: 'DRIVING',
+      unitSystem: google.maps.UnitSystem.METRIC,
+      drivingOptions: {
+      departureTime: new Date(Date.now()),  // for the time N milliseconds from now.
+      trafficModel: 'optimistic'
+    }
+
+    }
+  }
+ 
+directionsService.route(reqst, function(response, status) {
     if (status === 'OK') {
-      //console.log(response)
+      console.log(response);      
       directionsDisplay.setDirections(response);
     } else {
       window.alert('Directions request failed due to ' + status);
@@ -297,23 +316,27 @@ content: "Drop"
       $(".centerMarker").css({"display":"none"})
       var origin=JSON.parse(getCookie("pickuplatlong")) ;
       var dist=JSON.parse(getCookie("droplatlong")) ;
-      directionRooteService(origin,dist);      
-      $.post('/india/getDistance',{orig:''+Number(origin.lat)+' , '+Number(origin.lng)+'',diste:''+Number(dist.lat)+' , '+Number(dist.lng)+''},function(data){
-          //alert(data.rows[0].elements[0].distance.value);
-          var travelmod=$("#ModeofTravel").val();
-          var distance=data.rows[0].elements[0].distance.value;
-          //alert(distance)          
-          distance=parseInt(distance/1000) + 1;
+      var travelmod=$("#ModeofTravel").val();
+      directionRooteService(origin,dist,travelmod); 
+           
+      
           $.each($(".modeImg"),function(i){
             j=i+1;
-            $.post('/india/getPrice',{travelmod:j,distance:distance},function(data){
+            $.post('/india/getDistance',{travelmod:j,orig:''+Number(origin.lat)+' , '+Number(origin.lng)+'',diste:''+Number(dist.lat)+' , '+Number(dist.lng)+''},function(data){
+              //alert(data.rows[0].elements[0].distance.value);          
+              var distance=data.result.rows[0].elements[0].distance.value;
+              //alert(distance)          
+              distance=parseInt(distance/1000) + 1;
+            
+            $.post('/india/getPrice',{travelmod:data.travelmod,distance:distance},function(data){
               $("#tm"+data.travelmod+"").css({"display":"block"})
               $("#tm"+data.travelmod+"").html('&#8377;'+data.price+'');
               $("#tmPrice"+data.travelmod+"").val(+data.price);             
               
             });
+          });
           });        
-      });
+      
       $("#naxtBtn").css({"display":"none"});
       $("#footer-content").html(confrmContent);
      
