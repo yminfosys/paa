@@ -13,6 +13,11 @@ router.get('/cust', function(req, res, next) {
   res.render('appCust', { title: 'Paacab' });
 });
 
+router.get('/privacy', function(req, res, next) {
+
+  res.render('privacy', { title: 'Paacab' });
+});
+
 router.get('/drive', function(req, res, next) {
 
   res.render('appDriver', { title: 'Paacab' });
