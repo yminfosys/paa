@@ -135,6 +135,17 @@ function loginprocess(){
 
 
  ///////End Login and Register///////
+
+
+
+ /////////Driver Page ////////////
+
+        ///////Switch//////////
+
+        // for accessibility only
+document.getElementById("toggle").addEventListener("change",function() {
+	this.setAttribute("aria-checked",this.checked);
+});
  
  
  
