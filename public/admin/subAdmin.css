@@ -2,7 +2,7 @@
 #verify-driver{
     font-family: calibri;
     margin-top: 50px;
-    
+    display: none;
 }
 .profile-main{
     width: 750px;

@@ -292,8 +292,10 @@ router.post('/getprice', function(req, res, next) {
 router.get('/drv', function(req, res, next) {
   //res.send('respond with a resource I am INDIA');
   if(req.cookies.pilotID){
-    database.pilot.findOne({completereg:'Active',pilotID:req.cookies.pilotID},function(err,data){
+    database.pilot.findOne({completereg:'done',pilotID:req.cookies.pilotID},function(err,data){
+      console.log(req.cookies.pilotID)
       if(data){
+
         res.render('india/inDriver',{YOUR_API_KEY:process.env.API_KEY});
       }else{
         res.render('india/inDriverReg',{YOUR_API_KEY:process.env.API_KEY});
@@ -334,7 +336,7 @@ router.post('/drv/checkMobileExist', function(req, res, next) {
 
 ///////Login Driver////////
 router.post('/drv/login', function(req, res, next) {
-  database.pilot.findOne({mobileNumber:req.body.mobile},function(err,user){
+  database.pilot.findOne({mobileNumber:req.body.mobile,isdCode: '+91'},function(err,user){
     if(user){
     bcrypt.compare(req.body.password, user.password, function(err, pass) {
        console.log(pass)
@@ -351,6 +353,13 @@ router.post('/drv/login', function(req, res, next) {
       });
   });
 
+   ////////Logout /////////////
+   router.get('/drv/logout', function(req, res, next) {
+    res.clearCookie("pilotID");
+    res.redirect('../../drive')
+      
+  });
+
   ///////////OTP////////////
 router.post('/drv/otpSend', function(req, res, next) {
   //   googleApi.otpsend({  
@@ -365,6 +374,8 @@ router.post('/drv/otpSend', function(req, res, next) {
   
   res.send({status: 'success'})
   });
+
+ 
 
   ///////Register New Driver////////
 router.post('/drv/driverReg', function(req, res, next) {

@@ -1,0 +1,15 @@
+#main-content{position: fixed;
+    height: 10vh;
+    top: 0;
+    width: 100%; 
+    border-bottom:1px solid orangered;
+  }
+#mapcontent{position: fixed;
+    height: 90vh;
+    top: 10vh;
+    width: 100%; 
+  }
+  #map {
+    height: 100%;  /* The height is 400 pixels */
+    width: 100%;  /* The width is the width of the web page */
+   }

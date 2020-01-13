@@ -77,10 +77,10 @@
           <div id="Driver-search" class="form-inline"> 
                       
               <div class="form-group">
-                <label for="exampleInputEmail2">Driver Mobile No:</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" placeholder="10 Digit Mobile Number">
+                <label for="mobile">Driver Mobile No:</label>
+                <input type="text" class="form-control" id="mobile" placeholder="10 Digit Mobile Number">
               </div>
-              <button type="button" class="btn btn-default">Find</button>
+              <button onclick="findDriver()" type="button" class="btn btn-default">Find</button>
             
           </div> 
             <div id="verify-driver" > 
@@ -154,7 +154,8 @@
                       </div>
                       <div id="document" class="tab-content">
                         <div class="portfolio-box">
-                          <div class="portfolio-img-box">
+
+                          <!-- <div class="portfolio-img-box">
                             <h4>Web Design</h4>
                             <img src="http://nicesnippets.com/demo/up-web-design.jpg">
                           </div>
@@ -169,7 +170,11 @@
                           <div class="portfolio-img-box">
                             <h4>SEO</h4>
                             <img src="http://nicesnippets.com/demo/up-seo.jpg">
-                          </div>
+                          </div> -->
+
+                          
+                          <button onclick="verifyDriver()" type="button" class="btn btn-large btn-block btn-success">Verify</button>
+                          
                         </div>
                       </div>
                     </div>
@@ -177,19 +182,7 @@
                   <div style="clear: both;"></div>
                 
                 </div>
-              <script type="text/javascript">
-                $(document).ready(function(){
-                  $('ul.tabs li').click(function(){
-                    var tab_id = $(this).attr('data-tab');
               
-                    $('ul.tabs li').removeClass('current');
-                    $('.tab-content').removeClass('current');
-              
-                    $(this).addClass('current');
-                    $("#"+tab_id).addClass('current');
-                  });
-                });
-              </script>
                 
               
             </div>
@@ -198,32 +191,8 @@
           
 
         </div>
-        <script>
-        // The wake lock sentinel.
-let wakeLock = null;
-
-// Function that attempts to request a wake lock.
-const requestWakeLock = async () => {
-  try {
-    wakeLock =  navigator.wakeLock.request('screen');
-    wakeLock.addEventListener('release', () => {
-      console.log('Wake Lock was released');
-    });
-    console.log('Wake Lock is active');
-  } catch (err) {
-    console.error(`${err.name}, ${err.message}`);
-  }
-};
-
-// Request a wake lock…
- requestWakeLock();
-// …and release it again after 5s.
-window.setTimeout(() => {
-  wakeLock.release();
-  wakeLock = null;
-}, 5000);
-        </script>
-
+        
+        <script src="/admin/subAdmin.js"></script>
         <!-- jQuery -->
         <script src="/index/javascripts/sidebar.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>

@@ -85,6 +85,7 @@ var pilotSchema = new mongoose.Schema({
   name:  String,
   email :String,
   address:String,
+  city:String,
   postcode:String,
   password: String,    
   mobileNumber:String,
