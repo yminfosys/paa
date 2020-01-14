@@ -1,1 +1,130 @@
-<h1>fa-registered</h1>
+
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Title Page</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <style>
+    .file{ width: 1px; height: 1px;  }
+    </style>    
+    </head>
+    <body>
+        
+        
+        <div class="container">
+           
+          
+          <div class="row">
+              <div class="col-xs-10 col-sm-10 col-xs-offset-1 col-sm-offset-1 col-md-4 col-lg-4">
+                  
+                  <form action="" method="POST" class="form-horizontal" role="form">
+                          <div class="form-group">
+                              <legend>Complete Registration Process</legend>
+                          </div>
+                          <div class="form-group">
+                            <label>Name :<%=driver.name%></label><br>
+                            <label>Account Id :<%=driver.mobileNumber%></label><br>
+                          </div>
+
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Address</label>
+                           <textarea name="address" class="form-control"></textarea>
+                          </div>
+
+                          <div class="form-group">
+
+                            <label class="col-xs-12 col-sm-12" for="exampleInputEmail1">Type of Work * You can Choose All three</label>
+                            <div class="checkbox col-xs-3 col-sm-3" >
+                                <label>
+                                  <input type="checkbox"> Rider
+                                </label>
+                              </div>
+                              <div class="checkbox col-xs-5 col-sm-5">
+                                <label>
+                                  <input type="checkbox"> Delivery On Demand 
+                                </label>
+                              </div>
+                              <div class="checkbox col-xs-4 col-sm-4">
+                                <label>
+                                  <input type="checkbox"> Employee
+                                </label>
+                              </div>
+                            
+                          </div>
+
+                          <div class="form-group">
+                            <label for="exampleInputEmail1">Rider Or Delivery Mode</label>
+                            <select name="partnerType" class="form-control">
+                                <option value="1">Bike Taxi</option>
+                                <option value="2">CNG Auto 5 Set</option>
+                                <option value="3">Mini- 4Set</option>
+                                <option value="4">Suden 6-8 Set</option>
+                                <option value="5">Van [Battery opereted]</option>
+                                <option value="6">Easy Bike 8 Set</option>
+                                <option value="7">Riksaw</option>
+                                <option value="8">Bicycle Only For Ondemend Delivery</option>
+                                
+
+                            </select>
+                          </div>
+
+                          <div class="form-group">
+                            <label class="col-xs-12 col-sm-12">Supported Document</label>
+
+                            <label class="btn btn-default">Id Profe
+                                <input type="file" accept="image/*;capture=camera" class="file">
+                            </label>
+
+                            <label class="btn btn-default">Id Profe
+                                <input type="file" accept="image/*;capture=camera" class="file">
+                            </label>
+
+                            <label class="btn btn-default">Id Profe
+                                <input type="file" accept="image/*;capture=camera" class="file">
+                            </label>
+
+                            <label>Id Profe
+                                <input type="file" accept="image/*;capture=camera" class="file">
+                            </label>
+                            <label>Id Profe
+                                <input type="file" accept="image/*;capture=camera" class="file">
+                            </label>
+                            
+                          </div>
+                          
+                  
+                          <div class="form-group">
+                              <div class="col-sm-12">
+                                  <button type="submit" class="btn btn-primary">Submit</button>
+                              </div>
+                          </div>
+                  </form>
+                  
+              </div>
+          </div>
+          
+           
+
+        </div>
+        
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    </body>
+</html>
+
+
+

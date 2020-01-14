@@ -1,7 +1,7 @@
 
 
 #heder-content{position: fixed;
-    height: 10vh;
+    height: 7vh;
     top: 0;
     width: 100%; 
     border-bottom:1px solid orangered;
@@ -12,9 +12,11 @@
     background: #575757;
 	display: flex;
 	justify-content: center;
-	align-items: center;
-	
+	align-items: center;	
 	overflow: hidden;
+  }
+  :root {
+    font-size: calc(48px + (60 - 48)*(100vw - 320px)/(1024 - 320));
   }
 
   #heder-content input{
@@ -24,8 +26,8 @@
   }
 
 #mapcontent{position: fixed;
-    height: 90vh;
-    top: 10vh;
+    height: 83vh;
+    top: 7vh;
     width: 100%; 
   }
   #map {

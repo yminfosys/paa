@@ -14,7 +14,7 @@ function getCookie(cname) {
     }
     return "";
   }
-
+  
 
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();

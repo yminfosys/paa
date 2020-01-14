@@ -298,7 +298,10 @@ router.get('/drv', function(req, res, next) {
 
         res.render('india/inDriver',{YOUR_API_KEY:process.env.API_KEY});
       }else{
-        res.render('india/inDriverReg',{YOUR_API_KEY:process.env.API_KEY});
+        database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,driver){
+          res.render('india/inDriverReg',{YOUR_API_KEY:process.env.API_KEY,driver:driver});
+        });
+        
       }
      
     });
