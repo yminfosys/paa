@@ -399,6 +399,93 @@ router.post('/drv/driverReg', function(req, res, next) {
 
   });
 
+
+   ///////Continue Registration process////////
+router.post('/drv/completeReg', function(req, res, next) {
+     
+  ////upload files  ///////
+     var photo = req.files.file1; 
+     if(photo.size >0){         
+     var urlphoto='driverDocument/photo'+req.body.mobile+'1'+photo.name+''
+     photo.mv('public/india/'+urlphoto+'', function(err) {
+       if(err){console.log(err)  }
+       database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+         photo:urlphoto
+      }},function(e,d){
+       });
+
+      });
+    }
+    var id = req.files.file2;
+     if(id.size > 0){       
+    var urlid='driverDocument/id'+req.body.mobile+'1'+id.name+''
+    id.mv('public/india/'+urlid+'', function(err) {
+      if(err){console.log(err)  }
+      database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+        Idproof:urlid 
+      }},function(e,d){
+       });
+   });
+  }
+    var dl = req.files.file3;
+    if(dl.size >0){          
+    var urldl='driverDocument/dl'+req.body.mobile+'1'+dl.name+''
+    dl.mv('public/india/'+urldl+'', function(err) {
+      if(err){console.log(err)  }
+      database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+        dl:urldl
+      }},function(e,d){
+       });
+    });
+  }
+    var rto = req.files.file4;
+    if(rto.size > 0){          
+    var urlrto='driverDocument/rto'+req.body.mobile+'1'+rto.name+''
+    rto.mv('public/india/'+urlrto+'', function(err) {
+      if(err){console.log(err)  }
+      database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+        rto:urlrto
+      }},function(e,d){
+       });
+    });
+  }
+  var insu = req.files.file5;
+  if(insu.size > 0){
+  var urlinsu='driverDocument/insurance'+req.body.mobile+'1'+insu.name+''
+  insu.mv('public/india/'+urlinsu+'', function(err) {
+    if(err){console.log(err)  }
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      insurence:urlinsu
+    }},function(e,d){
+     });
+    });
+  }
+  var polu = req.files.file6; 
+  if(polu.size > 0){         
+  var urlpolu='driverDocument/polution'+req.body.mobile+'1'+polu.name+''
+  polu.mv('public/india/'+urlpolu+'', function(err) {
+    if(err){console.log(err)  }
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      polution:urlpolu
+    }},function(e,d){
+     });
+    });
+  }
+
+    // database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+    //   document:{photo:urlphoto,Idproof:urlid,dl:urldl,rto:urlrto,insurence:urlinsu,polution:urlpolu}
+    // }},function(e,d){
+
+    // });
+        
+
+  
+  res.redirect('/india/drv')
+
+
+
+  });
+
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////
 ///////////////////////////////////////

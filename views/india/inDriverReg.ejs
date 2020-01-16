@@ -19,6 +19,8 @@
     <style>
     .file{ width: 1px; height: 1px;  }
     .document{color: darkblue;}
+    .img-c{height: 100%; }
+    .img-c img{height: 50px; width: 50px;}
     </style>    
     </head>
     <body>
@@ -30,13 +32,15 @@
           <div class="row">
               <div class="col-xs-10 col-sm-10 col-xs-offset-1 col-sm-offset-1 col-md-4 col-lg-4">
                   
-                  <form action="" method="POST" class="form-horizontal" role="form">
+                  <form action="/india/drv/completeReg" method="POST" enctype="multipart/form-data" class="form-horizontal" role="form">
                           <div class="form-group">
                               <legend>Complete Registration Process</legend>
                           </div>
                           <div class="form-group">
                             <label>Name :<%=driver.name%></label><br>
                             <label>Account Id :<%=driver.mobileNumber%></label><br>
+                            <input name="mobile" type="hidden" value="<%=driver.mobileNumber%>">
+                            <input name="isd" type="hidden" value="<%=driver.isdCode%>">
                           </div>
 
                           <div class="form-group">
@@ -49,17 +53,17 @@
                             <label class="col-xs-12 col-sm-12" for="exampleInputEmail1">Type of Work * You can Choose All three</label>
                             <div class="checkbox col-xs-3 col-sm-3" >
                                 <label>
-                                  <input type="checkbox"> Rider
+                                  <input name="riderCheckbox" type="checkbox"> Rider
                                 </label>
                               </div>
                               <div class="checkbox col-xs-5 col-sm-5">
                                 <label>
-                                  <input type="checkbox"> Delivery On Demand 
+                                  <input name="deliveryCheckbox" type="checkbox"> Delivery On Demand 
                                 </label>
                               </div>
                               <div class="checkbox col-xs-4 col-sm-4">
                                 <label>
-                                  <input type="checkbox"> Employee
+                                  <input name="employeeCheckbox" type="checkbox"> Employee
                                 </label>
                               </div>
                             
@@ -85,24 +89,27 @@
                             <label class="col-xs-12 col-sm-12">Supported Document</label>
 
                             <label class="btn btn-default col-xs-6 col-sm-6">Passport Photo &nbsp; <span id="img1" class="document"><i class="fa fa-camera" aria-hidden="true"></i></span> 
-                                <input type="file" accept="image/*;capture=camera" class="file">
+                                <input name="file1" type="file" accept="image/*;capture=camera" class="file">
                             </label>
 
                             <label class="btn btn-default col-xs-6 col-sm-6">ID Proof &nbsp; <span id="img1" class="document"><i class="fa fa-camera" aria-hidden="true"></i></span> 
-                                <input type="file" accept="image/*;capture=camera" class="file">
+                                <input name="file2" type="file" accept="image/*;capture=camera" class="file">
                             </label>
 
                             <label class="btn btn-default col-xs-6 col-sm-6">Driving Licence &nbsp; <span id="img1" class="document"><i class="fa fa-camera" aria-hidden="true"></i></span> 
-                                <input type="file" accept="image/*;capture=camera" class="file">
+                                <input name="file3" type="file" accept="image/*;capture=camera" class="file">
                             </label>
 
                             <label class="btn btn-default col-xs-6 col-sm-6">RTO / Blue book &nbsp; <span id="img1" class="document"><i class="fa fa-camera" aria-hidden="true"></i></span> 
-                                <input type="file" accept="image/*;capture=camera" class="file">
+                                <input name="file4" type="file" accept="image/*;capture=camera" class="file">
                             </label>
 
                             <label class="btn btn-default col-xs-6 col-sm-6">Insurence &nbsp; <span id="img1" class="document"><i class="fa fa-camera" aria-hidden="true"></i></span> 
-                                <input type="file" accept="image/*;capture=camera" class="file">
+                                <input name="file5" type="file" accept="image/*;capture=camera" class="file">
                             </label>
+                            <label class="btn btn-default col-xs-6 col-sm-6">Polution &nbsp; <span id="img1" class="document"><i class="fa fa-camera" aria-hidden="true"></i></span> 
+                              <input name="file6" type="file" accept="image/*;capture=camera" class="file">
+                          </label>
                             
                           </div>
                           
@@ -119,11 +126,13 @@
 
               <div class="col-xs-10 col-sm-10 col-xs-offset-1 col-sm-offset-1 col-md-4 col-lg-4">
                 <label class=" col-xs-12 col-sm-12">Uploaded Document</label>
-                    <img class="col-xs-4 col-sm-4" src="/india/images/tm1.png">
-                    <img class="col-xs-4 col-sm-4" src="/india/images/tm1.png">
-                    <img class="col-xs-4 col-sm-4" src="/india/images/tm1.png">
-                    <img class="col-xs-4 col-sm-4" src="/india/images/tm1.png">
-                    <img class="col-xs-4 col-sm-4" src="/india/images/tm1.png">
+                <div class="col-xs-4 col-sm-4 img-c">Photo <br><img src="/india/<%=driver.photo%>" onerror="if (this.src != 'error.jpg') this.src = '/india/driverDocument/defult.png';"></div>
+                 <div class="col-xs-4 col-sm-4 img-c">ID Proof <br><img src="/india/<%=driver.Idproof%>" onerror="if (this.src != 'error.jpg') this.src = '/india/driverDocument/defult.png';"></div>
+
+                <div class="col-xs-4 col-sm-4 img-c">D/L <br><img src="/india/<%=driver.dl%>" onerror="if (this.src != 'error.jpg') this.src = '/india/driverDocument/defult.png';"></div>
+                <div class="col-xs-4 col-sm-4 img-c">RTO<br><img src="/india/<%=driver.rto%>" onerror="if (this.src != 'error.jpg') this.src = '/india/driverDocument/defult.png';"></div>
+                <div class="col-xs-4 col-sm-4 img-c">Insurence <br><img src="/india/<%=driver.insurence%>" onerror="if (this.src != 'error.jpg') this.src = '/india/driverDocument/defult.png';"></div>
+                <div class="col-xs-4 col-sm-4 img-c">Polution <br><img src="/india/<%=driver.polution%>" onerror="if (this.src != 'error.jpg') this.src = '/india/driverDocument/defult.png';"></div>  
               </div>
 
           </div>
