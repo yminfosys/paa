@@ -18,11 +18,61 @@ $(document).ready(function(){
           //alert(data) 
           $("#Driver-search").css({"display":"none"});
           $("#verify-driver").css({"display":"block"});
+          $(".user-image").html('<img src="/india/'+data.photo+'">')
           $(".user-data").html('<h2>'+data.name+'</h2>\
           <span  class="post-label">Account ID : '+data.mobileNumber+'</span><br>\
           <input id="AccountID" type="hidden" value="'+data.mobileNumber+'">\
           <span class="post-label">Status : '+data.accountStatus+'</span><br>\
-          <i class="fa fa-map-marker" aria-hidden="true"></i>  '+data.address+'</p>')
+          <i class="fa fa-map-marker" aria-hidden="true"></i>  '+data.address+'</p>');
+          $("#document").html('<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+            <div class="thumbnail">\
+              <img src="/india/'+data.photo+'" onclick="window.open(this.src)" onerror="if (this.src != \'error.jpg\') this.src = \'/india/driverDocument/defult.png\';">\
+              <div class="caption">\
+                <p class="text-center">Self Photo</p>\
+              </div>\
+            </div>\
+          </div>\
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+            <div class="thumbnail">\
+              <img src="/india/'+data.Idproof+'" onclick="window.open(this.src)" onerror="if (this.src != \'error.jpg\') this.src = \'/india/driverDocument/defult.png\';">\
+              <div class="caption">\
+                <p class="text-center">Id Proof</p>\
+              </div>\
+            </div>\
+          </div>\
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+            <div class="thumbnail">\
+              <img src="/india/'+data.dl+'" onclick="window.open(this.src)" onerror="if (this.src != \'error.jpg\') this.src = \'/india/driverDocument/defult.png\';">\
+              <div class="caption">\
+                <p class="text-center">Driving Licence</p>\
+              </div>\
+            </div>\
+          </div>\
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+            <div class="thumbnail">\
+              <img src="/india/'+data.rto+'" onclick="window.open(this.src)" onerror="if (this.src != \'error.jpg\') this.src = \'/india/driverDocument/defult.png\';">\
+              <div class="caption">\
+                <p class="text-center">RTO / Blue Book</p>\
+              </div>\
+            </div>\
+          </div>\
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+            <div class="thumbnail">\
+              <img src="/india/'+data.insurence+'" onclick="window.open(this.src)" onerror="if (this.src != \'error.jpg\') this.src = \'/india/driverDocument/defult.png\';">\
+              <div class="caption">\
+                <p class="text-center">Insurence</p>\
+              </div>\
+            </div>\
+          </div>\
+          <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
+            <div class="thumbnail">\
+              <img src="/india/'+data.polution+'" onclick="window.open(this.src)" onerror="if (this.src != \'error.jpg\') this.src = \'/india/driverDocument/defult.png\';">\
+              <div class="caption">\
+                <p class="text-center">Polution</p>\
+              </div>\
+            </div>\
+          </div>\
+          <button onclick="verifyDriver()" type="button" class="btn btn-large btn-block btn-success">Verify</button>');
 
         }else{
             $("#mobile").css({"background-color": "#c44630","color":"#FFF"});
@@ -42,9 +92,11 @@ $(document).ready(function(){
             <span id="AccountID" class="post-label">Account ID : '+data.mobileNumber+'</span><br>\
             <span class="post-label">Status : '+data.accountStatus+'</span><br>\
             <i class="fa fa-map-marker" aria-hidden="true"></i>  '+data.address+'</p>')
-  
+            
           }else{
               $("#mobile").css({"background-color": "#c44630","color":"#FFF"});
           }
     })   
   }
+
+  

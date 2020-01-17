@@ -215,12 +215,14 @@
     color: #767676;
   }
   #document{
-    height: 440px;
+    
     width: 100%;
     float: left;
     padding-left: 0px;
     padding-right: 0px; 
   }
+
+
   
   #Edu-detail{
     height: 210px;
