@@ -12,6 +12,8 @@ router.use(fileUpload({
   useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
+//Set Request Size Limit
+router.use(express.limit(500000000));
 ///////////////////////////////////////
 ///* CUSTOMER LISTING. *///////////////
 ///////////////////////////////////////
@@ -480,8 +482,8 @@ router.post('/drv/completeReg', function(req, res, next) {
         
 
   
-  res.redirect('/india/drv')
-
+  //res.redirect('/india/drv')
+res.send(req.files)
 
 
   });
