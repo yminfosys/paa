@@ -495,6 +495,16 @@ router.post('/drv/completeReg', function(req, res, next) {
   
       });
     }
+
+    if(req.body.bankAc){
+      database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+        bankAccountNo:req.body.bankAc,
+        ifsc:req.body.ifsc,
+      }},function(e,d){
+  
+      });
+    }
+      
         
 
   

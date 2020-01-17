@@ -96,6 +96,7 @@
         }else{
           if(a===1 && document.getElementById("ride").checked == false){
             $("#tm").html('');
+            document.getElementById("delivery").checked =false;
           }
         }
 
@@ -116,6 +117,7 @@
           }else{
             if(a===2 && document.getElementById("delivery").checked == false){
             $("#tm").html('');
+            document.getElementById("ride").checked = false;
           }
           }
     }
@@ -203,17 +205,28 @@
                                   
                                 </div>
                                   <%}%>
+
+                                  
+
+                               <% if(driver.bankAccountNo){%> 
+                          <div class="form-group">
+                            <label>Bank A/c :<%=driver.bankAccountNo%> &nbsp; IFSC Code :<%=driver.ifsc%></label><br>
+                            
+                          </div>
+                          <%}else{%>
                             <div class="form-group">
                               <div class="row">
                               <label class="col-xs-12 col-sm-12 ">Bank Details</label>
                               <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-                                <input class="form-control" type="number" placeholder=" Account Number">
+                                <input name="bankAc" class="form-control" type="number" placeholder=" Account Number">
                               </div>
                               <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                                <input class="form-control" type="text" placeholder="IFSC Code">
+                                <input name="ifsc" class="form-control" type="text" placeholder="IFSC Code">
                               </div>
                             </div>
                             </div>
+                            <%}%>           
+                            
                          
                           
 

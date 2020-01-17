@@ -97,7 +97,10 @@ var pilotSchema = new mongoose.Schema({
   userType:String,
   typeOfWork:[],
   travelmod:String,
-  duty:String,  
+  duty:String, 
+  bankAccountNo:String,
+  ifsc:String,
+  sortCode:String, 
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
   location: {
     type: {
