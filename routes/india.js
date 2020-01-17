@@ -8,7 +8,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 router.use(fileUpload({
-  limits: { fileSize: 500000000 },
+ 
   useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
@@ -481,8 +481,8 @@ router.post('/drv/completeReg', function(req, res, next) {
         
 
   
-  //res.redirect('/india/drv')
-res.send(req.files)
+  res.redirect('/india/drv')
+//res.send(req.files)
 
 
   });
