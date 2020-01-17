@@ -29,6 +29,98 @@
     function submitbtn(){
        $("#sub-btn").html('<img src="/india/images/gif/progress.gif">')
     }
+
+    function modeofCheckbox(a){
+      
+      if(a===3 && document.getElementById("employee").checked==true){
+       $("#empDetails").html('<div class="form-group">\
+                                <label for="exampleInputEmail1">Job Catagory</label>\
+                                <select name="jobcategory" class="form-control">\
+                                    <option value="Bartender">Bartender</option>\
+                                    <option value="Cook">Cook</option>\
+                                  </select>\
+                              </div>\
+                              <div class="form-group">\
+                                <label for="exampleInputEmail1">Job Sub Catagory</label>\
+                                <select name="jobcategory" class="form-control">\
+                                    <option value="Coocktel">Coocktel</option>\
+                                    <option value="Cook">Cook</option>\
+                                    </select>\
+                              </div>\
+                              <div class="form-group">\
+                                <label for="exampleInputEmail1">Age Group</label>\
+                                <select name="jobcategory" class="form-control">\
+                                    <option value="Coocktel">16 to 24 Years</option>\
+                                    <option value="Cook">25 to 35 Years</option>\
+                                    <option value="Cook">35 to 50 Years</option>\
+                                    <option value="Cook">51 to 62 Years</option>\
+                                    </select>\
+                              </div>\
+                              <div class="form-group">\
+                                <label for="exampleInputEmail1">Work Experiance (No Of Years)</label>\
+                               <input class="form-control" type="number" placeholder=" Ex: 2">\
+                              </div>\
+                              <div class="form-group">\
+                                <label for="exampleInputEmail1">National Insurence Number(NI)</label>\
+                               <input class="form-control" type="text" placeholder="Sl 40 30 85 B">\
+                              </div>\
+                              <div class="form-group">\
+                                <label for="exampleInputEmail1">Genger</label>\
+                                <select name="jobcategory" class="form-control">\
+                                    <option value="Coocktel">Male</option>\
+                                    <option value="Cook">Female</option>\
+                                    <option value="Cook">Others</option>\
+                                </select>\
+                              </div>');
+        
+      }else{
+        if(a===3 && document.getElementById("employee").checked == false){
+          $("#empDetails").html('');
+        }
+      }
+
+      if(a===1 && document.getElementById("ride").checked == true){
+          $("#tm").html('<div class="form-group">\
+                                    <label for="exampleInputEmail1">Rider Or Delivery Mode</label>\
+                                    <select name="travelmod" class="form-control">\
+                                        <option value="1">Bike Taxi</option>\
+                                        <option value="2">CNG Auto 5 Set</option>\
+                                        <option value="3">Mini- 4Set</option>\
+                                        <option value="4">Suden 6-8 Set</option>\
+                                        <option value="5">Van [Battery opereted]</option>\
+                                        <option value="6">Easy Bike 8 Set</option>\
+                                        <option value="7">Riksaw</option>\
+                                        <option value="8">Bicycle Only For Ondemend Delivery</option>\
+                                    </select>\
+                                  </div>');
+        }else{
+          if(a===1 && document.getElementById("ride").checked == false){
+            $("#tm").html('');
+          }
+        }
+
+        if(a===2 && document.getElementById("delivery").checked == true){
+            $("#tm").html('<div class="form-group">\
+                                    <label for="exampleInputEmail1">Rider Or Delivery Mode</label>\
+                                    <select name="travelmod" class="form-control">\
+                                        <option value="1">Bike Taxi</option>\
+                                        <option value="2">CNG Auto 5 Set</option>\
+                                        <option value="3">Mini- 4Set</option>\
+                                        <option value="4">Suden 6-8 Set</option>\
+                                        <option value="5">Van [Battery opereted]</option>\
+                                        <option value="6">Easy Bike 8 Set</option>\
+                                        <option value="7">Riksaw</option>\
+                                        <option value="8">Bicycle Only For Ondemend Delivery</option>\
+                                    </select>\
+                                  </div>');
+          }else{
+            if(a===2 && document.getElementById("delivery").checked == false){
+            $("#tm").html('');
+          }
+          }
+    }
+
+
     </script>
     
     </head>
@@ -73,22 +165,26 @@
                                   <label class="col-xs-12 col-sm-12" for="exampleInputEmail1">Type of Work * You can Choose All three</label>
                                   <div class="checkbox col-xs-3 col-sm-3" >
                                       <label>
-                                        <input name="riderCheckbox" value="Rider" type="checkbox"> Rider
+                                        <input onclick="modeofCheckbox(1)" id="ride" name="riderCheckbox" value="Rider" type="checkbox"> Rider
                                       </label>
                                     </div>
                                     <div class="checkbox col-xs-5 col-sm-5">
                                       <label>
-                                        <input name="deliveryCheckbox" value="Delivery" type="checkbox"> Delivery On Demand 
+                                        <input onclick="modeofCheckbox(2)" id="delivery" name="deliveryCheckbox" value="Delivery" type="checkbox"> Delivery On Demand 
                                       </label>
                                     </div>
                                     <div class="checkbox col-xs-4 col-sm-4">
                                       <label>
-                                        <input name="employeeCheckbox" value="Employee" type="checkbox"> Employee
+                                        <input onclick="modeofCheckbox(3)" id="employee" name="employeeCheckbox" value="Employee" type="checkbox"> Employee
                                       </label>
                                     </div>                            
                                 </div>
                               <%}%>
-                          
+                            <div id="empDetails">
+                              
+                            </div>
+                            
+
                               <% if(driver.travelmod){ var out=''%> 
                                 <div class="form-group">
                                   <% if(driver.travelmod==1){  out='Bike'}%>
@@ -103,23 +199,23 @@
                                   <label>Rider Or Delivery Mode :<%=out%></label><br>
                                 </div>
                                 <%}else{%>
-                                  <div class="form-group">
-                                    <label for="exampleInputEmail1">Rider Or Delivery Mode</label>
-                                    <select name="travelmod" class="form-control">
-                                        <option value="1">Bike Taxi</option>
-                                        <option value="2">CNG Auto 5 Set</option>
-                                        <option value="3">Mini- 4Set</option>
-                                        <option value="4">Suden 6-8 Set</option>
-                                        <option value="5">Van [Battery opereted]</option>
-                                        <option value="6">Easy Bike 8 Set</option>
-                                        <option value="7">Riksaw</option>
-                                        <option value="8">Bicycle Only For Ondemend Delivery</option>
-                                        
-        
-                                    </select>
-                                  </div>
+                                  <div id="tm">
+                                  
+                                </div>
                                   <%}%>
+                            <div class="form-group">
+                              <div class="row">
+                              <label class="col-xs-12 col-sm-12 ">Bank Details</label>
+                              <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+                                <input class="form-control" type="number" placeholder=" Account Number">
+                              </div>
+                              <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+                                <input class="form-control" type="text" placeholder="IFSC Code">
+                              </div>
+                            </div>
+                            </div>
                          
+                          
 
                           <div class="form-group">
                             <label class="col-xs-12 col-sm-12">Supported Document</label>
