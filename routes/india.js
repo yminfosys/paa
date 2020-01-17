@@ -472,12 +472,29 @@ router.post('/drv/completeReg', function(req, res, next) {
      });
     });
   }
+    if(req.body.address){
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      address:req.body.address
+    }},function(e,d){
 
-    // database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
-    //   document:{photo:urlphoto,Idproof:urlid,dl:urldl,rto:urlrto,insurence:urlinsu,polution:urlpolu}
-    // }},function(e,d){
+    });
+  }
 
-    // });
+    if(req.body.riderCheckbox||req.body.deliveryCheckbox||req.body.employeeCheckbox){
+      database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+        typeOfWork:[req.body.riderCheckbox,req.body.deliveryCheckbox,req.body.employeeCheckbox]
+      }},function(e,d){
+  
+      });
+    }
+
+    if(req.body.travelmod){
+      database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+        travelmod:req.body.travelmod
+      }},function(e,d){
+  
+      });
+    }
         
 
   

@@ -21,7 +21,16 @@
     .document{color: darkblue;}
     .img-c{height: 100%; }
     .img-c img{height: 50px; width: 50px;}
-    </style>    
+    #sub-btn img{height:20px; }
+    </style> 
+    
+    <script type="text/javascript">
+    //////Submit btnn/////
+    function submitbtn(){
+       $("#sub-btn").html('<img src="/india/images/gif/progress.gif">')
+    }
+    </script>
+    
     </head>
     <body>
         
@@ -43,47 +52,75 @@
                             <input name="isd" type="hidden" value="<%=driver.isdCode%>">
                           </div>
 
+                            <% if(driver.address){%> 
                           <div class="form-group">
-                            <label for="exampleInputEmail1">Address</label>
-                           <textarea name="address" class="form-control"></textarea>
+                            <label>Address :<%=driver.address%></label><br>
                           </div>
+                          <%}else{%>
+                            <div class="form-group">
+                              <label for="exampleInputEmail1">Address</label>
+                             <textarea name="address" class="form-control"></textarea>
+                            </div>
+                            <%}%>
 
-                          <div class="form-group">
 
-                            <label class="col-xs-12 col-sm-12" for="exampleInputEmail1">Type of Work * You can Choose All three</label>
-                            <div class="checkbox col-xs-3 col-sm-3" >
-                                <label>
-                                  <input name="riderCheckbox" type="checkbox"> Rider
-                                </label>
+                            <% if(driver.typeOfWork.length >0){%> 
+                              <div class="form-group">
+                                <label>Type of Work :<%= driver.typeOfWork.toString()%></label><br>
                               </div>
-                              <div class="checkbox col-xs-5 col-sm-5">
-                                <label>
-                                  <input name="deliveryCheckbox" type="checkbox"> Delivery On Demand 
-                                </label>
-                              </div>
-                              <div class="checkbox col-xs-4 col-sm-4">
-                                <label>
-                                  <input name="employeeCheckbox" type="checkbox"> Employee
-                                </label>
-                              </div>
-                            
-                          </div>
+                              <%}else{%>
+                                <div class="form-group">
+                                  <label class="col-xs-12 col-sm-12" for="exampleInputEmail1">Type of Work * You can Choose All three</label>
+                                  <div class="checkbox col-xs-3 col-sm-3" >
+                                      <label>
+                                        <input name="riderCheckbox" value="Rider" type="checkbox"> Rider
+                                      </label>
+                                    </div>
+                                    <div class="checkbox col-xs-5 col-sm-5">
+                                      <label>
+                                        <input name="deliveryCheckbox" value="Delivery" type="checkbox"> Delivery On Demand 
+                                      </label>
+                                    </div>
+                                    <div class="checkbox col-xs-4 col-sm-4">
+                                      <label>
+                                        <input name="employeeCheckbox" value="Employee" type="checkbox"> Employee
+                                      </label>
+                                    </div>                            
+                                </div>
+                              <%}%>
 
-                          <div class="form-group">
-                            <label for="exampleInputEmail1">Rider Or Delivery Mode</label>
-                            <select name="partnerType" class="form-control">
-                                <option value="1">Bike Taxi</option>
-                                <option value="2">CNG Auto 5 Set</option>
-                                <option value="3">Mini- 4Set</option>
-                                <option value="4">Suden 6-8 Set</option>
-                                <option value="5">Van [Battery opereted]</option>
-                                <option value="6">Easy Bike 8 Set</option>
-                                <option value="7">Riksaw</option>
-                                <option value="8">Bicycle Only For Ondemend Delivery</option>
-                                
-
-                            </select>
-                          </div>
+                          
+                              <% if(driver.travelmod){ var out=''%> 
+                                <div class="form-group">
+                                  <% if(driver.travelmod==1){  out='Bike'}%>
+                                  <% if(driver.travelmod==2){  out='CNG 5 seat'}%>
+                                  <% if(driver.travelmod==3){  out='Mini 4 Seat'}%>
+                                  <% if(driver.travelmod==4){  out='Suden 6-8 Seat'}%>
+                                  <% if(driver.travelmod==5){  out='Van (Battery operated'}%>
+                                  <% if(driver.travelmod==6){  out='Easy Bike 8 seat'}%>
+                                  <% if(driver.travelmod==7){  out='Riksaw'}%>
+                                  <% if(driver.travelmod==8){  out='Bicycle Only Delivery On Demend'}%>
+                                  
+                                  <label>Rider Or Delivery Mode :<%=out%></label><br>
+                                </div>
+                                <%}else{%>
+                                  <div class="form-group">
+                                    <label for="exampleInputEmail1">Rider Or Delivery Mode</label>
+                                    <select name="travelmod" class="form-control">
+                                        <option value="1">Bike Taxi</option>
+                                        <option value="2">CNG Auto 5 Set</option>
+                                        <option value="3">Mini- 4Set</option>
+                                        <option value="4">Suden 6-8 Set</option>
+                                        <option value="5">Van [Battery opereted]</option>
+                                        <option value="6">Easy Bike 8 Set</option>
+                                        <option value="7">Riksaw</option>
+                                        <option value="8">Bicycle Only For Ondemend Delivery</option>
+                                        
+        
+                                    </select>
+                                  </div>
+                                  <%}%>
+                         
 
                           <div class="form-group">
                             <label class="col-xs-12 col-sm-12">Supported Document</label>
@@ -117,7 +154,7 @@
                           <div class="form-group">
                               <div class="col-sm-12">
                                 
-                                  <button type="submit" class="btn btn-primary">Submit</button>
+                                  <button id="sub-btn" onclick="submitbtn()" type="submit" class="btn btn-primary">Submit</button>
                               </div>
                           </div>
                   </form>

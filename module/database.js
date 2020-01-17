@@ -59,7 +59,7 @@ var custSchema = new mongoose.Schema({
     password: String,    
     mobileNumber:String, 
     isdCode:String,
-    typeOfWork:[],   
+       
     CustID:String,   
     userType:String,
     location: {
@@ -95,6 +95,7 @@ var pilotSchema = new mongoose.Schema({
   accountStatus:String,
   completereg:String,   
   userType:String,
+  typeOfWork:[],
   travelmod:String,
   duty:String,  
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
