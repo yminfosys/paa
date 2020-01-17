@@ -481,7 +481,8 @@ router.post('/drv/completeReg', function(req, res, next) {
         
 
   
-  res.redirect('/india/drv')
+  
+    res.redirect('/india/drv')
 //res.send(req.files)
 
 
