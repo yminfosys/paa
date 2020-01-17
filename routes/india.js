@@ -8,12 +8,11 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 router.use(fileUpload({
-  limits: { fileSize: 50 * 1024 * 1024 },
+  limits: { fileSize: 500000000 },
   useTempFiles : true,
     tempFileDir : '/tmp/'
 }));
-//Set Request Size Limit
-router.use(express.limit(500000000));
+
 ///////////////////////////////////////
 ///* CUSTOMER LISTING. *///////////////
 ///////////////////////////////////////
