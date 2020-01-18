@@ -35,7 +35,7 @@ function initMap() {
         centerMarker=new google.maps.Marker({
         position: pos, 
        // icon:'http://www.robotwoods.com/dev/misc/bluecircle.png',
-        icon:new google.maps.MarkerImage('http://www.robotwoods.com/dev/misc/bluecircle.png',
+        icon:new google.maps.MarkerImage('/india/images/bluecircle.png',
                                         new google.maps.Size(50,50),
                                         new google.maps.Point(0,0),
                                         new google.maps.Point(8,8)),
