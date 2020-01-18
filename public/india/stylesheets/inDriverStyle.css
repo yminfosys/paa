@@ -33,9 +33,32 @@
   #map {
     height: 100%;  /* The height is 400 pixels */
     width: 100%;  /* The width is the width of the web page */
+    display: none;
+   }
+   #offline-content{
+    width: 50%; height: 10%; margin-top: 45%; 
+    margin-left: 25%; text-align: center; 
+    font-size: 22px;
+    color: red;
+  }
+
+   #footer{
+    position: fixed;
+    height: 10vh;
+    top: 90vh;
+    width: 100%;
+    background-color: #facb3d;
+    border-top: 1px solid #000;
    }
 
-
+   .incetext{position: relative; float: left; font-size:12px; width: 30%; left: 5%; top: 5px; text-align: center; } 
+.incetext p{font-weight: bolder; font-size: 16px;}
+.mapcontent{position: fixed;
+  height: 80vh;
+  top: 17vh;
+  width: 100%; 
+  background-color: rgb(238, 241, 241);
+}
 
 
    .toggle, .toggle:before, .slot__label, .curtain {

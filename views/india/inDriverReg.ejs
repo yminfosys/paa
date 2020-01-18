@@ -42,14 +42,14 @@
                               </div>\
                               <div class="form-group">\
                                 <label for="exampleInputEmail1">Job Sub Catagory</label>\
-                                <select name="jobcategory" class="form-control">\
+                                <select name="jobSubcategory" class="form-control">\
                                     <option value="Coocktel">Coocktel</option>\
                                     <option value="Cook">Cook</option>\
                                     </select>\
                               </div>\
                               <div class="form-group">\
                                 <label for="exampleInputEmail1">Age Group</label>\
-                                <select name="jobcategory" class="form-control">\
+                                <select name="ageGroup" class="form-control">\
                                     <option value="Coocktel">16 to 24 Years</option>\
                                     <option value="Cook">25 to 35 Years</option>\
                                     <option value="Cook">35 to 50 Years</option>\
@@ -58,15 +58,15 @@
                               </div>\
                               <div class="form-group">\
                                 <label for="exampleInputEmail1">Work Experiance (No Of Years)</label>\
-                               <input class="form-control" type="number" placeholder=" Ex: 2">\
+                               <input name="experance" class="form-control" type="number" placeholder=" Ex: 2">\
                               </div>\
                               <div class="form-group">\
-                                <label for="exampleInputEmail1">National Insurence Number(NI)</label>\
-                               <input class="form-control" type="text" placeholder="Sl 40 30 85 B">\
+                                <label for="exampleInputEmail1">PAN Number</label>\
+                               <input name="panNumber" class="form-control" type="text" placeholder="Sl 40 30 85 B">\
                               </div>\
                               <div class="form-group">\
                                 <label for="exampleInputEmail1">Genger</label>\
-                                <select name="jobcategory" class="form-control">\
+                                <select name="gender" class="form-control">\
                                     <option value="Coocktel">Male</option>\
                                     <option value="Cook">Female</option>\
                                     <option value="Cook">Others</option>\
@@ -92,7 +92,11 @@
                                         <option value="7">Riksaw</option>\
                                         <option value="8">Bicycle Only For Ondemend Delivery</option>\
                                     </select>\
-                                  </div>');
+                                  </div>\
+                              <div class="form-group">\
+                                <label >RTO Reg Number</label>\
+                                <input name="RtoNo" class="form-control" type="text" placeholder=" Ex: WB99B1111">\
+                              </div>');
         }else{
           if(a===1 && document.getElementById("ride").checked == false){
             $("#tm").html('');
@@ -113,7 +117,11 @@
                                         <option value="7">Riksaw</option>\
                                         <option value="8">Bicycle Only For Ondemend Delivery</option>\
                                     </select>\
-                                  </div>');
+                                  </div>\
+                              <div class="form-group">\
+                                <label >RTO Reg Number</label>\
+                                <input name="RtoNo" class="form-control" type="text" placeholder=" Ex: WB99B1111">\
+                              </div>');
           }else{
             if(a===2 && document.getElementById("delivery").checked == false){
             $("#tm").html('');
@@ -198,7 +206,7 @@
                                   <% if(driver.travelmod==7){  out='Riksaw'}%>
                                   <% if(driver.travelmod==8){  out='Bicycle Only Delivery On Demend'}%>
                                   
-                                  <label>Rider Or Delivery Mode :<%=out%></label><br>
+                                  <label>Rider Or Delivery Mode :<%=out%>  / RTO No: <%=driver.rtoRegno%></label><br>
                                 </div>
                                 <%}else{%>
                                   <div id="tm">

@@ -488,9 +488,23 @@ router.post('/drv/completeReg', function(req, res, next) {
       });
     }
 
+    if(req.body.employeeCheckbox){
+      database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+        jobCategory:req.body.jobcategory,
+        jobSubCategory:req.body.jobSubcategory,
+        ageGroup:req.body.ageGroup,
+        experance:req.body.experance,
+        panNumber:req.body.panNumber,
+        gender:req.body.gender
+      }},function(e,d){
+  
+      });
+    }
+
     if(req.body.travelmod){
       database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
-        travelmod:req.body.travelmod
+        travelmod:req.body.travelmod,
+        rtoRegno:req.body.RtoNo
       }},function(e,d){
   
       });
