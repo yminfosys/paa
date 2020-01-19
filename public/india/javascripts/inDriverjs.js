@@ -140,7 +140,9 @@ function loginprocess(){
 
  /////////Driver Page ////////////
 
-        ///////Switch//////////
+ function abc(){
+     window.open('/drive')
+ }
 
 
  
