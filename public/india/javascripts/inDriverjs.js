@@ -141,7 +141,7 @@ function loginprocess(){
  /////////Driver Page ////////////
 
  function abc(){
-     window.open('/drive')
+     window.open('/india/call')
  }
 
 
