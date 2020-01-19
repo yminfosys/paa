@@ -253,6 +253,7 @@ content: "Drop"
     var travelmod=$("#ModeofTravel").val();
     clearDriverMarker();
     driverLocetion.forEach(function(val,indx){
+     
       driverMarkers.push(new google.maps.Marker({
         position: {lat:val.lat, lng:val.lng},
         //icon:new google.maps.MarkerImage('/images/ic_bike.png'),
@@ -265,9 +266,9 @@ content: "Drop"
             
         },
         map: map,
-        });
+        }));
         
-        );
+        
 
     })
     }
