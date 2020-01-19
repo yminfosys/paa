@@ -140,20 +140,14 @@ function loginprocess(){
 
  /////////Driver Page ////////////
 
- function abc(){
-    var  myAudio= new Audio('/india/audio/car_horn.mp3');
-    myAudio.addEventListener('ended', function() {
-        this.currentTime = 0;
-        this.play();
-        }, false);
+ ///////Handel Socket io  parameter///////
+
+        var socket = io('//'+document.location.hostname+':'+document.location.port);
+        socket.on('socketToMe', function (data) {
+        console.log('socketToMe',data);
+        setCookie("ringToneControl","ON",1);
         
-        myAudio.play();
-   
-
-
-
-   
- }
+        });
 
 
  

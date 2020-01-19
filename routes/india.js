@@ -19,6 +19,7 @@ router.use(fileUpload({
 router.get('/', function(req, res, next) {
   //res.send('respond with a resource I am INDIA');
   if(req.cookies.CustID){
+    res.io.emit("socketToMe", "users");
     res.render('india/inCust',{YOUR_API_KEY:process.env.API_KEY})
   }else{
     res.redirect('/india/login')
@@ -546,11 +547,7 @@ router.post('/drv/completeReg', function(req, res, next) {
    });
   });
   
-     //////////Driver Incomming Call//////
-     router.get('/call', function(req, res, next) {
-   
-      res.render('india/inDriverIncommingCall',{YOUR_API_KEY:process.env.API_KEY})
-    });
+ 
    
 
 ///////////////////////////////////////

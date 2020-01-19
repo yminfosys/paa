@@ -87,17 +87,35 @@ function initMap() {
         console.log(data)
       })
       clearWachposition();
+      setCookie("ringToneControl","OFF",1);
     }
   }); 
   
   function onlineExicute(){
+    wachLocation();
     $("#map").css({"display":"block"});
     $("#offline-content").css({"display":"none"});
     $.post('/india/drv/dutyUpdate',{duty:'online'},function(data){
       console.log(data)
-    })
-    wachLocation();
+    });
+     ringTimer= setInterval(RingToneHandeler,300);
   }
+
+  //////Ring tone Handeler////
+  var  myAudio= new Audio('/india/audio/car_horn.mp3');
+  function RingToneHandeler(){
+    var OnOff=getCookie("ringToneControl");
+    if(OnOff=='ON'){
+      myAudio.addEventListener('ended', function() {
+      this.currentTime = 0;
+      this.play();
+      }, false);        
+      myAudio.play();
+    }else{
+      myAudio.pause();
+    }
+  }    
+ 
 
 } /////End IntMap////////
 
