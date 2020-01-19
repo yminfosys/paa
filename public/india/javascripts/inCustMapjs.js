@@ -253,8 +253,7 @@ content: "Drop"
     var travelmod=$("#ModeofTravel").val();
     clearDriverMarker();
     driverLocetion.forEach(function(val,indx){
-      var mk;
-       mk=new google.maps.Marker({
+      driverMarkers.push(new google.maps.Marker({
         position: {lat:val.lat, lng:val.lng},
         //icon:new google.maps.MarkerImage('/images/ic_bike.png'),
         icon:{
@@ -267,10 +266,8 @@ content: "Drop"
         },
         map: map,
         });
-        if (mk) { // when it hasn't loaded, it's null
-        mk.style.transform = `rotate(${angleDegrees}deg)`
-      }
-        driverMarkers.push(mk);
+        
+        );
 
     })
     }
