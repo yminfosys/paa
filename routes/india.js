@@ -534,6 +534,7 @@ router.post('/drv/completeReg', function(req, res, next) {
     console.log(data)
     });
     res.send(req.body.lat)
+    
   });
 
    //////////Update Driver Duty Offline and online//////
@@ -547,8 +548,15 @@ router.post('/drv/completeReg', function(req, res, next) {
   
      //////////Driver Incomming Call//////
      router.get('/call', function(req, res, next) {
+      const player = require('play-sound')();
+      player.play('./public/india/audio/car_horn.mp3', (err) => {
+        if (err) console.log(`Could not play sound: ${err}`);
+    });
       res.render('india/inDriverIncommingCall',{YOUR_API_KEY:process.env.API_KEY})
     });
+   
+      
+    
 
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////
