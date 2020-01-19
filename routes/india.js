@@ -548,10 +548,10 @@ router.post('/drv/completeReg', function(req, res, next) {
   
      //////////Driver Incomming Call//////
      router.get('/call', function(req, res, next) {
-      const player = require('play-sound')();
-      player.play('./public/india/audio/car_horn.mp3', (err) => {
-        if (err) console.log(`Could not play sound: ${err}`);
-    });
+    //   const player = require('play-sound')();
+    //   player.play('./public/india/audio/car_horn.mp3', (err) => {
+    //     if (err) console.log(`Could not play sound: ${err}`);
+    // });
       res.render('india/inDriverIncommingCall',{YOUR_API_KEY:process.env.API_KEY})
     });
    console.log("gg")
