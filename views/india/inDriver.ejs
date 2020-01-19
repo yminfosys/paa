@@ -54,6 +54,13 @@
                 <input id="toggle" class="toggle" type="checkbox" role="switch" name="toggle" value="on">
                 <label for="toggle" class="slot"></label>
                 <div class="curtain"></div>
+                <script>
+                        // for accessibility only
+                        document.getElementById("toggle").addEventListener("change",function() {
+                            this.setAttribute("aria-checked",this.checked);
+                        });
+ 
+                </script>
             </div>
             <div id="mapcontent">
                 <div id="map"></div> 

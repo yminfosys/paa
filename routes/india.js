@@ -524,10 +524,27 @@ router.post('/drv/completeReg', function(req, res, next) {
   
   
     res.redirect('/india/drv')
-//res.send(req.files)
-
 
   });
+
+  //////////Update Driver Location//////
+  router.post('/drv/driverLocatioUpdate', function(req, res, next) {
+    console.log('body',req.body)
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(err,data){
+    console.log(data)
+    });
+    res.send(req.body.lat)
+  });
+
+   //////////Update Driver Duty Offline and online//////
+   router.post('/drv/dutyUpdate', function(req, res, next) {
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{duty:req.body.duty}},function(err,data){
+      if(data){
+        res.send(req.body.duty)
+      }
+   });
+  });
+  
 
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////

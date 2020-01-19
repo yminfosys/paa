@@ -49,7 +49,7 @@ function veryfyMobileNumber(){
     if(mobile.length===10){        ;
         var otp=randamNumber();
         $("#otp1").val(otp);
-        //alert(otp)
+        alert(otp)
         $("#mobile").css({"color":"green"});
         ////////Check Mobile No Exist in our System/////
         $.post('/india/checkMobileExist',{mobile:mobile},function(data){

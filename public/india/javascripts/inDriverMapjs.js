@@ -15,7 +15,8 @@ function initMap() {
     function wachLocation(){
         wachID=navigator.geolocation.watchPosition(function (position){
         ////////Call Circle Center Marker
-        circleMarker(position);           
+        circleMarker(position); 
+        driverLocationUpdate(position);          
         
         },function error(msg){
             alert('Please enable your GPS position future.');       
@@ -65,6 +66,14 @@ function initMap() {
   }
  //////End Circle Marker//////
 
+   /////////GPS location update driver tracking///////
+   function driverLocationUpdate(position){
+    $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude},function(data){
+      console.log(data);
+    });
+   }
+   
+
 
     /////Off line Online /////////
     document.getElementById("toggle").addEventListener("click", function(){
@@ -74,6 +83,9 @@ function initMap() {
     }else{
       $("#offline-content").css({"display":"block"});
       $("#map").css({"display":"none"});
+      $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
+        console.log(data)
+      })
       clearWachposition();
     }
   }); 
@@ -81,6 +93,9 @@ function initMap() {
   function onlineExicute(){
     $("#map").css({"display":"block"});
     $("#offline-content").css({"display":"none"});
+    $.post('/india/drv/dutyUpdate',{duty:'online'},function(data){
+      console.log(data)
+    })
     wachLocation();
   }
 

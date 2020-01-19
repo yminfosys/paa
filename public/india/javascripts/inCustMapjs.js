@@ -253,7 +253,8 @@ content: "Drop"
     var travelmod=$("#ModeofTravel").val();
     clearDriverMarker();
     driverLocetion.forEach(function(val,indx){
-        driverMarkers.push(new google.maps.Marker({
+      var mk;
+       mk=new google.maps.Marker({
         position: {lat:val.lat, lng:val.lng},
         //icon:new google.maps.MarkerImage('/images/ic_bike.png'),
         icon:{
@@ -261,11 +262,15 @@ content: "Drop"
             scaledSize: new google.maps.Size(50, 25), // scaled size
             origin: new google.maps.Point(0,0), // origin
             anchor: new google.maps.Point(22, 22), // anchor
-            rotation: angleDegrees
+            
+            
         },
         map: map,
-        
-        }));
+        });
+        if (mk) { // when it hasn't loaded, it's null
+        mk.style.transform = `rotate(${angleDegrees}deg)`
+      }
+        driverMarkers.push(mk);
 
     })
     }
