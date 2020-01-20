@@ -1,36 +1,5 @@
 var CenterChange='Enable';
-var confrmContent='<div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">\
-<div style="border-bottom: 1px solid #000; height: 25%;" class="row">\
-<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
-<img onclick="changeModeofTravel(2)" id="modeImg2" class="modeImg img-rounded" src="/india/images/tm2.png"></div>\
-<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">\
-        <div class="form-group">\
-        <input type="text" class="form-control" placeholder="Coupon Code" >\
-       </div>\
-    </div>\
-    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">\
-    <div id="totalAmt">&#8377; 20</div>\
-    </div>\
-</div>\
-<div style="border-bottom: 1px solid #000; height: 25%;" class="row">\
-<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
-<p><strong><i class="fa fa-money" aria-hidden="true"></i> Payment</strong></p></div>\
-<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
-<div class="checkbox">\
-            <label>\
-                <input type="checkbox" value="">\
-                Cash\
-            </label>\
-        </div>\
-    </div>\
-    <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">\
-    <p><i class="fa fa-google-wallet" aria-hidden="true"></i> &#8377; <br> Wallet(0.00)</p></div>\
-</div>\
-<div style=" height: 25%; margin-top: 5px;" class="row">\
-<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">\
-<button id="confrmBtn" type="button" class="btn btn-large btn-block btn-primary">Confirm PaaCab</button>\
-</div>\
-</div></div>'
+
 function initMap() {
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer({
@@ -222,6 +191,7 @@ content: "Drop"
        
     if(searchmod=='0'){
         setCookie("pickuplatlong",JSON.stringify(latlng),1);
+        setCookie("picuplocation",data.results[0].formatted_address,1);
         $("#picuplocation").val(data.results[0].formatted_address);
        // var a=JSON.parse(getCookie("pickuplatlong")) ;
      
@@ -235,6 +205,7 @@ content: "Drop"
         },1000);
     }else{
         setCookie("droplatlong",JSON.stringify(latlng),1);
+        setCookie("droplocation",data.results[0].formatted_address,1);
         $("#droplocation").val(data.results[0].formatted_address);
        
         ///////Add drop Marker/////
@@ -320,31 +291,37 @@ content: "Drop"
       var origin=JSON.parse(getCookie("pickuplatlong")) ;
       var dist=JSON.parse(getCookie("droplatlong")) ;
       var travelmod=$("#ModeofTravel").val();
-      directionRooteService(origin,dist,travelmod); 
-           
+      directionRooteService(origin,dist,travelmod);
       
+      var countt=0;
           $.each($(".modeImg"),function(i){
             j=i+1;
             $.post('/india/getDistance',{travelmod:j,orig:''+Number(origin.lat)+' , '+Number(origin.lng)+'',diste:''+Number(dist.lat)+' , '+Number(dist.lng)+''},function(data){
               //alert(data.rows[0].elements[0].distance.value);          
               var distance=data.result.rows[0].elements[0].distance.value;
               //alert(distance)          
-              distance=parseInt(distance/1000) + 1;
-            
-            $.post('/india/getPrice',{travelmod:data.travelmod,distance:distance},function(data){
-              $("#tm"+data.travelmod+"").css({"display":"block"})
-              $("#tm"+data.travelmod+"").html('&#8377;'+data.price+'');
-              $("#tmPrice"+data.travelmod+"").val(+data.price);             
-              
+              distance=parseInt(distance/1000) + 1;            
+            $.post('/india/getPrice',{travelmod:data.travelmod,distance:distance},function(dataa){
+              $("#tm"+dataa.travelmod+"").css({"display":"block"})
+              $("#tm"+dataa.travelmod+"").html('&#8377;'+dataa.price+'');
+              $("#tmPrice"+dataa.travelmod+"").val(dataa.price);
+              countt++;                        
+              if(countt==$(".modeImg").length-1){
+                $("#footer-content").css({"display":"none"});
+                $("#footer-prebooking").css({"display":"block"});                
+                $("#modeImg"+travelmod+"").css({"border": "4px solid rgb(42, 204, 36)"});
+                var totalprice=$("#tmPrice"+travelmod+"").val();
+                $("#totalAmt").text(totalprice);
+                $("#booimg").html('<img class="modeImg img-rounded" src="/india/images/tm'+travelmod+'.png">')
+
+                }              
             });
           });
-          });        
-      
-      $("#naxtBtn").css({"display":"none"});
-      $("#footer-content").html(confrmContent);
-     
-    });
+          
 
+        }); 
+    });
+//////// End Contunue Button////////////   
 
       
       document.getElementById("placeList").addEventListener("click", function(e) {

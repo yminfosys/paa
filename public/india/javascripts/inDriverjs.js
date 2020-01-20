@@ -141,14 +141,31 @@ function loginprocess(){
  /////////Driver Page ////////////
 
  ///////Handel Socket io  parameter///////
-
+ 
         var socket = io('//'+document.location.hostname+':'+document.location.port);
-        socket.on('socketToMe', function (data) {
-        console.log('socketToMe',data);
+        socket.on('inCommingCall', function (data) {
+        console.log('inCommingCall',data);
+        if(data.pilotID==getCookie("pilotID")){
         setCookie("ringToneControl","ON",1);
+        setCookie("inCommingCallDetails",JSON.stringify(data),1);
+        circlebar();
+        $("#ringtone").css({"display":"block"});
+        $("#pickupFrom").text(data.pickuoAddress);
         
+        }
         });
 
+         //////////Driver Accept /////////
+         function acceptRide(inp){
+            setCookie("ringToneControl","OFF",1);
+            $("#ringtone").css({"display":"none"});
+            var inCommingCallDetails=JSON.parse(getCookie("inCommingCallDetails")) ;
+             console.log(inCommingCallDetails);
+            // $.post('/india/AcceptCallByDriver',{},function(dara){
+            // console.log(dara)
+            // });
+        } 
+  
 
  
  

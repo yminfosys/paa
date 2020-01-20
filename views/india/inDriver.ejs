@@ -23,9 +23,44 @@
         <script src="/india/javascripts/inDriverjs.js"></script>
         <script src="/index/javascripts/sidebar.js"></script>
         
+
+        
     </head>
     <body>
-        <audio src="/india/audio/car_horn.mp3" id="my_audio" loop="loop"></audio>
+        
+        <div id="ringtone">
+            
+            <div class="container">
+                
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <canvas id="myCanvas" class="myCanvascircle" width="500" height="200"></canvas> 
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                      
+                        <div class="picupaddress">
+                            <p><strong>Pickup From</strong></p>
+                            <p id="pickupFrom">Unname road, City Center ,Durgapu Unname road, City Center ,Durgapu</p>
+                        </div>
+                    
+                        
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                      
+                        <div id="btnControl" class="btnBox">                                                       
+                            <input  class="boxbtn" type="button" value="Pass" >
+                            <input onclick="acceptRide()"  class="boxbtn" type="button" value="Accept" >
+                        </div>
+                    
+                        
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+     
 
         <div id="sidebar-waper">
             <div class="togle-btn" onclick="sidebartoggle()">
@@ -86,12 +121,8 @@
             </div>
               
         </div> 
-        <script>
-         
-
-                
-
-        </script>   
+       
+        <script src="/india/javascripts/circle.js"></script>   
         <!-- jQuery -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     </script>>

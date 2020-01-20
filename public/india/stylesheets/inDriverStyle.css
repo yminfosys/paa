@@ -61,6 +61,26 @@
 }
 
 
+#ringtone{
+  position: fixed;
+  height: 100vh;
+  top: 0vh;
+  width: 100%; 
+  background-color: #23c05f;
+  z-index: 51;
+  display:none;
+}
+
+.myCanvascircle{margin-left: -15%;}
+.picupaddress{width: 100%; height: 150px; overflow: hidden;}
+.picupaddress p{ text-align: center; font-size: 15px; color: #cce9d7; font-style: italic;}
+.btnBox{margin-top: 100px; width: 80%; margin-left: 10%;}
+.boxbtn{
+  position: relative; width: 40%; margin-left: 7.25%; height: 40px; float: left; border:2px solid rgb(71, 7, 7) ;
+  border-radius: 5px; background-color: rgba(25, 23, 27, 0.9); font-size: 16px; color: chartreuse;
+}
+
+
    .toggle, .toggle:before, .slot__label, .curtain {
     transition-property: background-color, transform, visibility;
     transition-duration: 0.25s;

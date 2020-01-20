@@ -17,7 +17,7 @@ router.use(fileUpload({
 ///* CUSTOMER LISTING. *///////////////
 ///////////////////////////////////////
 router.get('/', function(req, res, next) {
-  //res.send('respond with a resource I am INDIA');
+  console.log(req.cookies)
   if(req.cookies.CustID){
     res.io.emit("socketToMe", "users");
     res.render('india/inCust',{YOUR_API_KEY:process.env.API_KEY})
@@ -284,6 +284,20 @@ router.post('/getprice', function(req, res, next) {
   });
 
 });
+
+
+////////Call Driver Requiest notification/////
+router.post('/CallDriver', function(req, res, next) {  
+res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress});
+res.send('ReqEmited');
+});
+////////Call Driver accept notification/////
+router.post('/AcceptCallByDriver', function(req, res, next) {  
+  res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress});
+  res.send('ReqEmited');
+  });
+
+
 ///////////////////////////////////////
 ///* END CUSTOMER LISTING. *///////////
 ///////////////////////////////////////
