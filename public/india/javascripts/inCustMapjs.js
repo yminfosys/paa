@@ -312,6 +312,7 @@ content: "Drop"
                 $("#modeImg"+travelmod+"").css({"border": "4px solid rgb(42, 204, 36)"});
                 var totalprice=$("#tmPrice"+travelmod+"").val();
                 $("#totalAmt").text(totalprice);
+                $("#totalDistance").val(distance);
                 $("#booimg").html('<img class="modeImg img-rounded" src="/india/images/tm'+travelmod+'.png">')
 
                 }              

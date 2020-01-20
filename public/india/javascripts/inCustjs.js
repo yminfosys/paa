@@ -258,51 +258,75 @@ function loginprocess(){
     var dist=JSON.parse(getCookie("droplatlong")) ;
     var travelmod=$("#ModeofTravel").val();
     var CustID=getCookie("CustID")
+    var totalAmt= $("#totalAmt").text();
+    var totalDistance= $("#totalDistance").val();
     var timere;
-    console.log('CustID',CustID);
     /////Search Driver list/////
-    $.post('/india/nearby',{
+    $.post('/india/nearbyRideBooking',{
       lat:origin.lat,
       lng:origin.lng,
       travelmod:travelmod
      },function(data){
       console.log(data);
-      if(data.length > 0){
-        $("#booking-process").css({"display":"block"});
-        $("#footer-prebooking").css({"display":"none"});
-        /////Call to Driver///
-        var count=0; 
-        $.post('/india/CallDriver',{pilotID:data[count].pilotID,CustID:CustID,pickuoAddress:originAds},function(result){
-          console.log(result);
-        }); 
-        count++; 
+      if(data.drivers.length > 0){
+        ////////Create New Ride Booking///////
+        $.post('/india/newRideBooking',{
+          bookingID:data.bookingID,
+          originAds:originAds,
+          distAds:distAds,
+          originLat:origin.lat,
+          originLng:origin.lng,
+          distLat:dist.lat,
+          distLng:dist.lng,
+          travelmod:travelmod,
+          CustID:CustID,
+          totalAmt:totalAmt,
+          totalDistance:totalDistance
+        },function(booking){
+          console.log(booking);
+          $("#booking-process").css({"display":"block"});
+          $("#footer-prebooking").css({"display":"none"});
+          $("#traval-mod").css({"display":"none"});
 
-        ///Check Socket For Driver Accepttance////
-        var socket = io('//'+document.location.hostname+':'+document.location.port);
-        socket.on('DriverAccepeCall', function (data) {
-          if(CustID==data.CustID){
-            clearInterval(timere);
-            //////Log Call Booling ////////
-          }
-        });            
-        
-        timere=setInterval(function(){ 
-          if(count<data.length){
-          $.post('/india/CallDriver',{pilotID:data[count].pilotID,CustID:CustID,pickuoAddress:originAds},function(result){
+          /////Call to Driver///
+          var count=0; 
+          $.post('/india/CallDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID},function(result){
             console.log(result);
-          });
+          }); 
           count++;
-        }else{
-          clearInterval(timere);
-          ////////feedbace to customer/////
-          console.log("Driver Busy")
-        }
-        },15000);
+          timere=setInterval(function(){ 
+            if(count<data.drivers.length){
+            $.post('/india/CallDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID},function(result){
+              console.log(result);
+            });
+            count++;
+          }else{
+            clearInterval(timere);
+            ////////feedbace to customer/////
+            console.log("Driver Busy")
+          }
+          },15000);
+  
+            ///Check Socket For Driver Accepttance////
+            var socket = io('//'+document.location.hostname+':'+document.location.port);
+            socket.on('DriverAccepeCall', function (data) {
+              if(CustID==data.CustID){
+                clearInterval(timere);
+                //////Log Call Booling ////////
+                console.log("Call accept by :",data.pilotID)
+                window.location='../india/ride'
+              }
+            }); 
+
+        });      
+
       }else{
         $("#bookingMsg").html('<p class="text-center">Driver Not Avaible </p>')
       }
 
      });
+
+      
 
    } 
 

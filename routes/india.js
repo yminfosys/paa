@@ -181,6 +181,10 @@ router.post('/nearby', function(req, res, next) {
 
 });
 
+  
+
+
+
 /////For Neareast One Calculation //////
 router.post('/nearbytime', function(req, res, next) {
   console.log('myposition',req.body)
@@ -285,19 +289,82 @@ router.post('/getprice', function(req, res, next) {
 
 });
 
+/////For Neareast RideBooking//////
+router.post('/nearbyRideBooking', function(req, res, next) {    
+  database.index2Dpilot({},function(ss){
+    database.pilot.find({
+          location: {
+            $near: {
+              $geometry: {
+                 type: "Point" ,
+                 coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
+              },$maxDistance : 4000
+            }
+          },duty:'online',travelmod:req.body.travelmod
+        },function(e,data){
+        database.rideCounter.findOne({},function(e, d){
+          if(d){
+            var newId=Number(d.bookingID)+1;
+            database.rideCounter.findOneAndUpdate({bookingID:d.bookingID},{$set:{bookingID:newId}},function(e, dd){
+              res.send({drivers:data,bookingID:newId}); 
+            })
+          }else{
+            database.rideCounter({bookingID:1}).save(function(er){
+              res.send({drivers:data,bookingID:1});
+            });
+          }
+        });
+          
+        })
+  });
+
+});
 
 ////////Call Driver Requiest notification/////
 router.post('/CallDriver', function(req, res, next) {  
-res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress});
+res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
 res.send('ReqEmited');
 });
 ////////Call Driver accept notification/////
 router.post('/AcceptCallByDriver', function(req, res, next) {  
-  res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress});
-  res.send('ReqEmited');
+  res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
+  res.send('DriverAccepeEmited');
   });
 
+////////Create New Ride Booking/////
+router.post('/newRideBooking', function(req, res, next) {  
+console.log(req.body)
+  database.ride({
+    bookingID:req.body.bookingID,   
+    CustID:req.body.CustID,
+    picupaddress:req.body.originAds,
+    picuklatlng: [req.body.originLat, req.body.originLng],    
+    dropaddress:req.body.distAds,     
+    droplatlng:[req.body.distLat, req.body.distLng],        
+    kmtravels:req.body.totalDistance,
+    totalamount:req.body.totalAmt,
+    discount:"",
+    driverpayout:"",
+    driverIncentiv:"",
+    callbookingStatus:"waiting"
+  }).save(function(err){
+    
+    res.send("new Booking Created");
+  });
+  });  
 
+
+  /////Listin Cust Ride Conform//////
+    
+    router.get('/ride', function(req, res, next) {
+      if(req.cookies.CustID){       
+        res.render('india/inCustRideConfrm',{YOUR_API_KEY:process.env.API_KEY})
+      }else{
+        res.redirect('/india/login')
+      }
+      
+    });
+  
 ///////////////////////////////////////
 ///* END CUSTOMER LISTING. *///////////
 ///////////////////////////////////////
@@ -560,6 +627,7 @@ router.post('/drv/completeReg', function(req, res, next) {
       }
    });
   });
+  
   
  
    

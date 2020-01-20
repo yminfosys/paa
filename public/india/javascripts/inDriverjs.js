@@ -161,9 +161,10 @@ function loginprocess(){
             $("#ringtone").css({"display":"none"});
             var inCommingCallDetails=JSON.parse(getCookie("inCommingCallDetails")) ;
              console.log(inCommingCallDetails);
-            // $.post('/india/AcceptCallByDriver',{},function(dara){
-            // console.log(dara)
-            // });
+            $.post('/india/AcceptCallByDriver',inCommingCallDetails,function(dara){
+            console.log(dara);
+           
+            });
         } 
   
 

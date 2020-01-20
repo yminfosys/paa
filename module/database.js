@@ -133,9 +133,9 @@ var rideSchema = new mongoose.Schema({
   pilotID :String,
   CustID:String,
   picupaddress:String,
-  picuklatlng: String,    
+  picuklatlng: [],    
   dropaddress:String,     
-  droplatlng:String,
+  droplatlng:[],
   date: { type: Date, default: Date.now },
   startTime:String,   
   endTime:String,
@@ -144,15 +144,23 @@ var rideSchema = new mongoose.Schema({
   discount:String,
   driverpayout:String,
   driverIncentiv:String,
-  callbookingStatus:String,
-
-
-  
+  callbookingStatus:String  
 });
 
-rideSchema.plugin(autoIncrement.plugin, { model: 'ridecollections', field: 'bookingID',startAt: 1000, incrementBy: 1 });
+//rideSchema.plugin(autoIncrement.plugin, { model: 'ridecollections', field: 'bookingID',startAt: 1000, incrementBy: 1 });
 
 var ridemodul = mongoose.model('ridecollections', rideSchema);
+
+///Ride book Schema Counter
+var rideCountSchema = new mongoose.Schema({ 
+  bookingID:  String,   
+});
+
+//rideSchema.plugin(autoIncrement.plugin, { model: 'ridecollections', field: 'bookingID',startAt: 1000, incrementBy: 1 });
+
+var rideCountmodul = mongoose.model('rideCountcollections', rideCountSchema);
+
+
 
 ///Price and Offer Mnager
 var priceandOfferSchema = new mongoose.Schema({ 
@@ -252,4 +260,5 @@ module.exports.pilot=pilotmodul;
 module.exports.index2Dpilot=index2Dpilot;
 module.exports.index2Dcust=index2Dcust;
 module.exports.ride=ridemodul;
+module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;

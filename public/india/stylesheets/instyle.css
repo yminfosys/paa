@@ -101,7 +101,9 @@
 .modeContentprice{width: 100%; height: 15px; margin-top: 2px; text-align:center; font-size:small; display: none;}
 
 #footer-prebooking{display: none;}
-#booking-process{display: none;}
+#booking-process{ margin-top: 10%;
+  display: none;
+}
 
 /* END main Customer Operatio */
 
