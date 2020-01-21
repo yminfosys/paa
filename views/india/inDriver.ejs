@@ -30,13 +30,13 @@
     <body>
          <!-- For Pickup Drop Content -->
          <div id="pickDrop-Content">
-            <div style="height: 8vh; background-color: #FFF; border-bottom: 1px solid #000;" class="row">
+            <div  class="row pickDrop-head">
                 <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">                  
                     <div class="driver-details">
-                        <div style="text-align:left; margin-top: 10px; font-size: 18px;" id="booking-no">Order No : 1235458</div> 
+                        <div id="booking-no" class="booking-no"></div> 
                         <div id="callSms" style="margin-top: -20px; float: right;">
-                        <a href="tel:9733241208" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>  
-                        <a href="sms:9733241208" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a> 
+                        <!-- <a href="tel:9733241208" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>  
+                        <a href="sms:9733241208" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>  -->
                         </div> 
                                            
                     </div>
@@ -54,7 +54,7 @@
                         <div  style="position: relative; float: left; width: 15%; height: 50%;">
                             <div onclick="openMap()" class="naviGation"><i class="fa fa-location-arrow" aria-hidden="true"></i></div>
                             <div style="font-size: 12px;">Navigate</div>
-                            <input id="mapVal" type="hidden" >
+                            <input id="mapVal" type="text" >
 
                         </div> 
                         

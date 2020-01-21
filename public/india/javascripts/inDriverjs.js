@@ -167,12 +167,13 @@ function loginprocess(){
             setCookie("rideBookingDetails",JSON.stringify(data),30);
             $("#ringtone").css({"display":"none"});
             $("#pickDrop-Content").css({"display":"block"});
+            $("#mapVal").val(1);
             $("#booking-no").html('Order No : '+data.ride.bookingID+'');
             $("#callSms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>\
             <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
             $("#custName").text(data.cust.name);
             $("#address").text(data.ride.picupaddress);
-            $("#mapVal").val(1);
+            
             
             
             
