@@ -157,16 +157,35 @@ function loginprocess(){
 
          //////////Driver Accept /////////
          function acceptRide(inp){
-            setCookie("ringToneControl","OFF",1);
-            $("#ringtone").css({"display":"none"});
+            
             var inCommingCallDetails=JSON.parse(getCookie("inCommingCallDetails")) ;
              console.log(inCommingCallDetails);
-            $.post('/india/AcceptCallByDriver',inCommingCallDetails,function(dara){
-            console.log(dara);
+            $.post('/india/AcceptCallByDriver',inCommingCallDetails,function(data){
+            console.log(data);
+            if(data){
+            setCookie("ringToneControl","OFF",1); 
+            setCookie("rideBookingDetails",JSON.stringify(data),30);
+            $("#ringtone").css({"display":"none"});
+            $("#pickDrop-Content").css({"display":"block"});
+            $("#booking-no").html('Order No : '+data.ride.bookingID+'');
+            $("#callSms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>\
+            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
+            $("#custName").text(data.cust.name);
+            $("#address").text(data.ride.picupaddress);
+            $("#naviGation").html('<div onclick="openMap(\''+data.ride.picuklatlng[0]+', '+data.ride.picuklatlng[1]+'\')" style="text-align: center; margin-top: 5px; font-size: 30px; float: left; background-color: aquamarine; color: darkblue; width: 100%; height: 100%; border-radius: 50%; border: 1px solid #000;"><i class="fa fa-location-arrow" aria-hidden="true"></i></div> ')
+            }           
            
             });
         } 
-  
-
+  ///////Open Google Map///////
+        function openMap(latlng){
+            if /* if we're on iOS, open in Apple Maps */
+            ((navigator.platform.indexOf("iPhone") != -1) || 
+             (navigator.platform.indexOf("iPad") != -1) || 
+             (navigator.platform.indexOf("iPod") != -1))
+            window.open("maps://maps.google.com/maps?daddr="+latlng+"&amp;ll=");
+        else /* else use Google */
+            window.open("https://maps.google.com/maps?daddr="+latlng+"&amp;ll=");
+        }
  
  

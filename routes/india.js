@@ -325,11 +325,7 @@ router.post('/CallDriver', function(req, res, next) {
 res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
 res.send('ReqEmited');
 });
-////////Call Driver accept notification/////
-router.post('/AcceptCallByDriver', function(req, res, next) {  
-  res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
-  res.send('DriverAccepeEmited');
-  });
+
 
 ////////Create New Ride Booking/////
 router.post('/newRideBooking', function(req, res, next) {  
@@ -600,11 +596,6 @@ router.post('/drv/completeReg', function(req, res, next) {
   
       });
     }
-      
-        
-
-  
-  
     res.redirect('/india/drv')
 
   });
@@ -628,7 +619,18 @@ router.post('/drv/completeReg', function(req, res, next) {
    });
   });
   
-  
+  ////////Call Driver accept notification/////
+router.post('/AcceptCallByDriver', function(req, res, next) {  
+  res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
+  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept'}},function(err, ride){
+    if(ride){
+      database.customer.findOne({CustID:req.body.CustID},function(er,cust){
+        res.send({ride:ride,cust:cust});
+      });
+    }
+  });
+ 
+  });
  
    
 

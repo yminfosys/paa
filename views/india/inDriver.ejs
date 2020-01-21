@@ -9,6 +9,7 @@
 
         <!-- Bootstrap CSS -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <link rel="stylesheet" type="text/css" href="/index/stylesheets/sidebar.css" />
         <link rel="stylesheet" type="text/css" href="/india/stylesheets/inDriverStyle.css" />
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -27,9 +28,47 @@
         
     </head>
     <body>
-        
-        <div id="ringtone">
+         <!-- For Pickup Drop Content -->
+         <div id="pickDrop-Content">
+            <div style="height: 8vh; background-color: #FFF; border-bottom: 1px solid #000;" class="row">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">                  
+                    <div class="driver-details">
+                        <div style="text-align:left; margin-top: 10px; font-size: 18px;" id="booking-no">Order No : 1235458</div> 
+                        <div id="callSms" style="margin-top: -20px; float: right;">
+                        <a href="tel:9733241208" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>  
+                        <a href="sms:9733241208" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a> 
+                        </div> 
+                                           
+                    </div>
+                    
+                </div>
+            </div> 
             
+            <div style="height: 28vh; margin-top: 72vh; background-color: #FFF; border-top: 1px solid #000;" class="row">
+                <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">                  
+                    <div class="Customer-details"> 
+                        <div style="position: relative; float: left; width: 85%; height:70px; overflow: hidden;">
+                        <div id="custName" style="text-align: left; margin-top: 5px; font-weight: bold; font-size: 16px;" id="cust-name">Name : Sukanta Sardar</div>  
+                        <div style="text-align: left; font-size: 10px; float: left;" id="address">hidyut shing-7430926652, Bongan, Ranibandh, West Bengal 713427, India</div>                                            
+                        </div> 
+                        <div id="naviGation" style="position: relative; float: left; width: 15%; height: 50%;">
+                            <!-- <div onclick="openMap()" style="text-align: center; margin-top: 5px; font-size: 30px; float: left; background-color: aquamarine; color: darkblue; width: 100%; height: 100%; border-radius: 50%; border: 1px solid #000;"><i class="fa fa-location-arrow" aria-hidden="true"></i></div>   -->
+                        </div> 
+                        
+                        <div style="position: relative; float: left; width: 100%; height: 50%;">
+                            <input type="button" value="Cline Colated" style="border:1px solid rgb(71, 7, 7) ; 
+                            color: #facb3d; padding: 5px;background-color: #1c201d; border-radius: 5px;
+                            text-align: center; width: 50%; margin-left: 25%;">
+                        </div> 
+                    </div>
+                    
+                </div>
+            </div>
+         </div>
+
+
+        <!-- For Incomming Call -->
+        <div id="ringtone">            
             <div class="container">
                 
                 <div class="row">

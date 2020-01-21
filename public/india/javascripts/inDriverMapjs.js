@@ -111,10 +111,10 @@ function initMap() {
       this.play();
       }, false);        
       myAudio.play();
-      window.navigator.vibrate([100,30,100,30,100,30,200,30,200,30,200,30,100,30,100,30,100]);
+      window.navigator.vibrate(200);
     }else{
       myAudio.pause();
-      window.navigator.vibrate();
+      //window.navigator.vibrate();
     }
   }    
  
