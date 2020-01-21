@@ -172,7 +172,7 @@ function loginprocess(){
             <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
             $("#custName").text(data.cust.name);
             $("#address").text(data.ride.picupaddress);
-            $("#naviGation").html('<div onclick="openMap(\''+data.ride.picuklatlng[0]+', '+data.ride.picuklatlng[1]+'\')"  class="naviGation"><i class="fa fa-location-arrow" aria-hidden="true"></i></div><div style="font-size: 12px;">Navigate</div>');
+            $("#naviGation").html('<div onclick="openMap()" class="naviGation"><i class="fa fa-location-arrow" aria-hidden="true"></i></div>');
             
             
             
@@ -181,14 +181,15 @@ function loginprocess(){
             });
         } 
   ///////Open Google Map///////
-        function openMap(latlng){
+        function openMap(){
+            var data=JSON.parse(getCookie("rideBookingDetails")) ;
             if /* if we're on iOS, open in Apple Maps */
             ((navigator.platform.indexOf("iPhone") != -1) || 
              (navigator.platform.indexOf("iPad") != -1) || 
              (navigator.platform.indexOf("iPod") != -1))
-            window.open("maps://maps.google.com/maps?daddr="+latlng+"&amp;ll=");
+            window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[0]+" &amp;ll=");
         else /* else use Google */
-            window.open("https://maps.google.com/maps?daddr="+latlng+"&amp;ll=");
+            window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[0]+"&amp;ll=");
         }
  
  
