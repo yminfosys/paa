@@ -79,7 +79,7 @@
   width: 100%;  
   z-index: 55;
   
-  display:none;
+  /* display:none; */
 }
 .call{width: 60px; height: 40px;
    border:1px solid rgb(71, 7, 7) ; 
