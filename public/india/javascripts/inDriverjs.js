@@ -172,7 +172,10 @@ function loginprocess(){
             <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
             $("#custName").text(data.cust.name);
             $("#address").text(data.ride.picupaddress);
-            $("#naviGation").html('<div onclick="openMap(\''+data.ride.picuklatlng[0]+', '+data.ride.picuklatlng[1]+'\')" style="text-align: center; margin-top: 5px; font-size: 30px; float: left; background-color: aquamarine; color: darkblue; width: 100%; height: 100%; border-radius: 50%; border: 1px solid #000;"><i class="fa fa-location-arrow" aria-hidden="true"></i></div> ')
+            $("#naviGation").html('<div onclick="openMap(\''+data.ride.picuklatlng[0]+', '+data.ride.picuklatlng[1]+'\')"  class="naviGation"><i class="fa fa-location-arrow" aria-hidden="true"></i></div><div style="font-size: 12px;">Navigate</div>');
+            
+            
+            
             }           
            
             });
