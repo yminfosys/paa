@@ -172,7 +172,7 @@ function loginprocess(){
             <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
             $("#custName").text(data.cust.name);
             $("#address").text(data.ride.picupaddress);
-            $("#naviGation").html('<div onclick="openMap()" class="naviGation"><i class="fa fa-location-arrow" aria-hidden="true"></i></div>');
+            $("#mapVal").val(1);
             
             
             
@@ -183,13 +183,29 @@ function loginprocess(){
   ///////Open Google Map///////
         function openMap(){
             var data=JSON.parse(getCookie("rideBookingDetails")) ;
-            if /* if we're on iOS, open in Apple Maps */
-            ((navigator.platform.indexOf("iPhone") != -1) || 
-             (navigator.platform.indexOf("iPad") != -1) || 
-             (navigator.platform.indexOf("iPod") != -1))
-            window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[0]+" &amp;ll=");
-        else /* else use Google */
-            window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[0]+"&amp;ll=");
+            if($("#mapVal").val()=='1'){
+                if /* if we're on iOS, open in Apple Maps */
+                ((navigator.platform.indexOf("iPhone") != -1) || 
+                 (navigator.platform.indexOf("iPad") != -1) || 
+                 (navigator.platform.indexOf("iPod") != -1)){
+                    window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+" &amp;ll=");
+                 }else{
+                    window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+"&amp;ll=");
+                 } /* else use Google */
+            }else{
+                if($("#mapVal").val()=='2'){
+                alert("drop")
+            //     if /* if we're on iOS, open in Apple Maps */
+            // ((navigator.platform.indexOf("iPhone") != -1) || 
+            //  (navigator.platform.indexOf("iPad") != -1) || 
+            //  (navigator.platform.indexOf("iPod") != -1)){
+            //     window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+" &amp;ll=");
+            //  }else{
+            //     window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+"&amp;ll=");
+            //  } /* else use Google */
+            }
         }
+            
+            }
  
  
