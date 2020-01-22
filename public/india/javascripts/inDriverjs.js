@@ -167,7 +167,7 @@ function loginprocess(){
             setCookie("rideBookingDetails",JSON.stringify(data),30);
             $("#ringtone").css({"display":"none"});
             $("#pickDrop-Content").css({"display":"block"});
-
+alert(data.cust.isdCode+data.cust.mobileNumber)
             $("#pickDrop-Content").html('<div class="pickdropHead">\
             <div class="container">\
                 <div class="row pickdropHeadContainer">\
@@ -179,8 +179,8 @@ function loginprocess(){
                          <div class="col-xs-8 col-sm-8 ">\
                              <p class="text-center"><span class="label label-success ">CRN : '+data.ride.bookingID+'</span></p></div>\
                          <div class="col-xs-3 col-sm-3 ">\
-                            <a href="tel:'+data.cust.isdCode+''+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-                            <a href="sms:'+data.cust.isdCode+''+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
+                            <a href="tel:999"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+                            <a href="sms:333"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
                             </div>\
                        </div>\
                     </div>\
