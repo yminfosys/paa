@@ -123,6 +123,7 @@ router.post('/custReg', function(req, res, next) {
       email :req.body.email,    
       password: hash,    
       mobileNumber:req.body.mobile,
+      custRating:'0',
       isdCode:'+91',
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
       //location:{type:'Point',coordinates:[1.00001, 1.0001]}
@@ -488,6 +489,7 @@ router.post('/drv/driverReg', function(req, res, next) {
       password: hash,    
       mobileNumber:req.body.mobile,
       isdCode:'+91',
+      pilotRating:'0',
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
       //location:{type:'Point',coordinates:[1.00001, 1.0001]}
     }).save(function(err){
@@ -602,7 +604,8 @@ router.post('/drv/completeReg', function(req, res, next) {
     if(req.body.travelmod){
       database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
         travelmod:req.body.travelmod,
-        rtoRegno:req.body.RtoNo
+        rtoRegno:req.body.RtoNo,
+        carModel:req.body.carModel
       }},function(e,d){
   
       });

@@ -44,17 +44,17 @@ function initMap() {
             $("#footer").html('<div id="driver-content">\
              <div class="row">\
              <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">\
-                <img class="drive-img img-circle" src="/india/images/tm1.png">\
+                <img class="drive-img img-circle" src="/india/'+data.driver.photo+'">\
                     <div class="driver-details">\
-                        <p>Sukanta Sardar</p>\
-                            <p>Rating: 4.5 <i class="fa fa-star" aria-hidden="true"></i></p>\
+                        <p>'+data.driver.name+'</p>\
+                            <p>Rating: '+data.driver.pilotRating+' <i class="fa fa-star" aria-hidden="true"></i></p>\
                             <p class="otp">OTP: '+RideDetails.RideOTP+'</p>\
                     </div>\
                     <div class="car-details">\
-                        <p class="text-center">WB96G77581</p>\
-                        <p style="font-size: smaller;" class="text-center">Honda Shin SP</p>\
-                        <a href="tel:9733241208" class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>\
-                        <a href="sms:9733241208" class="btn btn-success"><i class="fa fa-comments" aria-hidden="true"></i></a>\
+                        <p class="text-center">'+data.driver.rtoRegno+'</p>\
+                        <p style="font-size: smaller;" class="text-center">'+data.driver.carModel+'</p>\
+                        <a href="tel:'+data.driver.mobileNumber+'" class="btn btn-success"><i class="fa fa-phone" aria-hidden="true"></i></a>\
+                        <a href="sms:'+data.driver.mobileNumber+'" class="btn btn-success"><i class="fa fa-comments" aria-hidden="true"></i></a>\
                     </div>\
                 </div>\
             </div>\
@@ -72,7 +72,7 @@ function initMap() {
             </div>\
                 <div class="row">\
                     <div  class=" mystyl col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">\
-                        <div id="drop" > Going To :BAnachity Durgaput</div>\
+                        <div id="drop" > Going To :'+data.ride.picupaddress+'</div>\
                     </div>\
                 </div> \
                 <div class="row">\

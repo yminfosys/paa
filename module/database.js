@@ -58,9 +58,9 @@ var custSchema = new mongoose.Schema({
     postcode:String,
     password: String,    
     mobileNumber:String, 
-    isdCode:String,
-       
-    CustID:String,   
+    isdCode:String,       
+    CustID:String,
+    custRating:String,   
     userType:String,
     location: {
       type: {
@@ -92,12 +92,14 @@ var pilotSchema = new mongoose.Schema({
   mobileNumber:String,
   isdCode:String,    
   pilotID:String,
+  pilotRating:String,
   accountStatus:String,
   completereg:String,   
   userType:String,
   typeOfWork:[],
   travelmod:String,
   rtoRegno:String,
+  carModel:String,
   duty:String, 
   bankAccountNo:String,
   ifsc:String,
