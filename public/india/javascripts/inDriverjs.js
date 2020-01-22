@@ -186,7 +186,24 @@ function loginprocess(){
                     </div>\
                 </div>\
             </div>\
-        </div>');
+        </div>\
+        <div class="pickdropfooter">\
+                <div class="container">\
+                    <div class="row pickupfootrer">\
+                        <div class="col-xs-9 col-sm-9">\
+                                <p>Pick up: <br> <strong>Masud Rana</strong> <br> Durgapur Benachidfh kolkta kjhf gggnd imdia 17</p>\
+                        </div>\
+                        <div class="col-xs-3 col-sm-3">\
+                            <button onclick="openMap(1)" type="button" class="btn btn-primary mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+                        </div>\
+                    </div>\
+                    <div class="row pickupfootrer">\
+                        <div class="col-xs-6 col-sm-6 col-xs-offset-3 col-sm-offset-3">\
+                           <input class="pickupfootrerbtn" type="button" value="Cline Located">\
+                        </div>\
+                    </div>\
+                </div>\
+            </div>');
 
 
            
@@ -205,9 +222,9 @@ function loginprocess(){
             });
         } 
   ///////Open Google Map///////
-        function openMap(){
+        function openMap(a){
             var data=JSON.parse(getCookie("rideBookingDetails")) ;
-            if($("#mapVal").val()=='1'){
+            if(a==1){
                 if /* if we're on iOS, open in Apple Maps */
                 ((navigator.platform.indexOf("iPhone") != -1) || 
                  (navigator.platform.indexOf("iPad") != -1) || 
@@ -217,7 +234,7 @@ function loginprocess(){
                     window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+"&amp;ll=");
                  } /* else use Google */
             }else{
-                if($("#mapVal").val()=='2'){
+                if(a==2){
                 alert("drop")
             //     if /* if we're on iOS, open in Apple Maps */
             // ((navigator.platform.indexOf("iPhone") != -1) || 
