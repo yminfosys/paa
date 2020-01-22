@@ -62,6 +62,7 @@ var custSchema = new mongoose.Schema({
     CustID:String,
     custRating:String,   
     userType:String,
+    orderStage:String,
     location: {
       type: {
         type: String, // Don't do `{ location: { type: String } }`
@@ -111,6 +112,7 @@ var pilotSchema = new mongoose.Schema({
   panNumber:String,
   gender:String,
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
+  orderStage:String,
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`

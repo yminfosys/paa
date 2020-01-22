@@ -16,11 +16,22 @@ router.use(fileUpload({
 ///////////////////////////////////////
 ///* CUSTOMER LISTING. *///////////////
 ///////////////////////////////////////
-router.get('/', function(req, res, next) {
-  console.log(req.cookies)
-  if(req.cookies.CustID){
-    res.io.emit("socketToMe", "users");
-    res.render('india/inCust',{YOUR_API_KEY:process.env.API_KEY})
+router.get('/', function(req, res, next) {  
+  if(req.cookies.CustID){ 
+    database.customer.findOne({CustID:req.cookies.CustID},function(err,data){
+      if(data){
+        //////Check Any Incomplete Order//////
+        if(data.orderStage=='accept'){
+          res.redirect('/india/ride')
+        }else{
+          res.render('india/inCust',{YOUR_API_KEY:process.env.API_KEY,error:'',cust:data})
+        }
+
+      }else{
+        res.render('india/inCust',{YOUR_API_KEY:process.env.API_KEY,error:'cookes'})
+      }
+    });   
+    
   }else{
     res.redirect('/india/login')
   }
@@ -394,9 +405,8 @@ router.get('/drv', function(req, res, next) {
   if(req.cookies.pilotID){
     database.pilot.findOne({completereg:'done',pilotID:req.cookies.pilotID},function(err,data){
       console.log(req.cookies.pilotID)
-      if(data){
-
-        res.render('india/inDriver',{YOUR_API_KEY:process.env.API_KEY});
+      if(data){          
+        res.render('india/inDriver',{YOUR_API_KEY:process.env.API_KEY,driver:data});
       }else{
         database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,driver){
           res.render('india/inDriverReg',{YOUR_API_KEY:process.env.API_KEY,driver:driver});
@@ -657,8 +667,11 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept'}},function(err, ride){
     if(ride){
-      database.customer.findOne({CustID:req.body.CustID},function(er,cust){
-        res.send({ride:ride,cust:cust,RideOTP:OTP});
+      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept'}},function(er,cust){
+        database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{duty:'offline',orderStage:'accept'}},function(re, ou){
+          res.send({ride:ride,cust:cust,RideOTP:OTP});
+        });
+       
       });
     }
   });
