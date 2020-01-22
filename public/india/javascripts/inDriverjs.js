@@ -167,12 +167,19 @@ function loginprocess(){
             setCookie("rideBookingDetails",JSON.stringify(data),30);
             $("#ringtone").css({"display":"none"});
             $("#pickDrop-Content").css({"display":"block"});
-            $("#mapVal").val(1);
-            $("#booking-no").html('Order No : '+data.ride.bookingID+'');
-            $("#callSms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>\
-            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
-            $("#custName").text(data.cust.name);
-            $("#address").text(data.ride.picupaddress);
+
+            $("#pickDrop-Content").html(' <div class="row"><div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">\
+            ok jdsfjkdbfkj jhdjgdj hjsghjgejsg\
+        </div></div>');
+
+
+           
+            // $("#mapVal").val(1);
+            // $("#booking-no").html('Order No : '+data.ride.bookingID+'');
+            // $("#callSms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>\
+            // <a href="" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
+            // $("#custName").text(data.cust.name);
+            // $("#address").text(data.ride.picupaddress);
             
             
             
