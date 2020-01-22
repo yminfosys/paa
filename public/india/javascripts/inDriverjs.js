@@ -179,8 +179,8 @@ function loginprocess(){
                          <div class="col-xs-8 col-sm-8 ">\
                              <p class="text-center"><span class="label label-success ">CRN : '+data.ride.bookingID+'</span></p></div>\
                          <div class="col-xs-3 col-sm-3 ">\
-                            <a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-                            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
+                            <a href="tel:'+data.cust.isdCode+''+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+                            <a href="sms:'+data.cust.isdCode+''+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
                             </div>\
                        </div>\
                     </div>\
