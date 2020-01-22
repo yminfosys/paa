@@ -174,13 +174,13 @@ function loginprocess(){
                     <div class="col-xs-12  col-sm-12 ">\
                        <div class="row">\
                          <div class="col-xs-1 col-sm-1 ">\
-                            <a href="tel:100"><button type="button" class="btn btn-primary btn-xs">sos</button></a>\
+                            <a href="tel:100"><button type="button" class="btn btn-danger btn-xs">sos</button></a>\
              </div>\
                          <div class="col-xs-8 col-sm-8 ">\
-                             <p class="text-center"><span class="label label-success ">CRN : 58755752</span></p></div>\
+                             <p class="text-center"><span class="label label-success ">CRN : '+data.ride.bookingID+'</span></p></div>\
                          <div class="col-xs-3 col-sm-3 ">\
-                            <a href="tel:97658"><button type="button" class="btn btn-primary btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-                            <a href="sms:5858"><button type="button" class="btn btn-primary btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
+                            <a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+                            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
                             </div>\
                        </div>\
                     </div>\
@@ -191,10 +191,10 @@ function loginprocess(){
                 <div class="container">\
                     <div class="row pickupfootrer">\
                         <div class="col-xs-9 col-sm-9">\
-                                <p>Pick up: <br> <strong>Masud Rana</strong> <br> Durgapur Benachidfh kolkta kjhf gggnd imdia 17</p>\
+                                <p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>\
                         </div>\
                         <div class="col-xs-3 col-sm-3">\
-                            <button onclick="openMap(1)" type="button" class="btn btn-primary mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+                            <button onclick="openMap(1)" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
                         </div>\
                     </div>\
                     <div class="row pickupfootrer">\

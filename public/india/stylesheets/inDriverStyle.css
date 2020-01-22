@@ -84,7 +84,7 @@
 .pickdropHead{height: 8vh; background-color: #FFF; border-bottom: 1px solid #000;}
 .pickdropHeadContainer{margin-top: 10px;}
 .pickdropfooter{height: 28vh; margin-top: 72vh; background-color: #FFF; border-top: 1px solid #000;}
-.pickupfootrer{height: 70px; font-size: 12px; overflow: hidden; }
+.pickupfootrer{height: 70px; font-size: 14px; overflow: hidden; }
 .pickupfootrerbtn{border:1px solid rgb(71, 7, 7) ; 
   color: #facb3d; padding: 5px;background-color: #1c201d; border-radius: 5px;
   text-align: center; width:100%;}
