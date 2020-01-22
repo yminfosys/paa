@@ -81,36 +81,8 @@
   
   display:none;
 }
-.pickDrop-head{
-  height: 8vh; background-color: #FFF; border-bottom: 1px solid #000;
-}
-.booking-no{text-align:left; margin-top: 10px; font-size: 18px;}
-
-.call{width: 60px; height: 40px;
-   border:1px solid rgb(71, 7, 7) ; 
-   color: #facb3d;
-   padding: 5px;
-   background-color: #1c201d;
-   border-radius: 5px;
-   text-decoration: none;
-  
-  } 
-
- .naviGation{
-  width: 100%;
-  height: 100%;
-  border:1px solid rgb(214, 193, 76) ; 
-  color: #3dedfa;
-  padding: 5px;
-  background-color: #1c201d;
-  border-radius: 50%;
-  text-align: center;
-  font-size: 25px;
-  margin-top: 5px;
-  cursor: pointer;
-  
- } 
-
+.pickdropHead{height: 8vh; background-color: #FFF; border-bottom: 1px solid #000;}
+.pickdropHeadContainer{margin-top: 10px;}
 .myCanvascircle{margin-left: -15%;}
 .picupaddress{width: 100%; height: 150px; overflow: hidden;}
 .picupaddress p{ text-align: center; font-size: 15px; color: #cce9d7; font-style: italic;}

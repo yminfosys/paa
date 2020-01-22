@@ -168,16 +168,25 @@ function loginprocess(){
             $("#ringtone").css({"display":"none"});
             $("#pickDrop-Content").css({"display":"block"});
 
-            $("#pickDrop-Content").html('<div  class="row pickDrop-head">\
-            <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">\
-            <div class="driver-details">\
-                 <div id="booking-no" class="booking-no"></div>\
-                 <div id="callSms" style="margin-top: -20px; float: right;">\
-                 <div class="call">\
-                 <a href="tel:9733241208" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>\
-                 <a href="sms:9733241208" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>\
-                 </div>\
-                 </div></div>');
+            $("#pickDrop-Content").html('<div class="pickdropHead">\
+            <div class="container">\
+                <div class="row pickdropHeadContainer">\
+                    <div class="col-xs-12  col-sm-12 ">\
+                       <div class="row">\
+                         <div class="col-xs-1 col-sm-1 ">\
+                            <a href="tel:100"><button type="button" class="btn btn-primary btn-xs">sos</button></a>\
+             </div>\
+                         <div class="col-xs-8 col-sm-8 ">\
+                             <p class="text-center"><span class="label label-success ">CRN : 58755752</span></p></div>\
+                         <div class="col-xs-3 col-sm-3 ">\
+                            <a href="tel:97658"><button type="button" class="btn btn-primary btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+                            <a href="sms:5858"><button type="button" class="btn btn-primary btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
+                            </div>\
+                       </div>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>');
 
 
            
