@@ -168,9 +168,16 @@ function loginprocess(){
             $("#ringtone").css({"display":"none"});
             $("#pickDrop-Content").css({"display":"block"});
 
-            $("#pickDrop-Content").html(' <div class="row"><div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">\
-            ok jdsfjkdbfkj jhdjgdj hjsghjgejsg\
-        </div></div>');
+            $("#pickDrop-Content").html('<div  class="row pickDrop-head">\
+            <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">\
+            <div class="driver-details">\
+                 <div id="booking-no" class="booking-no"></div>\
+                 <div id="callSms" style="margin-top: -20px; float: right;">\
+                 <div class="call">\
+                 <a href="tel:9733241208" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>\
+                 <a href="sms:9733241208" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>\
+                 </div>\
+                 </div></div>');
 
 
            
