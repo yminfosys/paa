@@ -166,7 +166,7 @@ function loginprocess(){
             setCookie("ringToneControl","OFF",1); 
             setCookie("rideBookingDetails",JSON.stringify(data),30);
             $("#ringtone").css({"display":"none"});
-            alert(JSON.stringify(data))
+            //alert(JSON.stringify(data))
             $("#pickDrop-Content").css({"display":"block"});
             $("#pickDrop-Content").html('<div class="pickdropHead">\
             <div class="container">\
@@ -177,10 +177,10 @@ function loginprocess(){
                             <a href="tel:100"><button type="button" class="btn btn-danger btn-xs">sos</button></a>\
              </div>\
                          <div class="col-xs-8 col-sm-8 ">\
-                             <p class="text-center"><span class="label label-success ">CRN : 56556</span></p></div>\
+                             <p class="text-center"><span class="label label-success ">CRN : '+data.ride.bookingID+'</span></p></div>\
                          <div class="col-xs-3 col-sm-3 ">\
-                            <a href="tel:999"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-                            <a href="sms:333"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
+                            <a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+                            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
                             </div>\
                        </div>\
                     </div>\
@@ -191,7 +191,7 @@ function loginprocess(){
                 <div class="container">\
                     <div class="row pickupfootrer">\
                         <div class="col-xs-9 col-sm-9">\
-                                <p>Pick up: <br> <strong>dudmfjt</strong> <br>durga</p>\
+                                <p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>\
                         </div>\
                         <div class="col-xs-3 col-sm-3">\
                             <button onclick="openMap(1)" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
