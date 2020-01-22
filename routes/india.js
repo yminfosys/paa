@@ -349,21 +349,41 @@ console.log(req.body)
   });
   });  
 
+///////////////////////////////////////
+///* END CUSTOMER LISTING. *///////////
+///////////////////////////////////////
 
-  /////Listin Cust Ride Conform//////
-    
+///////////////////////////////////////
+///* RIDE PAGE LISTING. *///////////
+///////////////////////////////////////
+
+
+  /////Listin Cust Ride Conform//////    
     router.get('/ride', function(req, res, next) {
-      if(req.cookies.CustID){       
+      if(req.cookies.CustID){ 
+        console.log(req.cookies)      
         res.render('india/inCustRideConfrm',{YOUR_API_KEY:process.env.API_KEY})
       }else{
         res.redirect('/india/login')
       }
       
     });
+
   
+////////Call Driver Requiest notification/////
+router.post('/rideDriverBookingDetails', function(req, res, next) {
+  database.pilot.findOne({pilotID:req.body.pilotID},function(err,driver){
+    database.ride.findOne({bookingID:req.body.bookingID},function(err,ride){
+      res.send({driver:driver,ride:ride});
+    });  
+  }); 
+ 
+});
+    
+  ///////////////////////////////////////
+///* END RIDE PAGE LISTING. *///////////
 ///////////////////////////////////////
-///* END CUSTOMER LISTING. *///////////
-///////////////////////////////////////
+
 
 ///////////////////////////////////////
 ///* DRIVER LISTING. *///////////////
@@ -618,14 +638,24 @@ router.post('/drv/completeReg', function(req, res, next) {
       }
    });
   });
-  
+
+  ////Randanm OTP/////////
+function randamNumber(){
+  var tex="";
+  for(var i=0; i < 4; i++){
+      tex+=''+Math.floor(Math.random() * 10)+'';    
+  }
+  return tex;
+
+}
   ////////Call Driver accept notification/////
-router.post('/AcceptCallByDriver', function(req, res, next) {  
-  res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
+router.post('/AcceptCallByDriver', function(req, res, next) { 
+  var OTP=randamNumber(); 
+  res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept'}},function(err, ride){
     if(ride){
       database.customer.findOne({CustID:req.body.CustID},function(er,cust){
-        res.send({ride:ride,cust:cust});
+        res.send({ride:ride,cust:cust,RideOTP:OTP});
       });
     }
   });

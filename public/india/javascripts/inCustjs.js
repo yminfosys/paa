@@ -287,7 +287,6 @@ function loginprocess(){
           $("#booking-process").css({"display":"block"});
           $("#footer-prebooking").css({"display":"none"});
           $("#traval-mod").css({"display":"none"});
-
           /////Call to Driver///
           var count=0; 
           $.post('/india/CallDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID},function(result){
@@ -304,6 +303,8 @@ function loginprocess(){
             clearInterval(timere);
             ////////feedbace to customer/////
             console.log("Driver Busy")
+            alert("All Drivers Are Busy with other Cline Please try again");
+            window.location='/india/'
           }
           },15000);
   
@@ -313,15 +314,17 @@ function loginprocess(){
               if(CustID==data.CustID){
                 clearInterval(timere);
                 //////Log Call Booling ////////
-                console.log("Call accept by :",data.pilotID)
-                window.location='../india/ride'
+                console.log("Call accept by :",JSON.stringify(data))
+                setCookie("RideDetails",JSON.stringify(data),30);
+               
+               window.location='../india/ride'
               }
             }); 
 
         });      
 
       }else{
-        $("#bookingMsg").html('<p class="text-center">Driver Not Avaible </p>')
+        $("#bookingMsg").html('<p class="text-center">Driver Not Avaible </p><a  href="/india/" class="btn btn-primary btn-xs">Back</a>')
       }
 
      });

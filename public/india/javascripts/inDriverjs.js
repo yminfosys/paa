@@ -151,13 +151,18 @@ function loginprocess(){
         circlebar();
         $("#ringtone").css({"display":"block"});
         $("#pickupFrom").text(data.pickuoAddress);
-        
+        //////Run Timer for 15sec///////
+         setTimeout(function(){
+         $("#ringtone").css({"display":"none"});
+         $("#pickupFrom").text('');
+         setCookie("ringToneControl","OFF",1);
+         setCookie("inCommingCallDetails"," ",1);
+         },14*1000);
         }
         });
 
          //////////Driver Accept /////////
-         function acceptRide(inp){
-            
+         function acceptRide(inp){            
             var inCommingCallDetails=JSON.parse(getCookie("inCommingCallDetails")) ;
              console.log(inCommingCallDetails);
             $.post('/india/AcceptCallByDriver',inCommingCallDetails,function(data){
@@ -204,19 +209,6 @@ function loginprocess(){
                     </div>\
                 </div>\
             </div>');
-
-
-           
-            // $("#mapVal").val(1);
-            // $("#booking-no").html('Order No : '+data.ride.bookingID+'');
-            // $("#callSms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'" class="call"><i class="fa fa-phone" aria-hidden="true"></i></a>\
-            // <a href="" class="call"><i class="fa fa-comments" aria-hidden="true"></i></a>');
-            // $("#custName").text(data.cust.name);
-            // $("#address").text(data.ride.picupaddress);
-            
-            
-            
-            
             }           
            
             });
