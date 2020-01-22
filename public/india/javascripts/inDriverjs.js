@@ -167,6 +167,7 @@ function loginprocess(){
             setCookie("rideBookingDetails",JSON.stringify(data),30);
             $("#ringtone").css({"display":"none"});
             $("#pickDrop-Content").css({"display":"block"});
+            
 
             $("#pickDrop-Content").html('<div class="pickdropHead">\
             <div class="container">\
