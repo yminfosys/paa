@@ -513,7 +513,7 @@ router.post('/drv/driverReg', function(req, res, next) {
 
    ///////Continue Registration process////////
 router.post('/drv/completeReg', function(req, res, next) {
-     
+     console.log(req.body);
   ////upload files  ///////
      var photo = req.files.file1; 
      if(photo.size >0){         
