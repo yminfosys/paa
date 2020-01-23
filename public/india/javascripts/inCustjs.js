@@ -319,7 +319,13 @@ function loginprocess(){
                
                window.location='../india/ride'
               }
-            }); 
+            });
+            
+            socket.on('clinelocated', function (data) {
+              if(CustID==data.CustID){
+                alert("ok im comming")
+              }
+            });
 
         });      
 

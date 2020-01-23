@@ -106,5 +106,17 @@ function restoreFooter(){
     $("#down-arw").css({"display":"none"});
     $("#up-arw").css({"display":"block"});
 
+   
+
 }
+
+///Check Socket For Driver Accepttance////
+var socket = io('//'+document.location.hostname+':'+document.location.port);
+socket.on('clinelocated', function (data) {
+    console.log(data)
+    var CustID=getCookie("CustID");
+    if(CustID==data.CustID){
+      
+    }
+  });  
 

@@ -21,6 +21,16 @@
     background-color: #FFF;
 
    }
+   #massage-notification{
+    position: fixed;
+    height: 15vh;
+    top: 35vh;
+    width: 90%;
+    margin-left: 5%;
+    z-index: 100;
+    background-color: rgb(216, 181, 84);
+   }
+
    #driver-content{margin-top: 10px;}
    .drive-img{position: relative; border: 1px solid rgb(66, 5, 5); width: 20%;  float: left;}
    .driver-details{position: relative;  width: 40%; float: left; margin-left: 5%;}
@@ -30,3 +40,5 @@
    .mystyl{padding: 5px; position: relative; float: left;
     border: 1px solid rgb(61, 56, 56); border-radius: 5px; margin-top: 10px;
     }
+
+

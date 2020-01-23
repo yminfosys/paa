@@ -677,6 +677,13 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   });
  
   });
+ //////////Driver Cline Located //////
+ router.post('/drv/clinelocated', function(req, res, next) {
+ res.io.emit("clinelocated",{CustID:req.body.CustID});
+ res.send("emitClinelocated")
+});
+
+  
  
    
 
