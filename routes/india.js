@@ -20,8 +20,9 @@ router.get('/', function(req, res, next) {
   if(req.cookies.CustID){ 
     database.customer.findOne({CustID:req.cookies.CustID},function(err,data){
       if(data){
+        console.log(data)
         //////Check Any Incomplete Order//////
-        if(data.orderStage=='accept'){
+        if(data.orderStage=='accept'||data.orderStage=='startRide'||data.orderStage=='finishRide'){
           res.redirect('/india/ride')
         }else{
           res.render('india/inCust',{YOUR_API_KEY:process.env.API_KEY,error:'',cust:data})
@@ -372,9 +373,10 @@ console.log(req.body)
 
   /////Listin Cust Ride Conform//////    
     router.get('/ride', function(req, res, next) {
-      if(req.cookies.CustID){ 
-        console.log(req.cookies)      
-        res.render('india/inCustRideConfrm',{YOUR_API_KEY:process.env.API_KEY})
+      if(req.cookies.CustID){         
+        database.pilot.findOne({CustID:req.body.CustID},function(err,cust){     
+        res.render('india/inCustRideConfrm',{YOUR_API_KEY:process.env.API_KEY,orderStage:cust.orderStage})
+        })
       }else{
         res.redirect('/india/login')
       }
@@ -391,6 +393,17 @@ router.post('/rideDriverBookingDetails', function(req, res, next) {
   }); 
  
 });
+
+////////getDriverposition/////
+router.post('/getDriverposition', function(req, res, next) {
+  database.pilot.findOne({pilotID:req.body.pilotID},function(err,driver){
+   console.log(driver.location.coordinates);
+   res.send(driver.location.coordinates) 
+  }); 
+ 
+});
+
+
     
   ///////////////////////////////////////
 ///* END RIDE PAGE LISTING. *///////////
@@ -664,11 +677,12 @@ function randamNumber(){
   ////////Call Driver accept notification/////
 router.post('/AcceptCallByDriver', function(req, res, next) { 
   var OTP=randamNumber(); 
-  res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
+  
   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept'}},function(err, ride){
     if(ride){
       database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept'}},function(er,cust){
         database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{duty:'offline',orderStage:'accept'}},function(re, ou){
+          res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
           res.send({ride:ride,cust:cust,RideOTP:OTP});
         });
        
@@ -683,9 +697,48 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
  res.send("emitClinelocated")
 });
 
-  
- 
+//////////Driver Cline Located //////
+router.post('/drv/startRide', function(req, res, next) {
+  database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'startRide'}},function(er,cust){
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'startRide'}},function(re, ou){
+      res.io.emit("StartRide",{CustID:req.body.CustID});
+      res.send("emitStartRide") 
+    });
    
+  });
+
+  
+  });
+
+  //////////Driver Cline Located //////
+router.post('/drv/finishRide', function(req, res, next) {
+  database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'finishRide'}},function(er,cust){
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'finishRide'}},function(re, driver){
+      if(driver){
+        database
+        //// Calculate Distance Last positio driver///////
+        var finishLocation=driver.location.coordinates;
+        var travelmod=driver.travelmod;
+            googleApi.distance({
+              origins:''+Number(req.body.picuklat)+', '+Number(req.body.picuklng)+'',              
+              destinations:''+Number(finishLocation[1])+','+Number(finishLocation[0])+'',
+              apik:process.env.API_KEY,
+              travelmod:travelmod
+          },function(result){
+            console.log("Final Distance",result)
+          });
+      }
+      res.io.emit("finishRide",{CustID:req.body.CustID});
+      res.send("emitfinishRide") 
+    });
+   
+  });
+
+
+
+  
+  });
+ 
 
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////

@@ -77,8 +77,7 @@
   height: 100vh;
   top: 0vh;
   width: 100%;  
-  z-index: 55;
-  
+  z-index: 55;  
   display:none;
 }
 .pickdropHead{height: 8vh; background-color: #FFF; border-bottom: 1px solid #000;}
@@ -88,7 +87,24 @@
 .pickupfootrerbtn{border:1px solid rgb(71, 7, 7) ; 
   color: #facb3d; padding: 5px;background-color: #1c201d; border-radius: 5px;
   text-align: center; width:100%;}
-.mybtn{font-size: 25px; margin-top: 5px;}  
+ #startRide{display: none;} 
+ #finishride{display: none;} 
+.mybtn{font-size: 25px; margin-top: 5px;} 
+
+#OTP-Content{
+  position: fixed;
+  height: 20vh;
+  top: 35vh;
+  width: 100%;  
+  z-index: 100;
+  background-color: #213328; 
+  text-align: center; 
+  color: #facb3d;
+  color: #df0d0d;
+  display:none;
+}
+#OTP-Content input{ text-align: center; font-size: 25px; letter-spacing: 10px; width: 150px; color: #575757; }
+
 
 .myCanvascircle{margin-left: -15%;}
 .picupaddress{width: 100%; height: 150px; overflow: hidden;}

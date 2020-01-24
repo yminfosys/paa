@@ -130,49 +130,32 @@ function reloadBookingStage(stage){
        setCookie("ringToneControl","OFF",1);
        $("#ringtone").css({"display":"none"});           
        $("#pickDrop-Content").css({"display":"block"});
-       $("#pickDrop-Content").html('<div class="pickdropHead">\
-       <div class="container">\
-           <div class="row pickdropHeadContainer">\
-               <div class="col-xs-12  col-sm-12 ">\
-                  <div class="row">\
-                    <div class="col-xs-1 col-sm-1 ">\
-                       <a href="tel:100"><button type="button" class="btn btn-danger btn-xs">sos</button></a>\
-        </div>\
-                    <div class="col-xs-8 col-sm-8 ">\
-                        <p class="text-center"><span class="label label-success ">CRN : '+data.ride.bookingID+'</span></p></div>\
-                    <div class="col-xs-3 col-sm-3 ">\
-                       <a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-                       <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
-                       </div>\
-                  </div>\
-               </div>\
-           </div>\
-       </div>\
-   </div>\
-   <div class="pickdropfooter">\
-           <div class="container">\
-               <div class="row pickupfootrer">\
-                   <div class="col-xs-9 col-sm-9">\
-                           <p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>\
-                   </div>\
-                   <div class="col-xs-3 col-sm-3">\
-                       <button onclick="openMap(1)" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
-                   </div>\
-               </div>\
-               <div class="row pickupfootrer">\
-                   <div class="col-xs-6 col-sm-6 col-xs-offset-3 col-sm-offset-3">\
-                      <input id="clinelocatebtn"  class="pickupfootrerbtn" type="button" value="Cline Located">\
-                   </div>\
-               </div>\
-           </div>\
-       </div>'); 
-       
-
+       $("#orderNO").text(data.ride.bookingID);
+       $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+       <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
+       $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
+       $("#geoNav").val(1); 
    }else{
-       if(stage=='clinelocate'){
+       if(stage=='startRide'){
+        wachLocation();
+        $("#map").css({"display":"block"});
+        $("#offline-content").css({"display":"none"});
+         var data=JSON.parse(getCookie("rideBookingDetails"));                
+         setCookie("ringToneControl","OFF",1);
+         $("#ringtone").css({"display":"none"});           
+         $("#pickDrop-Content").css({"display":"block"});
+         $("#orderNO").text(data.ride.bookingID);
+         $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+         <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
+         $("#address").html('<p>Drop to: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.dropaddress+'</p>');
+         $("#geoNav").val(2); 
+         $("#startRide").css({"display":"none"});
+         $("#clineLocated").css({"display":"none"});
+         $("#finishride").css({"display":"block"});
 
        }else{
-           if(stage=='startride'){
+           if(stage=='finish'){
+
 
            }else{
 
@@ -181,63 +164,7 @@ function reloadBookingStage(stage){
    }
  }
 
- ///////ClineLocate Cick Option////////
- document.getElementById("clinelocatebtn").addEventListener("click", function(){
-  var data=JSON.parse(getCookie("rideBookingDetails"));
-  console.log(data)
-  $.post('/india/drv/clinelocated',{CustID:data.cust.CustID},function(respon){
-      console.log("respon",respon)
-      if(respon){
-          console.log()
-          $("#pickDrop-Content").html('<div class="pickdropHead">\
-          <div class="container">\
-              <div class="row pickdropHeadContainer">\
-                  <div class="col-xs-12  col-sm-12 ">\
-                     <div class="row">\
-                       <div class="col-xs-1 col-sm-1 ">\
-                          <a href="tel:100"><button type="button" class="btn btn-danger btn-xs">sos</button></a>\
-           </div>\
-                       <div class="col-xs-8 col-sm-8 ">\
-                           <p class="text-center"><span class="label label-success ">CRN : '+data.ride.bookingID+'</span></p></div>\
-                       <div class="col-xs-3 col-sm-3 ">\
-                          <a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-                          <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
-                          </div>\
-                     </div>\
-                  </div>\
-              </div>\
-          </div>\
-      </div>\
-      <div class="pickdropfooter">\
-              <div class="container">\
-                  <div class="row pickupfootrer">\
-                      <div class="col-xs-9 col-sm-9">\
-                              <p>Drop TO: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.dropaddress+'</p>\
-                      </div>\
-                      <div class="col-xs-3 col-sm-3">\
-                          <button onclick="openMap(2)" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
-                      </div>\
-                  </div>\
-                  <div class="row pickupfootrer">\
-                      <div class="col-xs-6 col-sm-6 col-xs-offset-3 col-sm-offset-3">\
-                         <input id="startridebtn"  class="pickupfootrerbtn" type="button" value="Stard Ride">\
-                      </div>\
-                  </div>\
-              </div>\
-          </div>');
-      }
-  });
- });
-
- ///////StartRide Cick Option////////
- document.getElementById("startridebtn").addEventListener("click", function(){
-  alert("test")
- });
-
- ///////Finish StartRide Cick Option////////
- document.getElementById("finishridebtn").addEventListener("click", function(){
-  alert("test")
- });
+ 
 
 } /////End IntMap////////
 

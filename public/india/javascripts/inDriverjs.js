@@ -171,50 +171,20 @@ function loginprocess(){
             setCookie("ringToneControl","OFF",1); 
             setCookie("rideBookingDetails",JSON.stringify(data),30);
             
-            $("#ringtone").css({"display":"none"});           
+            $("#ringtone").css({"display":"none"}); 
             $("#pickDrop-Content").css({"display":"block"});
-            $("#pickDrop-Content").html('<div class="pickdropHead">\
-            <div class="container">\
-                <div class="row pickdropHeadContainer">\
-                    <div class="col-xs-12  col-sm-12 ">\
-                       <div class="row">\
-                         <div class="col-xs-1 col-sm-1 ">\
-                            <a href="tel:100"><button type="button" class="btn btn-danger btn-xs">sos</button></a>\
-             </div>\
-                         <div class="col-xs-8 col-sm-8 ">\
-                             <p class="text-center"><span class="label label-success ">CRN : '+data.ride.bookingID+'</span></p></div>\
-                         <div class="col-xs-3 col-sm-3 ">\
-                            <a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-                            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
-                            </div>\
-                       </div>\
-                    </div>\
-                </div>\
-            </div>\
-        </div>\
-        <div class="pickdropfooter">\
-                <div class="container">\
-                    <div class="row pickupfootrer">\
-                        <div class="col-xs-9 col-sm-9">\
-                                <p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>\
-                        </div>\
-                        <div class="col-xs-3 col-sm-3">\
-                            <button onclick="openMap(1)" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
-                        </div>\
-                    </div>\
-                    <div class="row pickupfootrer">\
-                        <div class="col-xs-6 col-sm-6 col-xs-offset-3 col-sm-offset-3">\
-                           <input id="clinelocatebtn"  class="pickupfootrerbtn" type="button" value="Cline Located">\
-                        </div>\
-                    </div>\
-                </div>\
-            </div>');
+            $("#orderNO").text(data.ride.bookingID);
+            $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
+            $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
+            $("#geoNav").val(1);        
             }           
            
             });
         } 
   ///////Open Google Map///////
-        function openMap(a){
+        function openMap(){
+            var a =$("#geoNav").val(); 
             var data=JSON.parse(getCookie("rideBookingDetails")) ;
             if(a==1){
                 if /* if we're on iOS, open in Apple Maps */
@@ -227,17 +197,82 @@ function loginprocess(){
                  } /* else use Google */
             }else{
                 if(a==2){
-                alert("drop")
-            //     if /* if we're on iOS, open in Apple Maps */
-            // ((navigator.platform.indexOf("iPhone") != -1) || 
-            //  (navigator.platform.indexOf("iPad") != -1) || 
-            //  (navigator.platform.indexOf("iPod") != -1)){
-            //     window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+" &amp;ll=");
-            //  }else{
-            //     window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+"&amp;ll=");
-            //  } /* else use Google */
+               // alert("drop")
+                if /* if we're on iOS, open in Apple Maps */
+            ((navigator.platform.indexOf("iPhone") != -1) || 
+             (navigator.platform.indexOf("iPad") != -1) || 
+             (navigator.platform.indexOf("iPod") != -1)){
+                window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+" &amp;ll=");
+             }else{
+                window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+"&amp;ll=");
+             } /* else use Google */
             }
         }
             
+     }
+
+
+     ////////// On Cline Clocated/////////
+     function clineLocated(){
+            var data=JSON.parse(getCookie("rideBookingDetails"));
+            console.log(data)
+            $.post('/india/drv/clinelocated',{CustID:data.cust.CustID},function(respon){
+            console.log("respon",respon)
+                if(respon){                    
+                    $("#clineLocated").css({"display":"none"});
+                    $("#startRide").css({"display":"block"});
+                }
+
+            });
             }
- 
+
+     function otpinput(){        
+         var valu=$("#otpp").val()
+        if(valu.length >3){
+            var data=JSON.parse(getCookie("rideBookingDetails"));
+            if(data.RideOTP==valu){
+                $.post('/india/drv/startRide',{CustID:data.cust.CustID},function(respon){
+                    console.log("respon",respon)
+                        if(respon){
+                            $("#address").html('<p>Drop To: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.dropaddress+'</p>');
+                            $("#geoNav").val(2);
+                            $("#OTP-Content").css({"display":"none"});
+                            $("#startRide").css({"display":"none"});
+                            $("#finishride").css({"display":"block"});
+                            openMap();    
+                           
+                        }
+        
+                    });
+                
+            }else{
+                $("#otpp").css({"background-color": "#df0d0d","color": "#FFF" })
+            }
+        }
+     }  
+ /////////Start Ride ////////
+    function startRide(){     
+        $("#OTP-Content").css({"display":"block"});
+    }
+ ////////Finish Ride///////   
+ function finishride(){
+    var data=JSON.parse(getCookie("rideBookingDetails"));
+    console.log("finisf data",data)
+    alert(data.ride.picuklatlng[0])    
+        $.post('/india/drv/finishRide',{
+            CustID:data.cust.CustID,
+            bookingID:data.ride.bookingID,
+            picuklat:data.ride.picuklatlng[0], 
+            picuklng:data.ride.picuklatlng[1]
+            
+        },function(respon){
+            console.log("respon",respon)
+                if(respon){                    
+                    $("#OTP-Content").css({"display":"none"});
+                    $("#startRide").css({"display":"none"});
+                    $("#finishride").css({"display":"none"});
+                }
+
+            });
+        
+}

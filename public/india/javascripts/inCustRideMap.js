@@ -27,13 +27,113 @@ var map;
 
 function initMap() {  
     ///////Map Initiate 
+    var directionsService = new google.maps.DirectionsService;
+    var directionsDisplay = new google.maps.DirectionsRenderer({
+         polylineOptions:{strokeColor:"#36301e",strokeWeight:2}, 
+         suppressMarkers:true 
+        });
     map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 7,
-          center: {lat: 23.5659115, lng: 87.2727577},
+          zoom: 12,
+         // center: {lat: 23.5659115, lng: 87.2727577},
           mapTypeId: 'roadmap',
           disableDefaultUI: true,
           map:map
         });
+    directionsDisplay.setMap(map);
+
+        var dropMarker=new google.maps.Marker({        
+            // icon:'http://www.robotwoods.com/dev/misc/bluecircle.png',
+             icon:new google.maps.MarkerImage('/india/images/drop.png',
+                                             new google.maps.Size(50,50),
+                                             new google.maps.Point(0,0),
+                                             new google.maps.Point(25,50)),
+             map:map
+           
+           });
+     var pickupMarker=new google.maps.Marker({        
+     // icon:'http://www.robotwoods.com/dev/misc/bluecircle.png',
+         icon:new google.maps.MarkerImage('/india/images/pickup.png',
+                                         new google.maps.Size(50,50),
+                                         new google.maps.Point(0,0),
+                                         new google.maps.Point(25,50)),
+         map:map
+         
+     
+     });
+        
+     var pickupwindow = new google.maps.InfoWindow({
+         content: "Destination"
+       });
+
+     var dropwindow = new google.maps.InfoWindow({
+     content: "Driver"
+     }); 
+     
+     var drop = new google.maps.InfoWindow({
+        content: "Drop"
+      });
+     
+     ///////Driver picup Stage///////
+      var timerR;
+     function getDriverposition(reqs){
+            timerR=setInterval(function(){
+            $.post('/india/getDriverposition',{pilotID:reqs.pilotID},function(resp){
+                console.log(resp)
+                dropMarker.setPosition({lat:Number(resp[1]), lng:Number(resp[0])});
+                dropwindow.open(map, dropMarker);
+                map.setCenter({lat:Number(resp[1]), lng:Number(resp[0])})
+
+            });
+            ///////stop timer//////
+        var CustID=getCookie("CustID");
+        if(getCookie("clineLocat")=='YES'){
+            setCookie("clineLocat","NO",1);
+            clearInterval(timerR)
+        }
+        },5*1000);
+
+     }
+
+       ///////Driver StartRide Stage///////
+       
+       function getDriverposition2(reqs){
+              timerR=setInterval(function(){
+              $.post('/india/getDriverposition',{pilotID:reqs.pilotID},function(resp){
+                  console.log(resp)
+                  dropMarker.setPosition({lat:Number(resp[1]), lng:Number(resp[0])});
+                  dropwindow.open(map, dropMarker);
+                  map.setCenter({lat:Number(resp[1]), lng:Number(resp[0])})
+  
+              });
+              ///////stop timer//////
+          var CustID=getCookie("CustID");
+          if(getCookie("StartRide")=='YES'){
+              setCookie("StartRide","NO",1);
+              clearInterval(timerR)
+          }
+          },5*1000);
+  
+       }
+
+
+    ///////Driver StartRide Stage///////
+    
+    function getDriverposition3(reqs){
+           timerR=setInterval(function(){
+           $.post('/india/finishandFeedback',{pilotID:reqs.pilotID},function(resp){
+               console.log(resp)
+               
+
+           });
+           ///////stop timer//////
+       var CustID=getCookie("CustID");
+       if(getCookie("finishRide")=='YES'){
+           setCookie("finishRide","NO",1);
+           clearInterval(timerR)
+       }
+       },5*1000);
+
+    }   
 
 ///////////Initiate page Parametter///////
         function pageInit(){
@@ -41,6 +141,35 @@ function initMap() {
          console.log('rRideDetails',RideDetails);
          $.post('/india/rideDriverBookingDetails',RideDetails,function(data){
             console.log('rider',data);
+             /////Add pickup Marker///// 
+          
+       console.log("test val",$("#orderStage").val())
+         if($("#orderStage").val()=='accept'){
+            var latlng ={lat:Number(data.ride.picuklatlng[0]),lng:Number(data.ride.picuklatlng[1])} ;
+            pickupMarker.setPosition(latlng)
+            dropwindow.open(map, pickupMarker);
+            map.setCenter(latlng)
+    
+            getDriverposition({latlng:latlng,pilotID:data.driver.pilotID});
+         }else{
+            if($("#orderStage").val()=='startRide'){
+                var dlatlng ={lat:Number(data.ride.droplatlng[0]),lng:Number(data.ride.droplatlng[1])} ;
+                pickupMarker.setPosition(dlatlng)
+                drop.open(map, pickupMarker);
+                map.setCenter(dlatlng)
+
+                getDriverposition2({latlng:dlatlng,pilotID:data.driver.pilotID});
+            }else{
+                if($("#orderStage").val()=='finishRide'){
+                    var clatlng ={lat:Number(data.ride.droplatlng[0]),lng:Number(data.ride.droplatlng[1])} ;
+                    getDriverposition3({latlng:clatlng,pilotID:data.driver.pilotID});
+                }
+
+            }
+         } 
+              
+       
+
             $("#footer").html('<div id="driver-content">\
              <div class="row">\
              <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">\
@@ -113,10 +242,48 @@ function restoreFooter(){
 ///Check Socket For Driver Accepttance////
 var socket = io('//'+document.location.hostname+':'+document.location.port);
 socket.on('clinelocated', function (data) {
-    console.log(data)
     var CustID=getCookie("CustID");
     if(CustID==data.CustID){
-      
+     $("#massage-notification").css({"display":"block"});
+     $("#massage-notification").html('<div class="alert alert-danger">\
+     <button onclick="closeclineLocation()" type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
+     <strong>PaaCab!</strong> Driver has been arrived, You need to go your Pickup Location\
+ </div>');
+        setCookie("clineLocat","YES",1);
     }
-  });  
+  }); 
+  
+  socket.on('StartRide', function (data) {
+    var CustID=getCookie("CustID");
+    if(CustID==data.CustID){
+        $("#massage-notification").css({"display":"block"});
+        $("#massage-notification").html('<div class="alert alert-danger">\
+        <button onclick="closestartRide()" type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
+        <strong>PaaCab!</strong> Welcom to your happy jurny leave a feed back after finish this trip \
+    </div>');
+    setCookie("StartRide","YES",1);
+    setCookie("clineLocat","NO",1);
+       
+    }
+
+  });
+
+  socket.on('finishRide', function (data) {
+    var CustID=getCookie("CustID");
+    if(CustID==data.CustID){
+        console.log("finishRide",data)
+        setCookie("finishRide","YES",1);
+
+    }
+});
+
+
+  function closeclineLocation(){
+    $("#massage-notification").css({"display":"none"})
+  }
+
+  function closestartRide(){
+    $("#massage-notification").css({"display":"none"});
+    window.location='/india'
+  }
 
