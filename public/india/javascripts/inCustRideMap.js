@@ -120,9 +120,9 @@ function initMap() {
     
     function getDriverposition3(reqs){
            timerR=setInterval(function(){
-           $.post('/india/finishandFeedback',{pilotID:reqs.pilotID},function(resp){
-               console.log(resp)
-               
+           $.post('/india/getFinishBooking',{bookingID:reqs.bookingID},function(resp){
+               console.log(resp.totalamount);
+               $("#billAndfeedback").css({"display":"block"});               
 
            });
            ///////stop timer//////
@@ -131,7 +131,7 @@ function initMap() {
            setCookie("finishRide","NO",1);
            clearInterval(timerR)
        }
-       },5*1000);
+       },1000);
 
     }   
 
@@ -162,7 +162,10 @@ function initMap() {
             }else{
                 if($("#orderStage").val()=='finishRide'){
                     var clatlng ={lat:Number(data.ride.droplatlng[0]),lng:Number(data.ride.droplatlng[1])} ;
-                    getDriverposition3({latlng:clatlng,pilotID:data.driver.pilotID});
+                    $.post('/india/getFinishBooking',{bookingID:data.ride.bookingID},function(resp){
+                        console.log(resp.totalamount);
+                        $("#billAndfeedback").css({"display":"block"});
+                    });
                 }
 
             }
@@ -215,6 +218,19 @@ function initMap() {
             
         }
         pageInit();
+
+
+  /////continueNextbooking /////////
+  document.getElementById("continueNextRide").addEventListener("click", function(){    
+    $.post('/india/setAllNormalandFinished',{},function(data){
+      if(data){       
+        $("#billAndfeedback").css({"display":"none"});
+        window.location='/india'
+      }
+      
+    });
+    
+  });       
 }  //////end InitMap 
 
 
@@ -272,7 +288,8 @@ socket.on('clinelocated', function (data) {
     var CustID=getCookie("CustID");
     if(CustID==data.CustID){
         console.log("finishRide",data)
-        setCookie("finishRide","YES",1);
+        window.location='/india'
+        
 
     }
 });

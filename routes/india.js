@@ -404,6 +404,21 @@ router.post('/getDriverposition', function(req, res, next) {
 });
 
 
+  ////////// getFinalBooking For Billing //////
+  router.post('/getFinishBooking', function(req, res, next) {
+    database.ride.findOne({bookingID:req.body.bookingID},function(e,data){
+      res.send(data);
+    });
+    });
+
+ //////////setAllNormalandFinished //////
+ router.post('/setAllNormalandFinished', function(req, res, next) {
+  database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{orderStage:" "}},function(er,data){
+   res.send("ok")
+  });
+  });   
+
+    
     
   ///////////////////////////////////////
 ///* END RIDE PAGE LISTING. *///////////
@@ -715,7 +730,7 @@ router.post('/drv/finishRide', function(req, res, next) {
   database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'finishRide'}},function(er,cust){
     database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'finishRide'}},function(re, driver){
       if(driver){
-        database
+        database.ride.findOne({bookingID:req.body.bookingID},function(er, Booking){      
         //// Calculate Distance Last positio driver///////
         var finishLocation=driver.location.coordinates;
         var travelmod=driver.travelmod;
@@ -725,20 +740,58 @@ router.post('/drv/finishRide', function(req, res, next) {
               apik:process.env.API_KEY,
               travelmod:travelmod
           },function(result){
-            console.log("Final Distance",result)
+            var distance=result.rows[0].elements[0].distance.value;                        
+              distance=parseInt(distance/1000) + 1; 
+                database.priceOffer.findOne({travelmod:travelmod,distanceKM:distance},function(e,price){
+                  console.log("Price :",price.price, "Bookin Price", Booking.totalamount)
+                  var billAmount=0;
+                  var driverpayout=Number(distance) *6;                  
+                  if(price.price >= Booking.totalamount){
+                     billAmount=price.price;
+                    
+                  }else{
+                     billAmount=Booking.totalamount;                     
+                  }
+                  /////send  and update bill details/////
+                  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{totalamount:billAmount,driverpayout:driverpayout}},function(er, updatbooking){ 
+                    if(updatbooking){
+                      res.io.emit("finishRide",{CustID:req.body.CustID});
+                      res.send({billAmount:billAmount}); 
+                      
+                    }
+                  });
+                  
+
+                });           
+           
           });
+        });
       }
-      res.io.emit("finishRide",{CustID:req.body.CustID});
-      res.send("emitfinishRide") 
+      
     });
    
   });
+  });
 
+  //////////Driver getFinalBooking For Billing //////
+router.post('/drv/getFinalBooking', function(req, res, next) {
+  database.ride.findOne({bookingID:req.body.bookingID},function(e,data){
+    res.send(data);
+  });
+  });
 
+   //////////Driver finishEverythingAndSetNormal //////
+router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:""}},function(e,data){
+    // console.log("Find all cook",req.cookies);
+    //////delete all cookes/////
+    res.send("ok") 
+    });
+  });
 
   
-  });
  
+  
 
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////

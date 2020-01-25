@@ -258,7 +258,7 @@ function loginprocess(){
  function finishride(){
     var data=JSON.parse(getCookie("rideBookingDetails"));
     console.log("finisf data",data)
-    alert(data.ride.picuklatlng[0])    
+    //alert(data.ride.picuklatlng[0])    
         $.post('/india/drv/finishRide',{
             CustID:data.cust.CustID,
             bookingID:data.ride.bookingID,
@@ -267,12 +267,18 @@ function loginprocess(){
             
         },function(respon){
             console.log("respon",respon)
-                if(respon){                    
+                if(respon){ 
+                    
+                    $("#pickDrop-Content").css({"display":"none"});
+                    $("#billAndfeedback").css({"display":"block"});                  
                     $("#OTP-Content").css({"display":"none"});
                     $("#startRide").css({"display":"none"});
                     $("#finishride").css({"display":"none"});
+                    $("#pickdropfooter").css({"display":"none"});
+                    $("#pickdropHead").css({"display":"none"});
                 }
 
             });
         
 }
+

@@ -154,8 +154,28 @@ function reloadBookingStage(stage){
          $("#finishride").css({"display":"block"});
 
        }else{
-           if(stage=='finish'){
-
+           if(stage=='finishRide'){
+            wachLocation();
+            $("#map").css({"display":"block"});
+            $("#offline-content").css({"display":"none"});
+             var data=JSON.parse(getCookie("rideBookingDetails"));                
+             setCookie("ringToneControl","OFF",1);
+             $("#ringtone").css({"display":"none"});           
+             $("#pickDrop-Content").css({"display":"none"});
+            $.post('/india/drv/getFinalBooking',{bookingID:data.ride.bookingID},function(data){
+              if(data){
+                console.log(data);
+                $("#billAndfeedback").css({"display":"block"});                  
+                $("#OTP-Content").css({"display":"none"});
+                $("#startRide").css({"display":"none"});
+                $("#finishride").css({"display":"none"});
+                $("#pickdropfooter").css({"display":"none"});
+                $("#pickdropHead").css({"display":"none"});
+                $("#amt").text(data.totalamount)
+              }
+            }); 
+            
+             
 
            }else{
 
@@ -164,7 +184,19 @@ function reloadBookingStage(stage){
    }
  }
 
- 
+  /////continueNextRide /////////
+  document.getElementById("continueNextRide").addEventListener("click", function(){
+    
+    $.post('/india/drv/finishEverythingAndSetNormal',{},function(data){
+      if(data){
+        onlineExicute();
+        $("#billAndfeedback").css({"display":"none"});
+        document.getElementById("toggle").checked = true;
+      }
+      
+    });
+    
+  });
 
 } /////End IntMap////////
 

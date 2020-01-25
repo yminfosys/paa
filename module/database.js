@@ -145,6 +145,8 @@ var rideSchema = new mongoose.Schema({
   endTime:String,
   kmtravels:String,
   totalamount:String,
+  paymentBy:String,
+  driverCashCollectio:String,
   discount:String,
   driverpayout:String,
   driverIncentiv:String,
@@ -175,7 +177,8 @@ var priceandOfferSchema = new mongoose.Schema({
   price:String,
   discount: String,    
   cupon:String,     
-  distanceKM:String,  
+  distanceKM:String, 
+  rideIncetiv:String 
 });
 
 priceandOfferSchema.plugin(autoIncrement.plugin, { model: 'priceandOffercollections', field: 'offerID',startAt: 1, incrementBy: 1 });
