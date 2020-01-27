@@ -203,9 +203,9 @@ function loginprocess(){
             ((navigator.platform.indexOf("iPhone") != -1) || 
              (navigator.platform.indexOf("iPad") != -1) || 
              (navigator.platform.indexOf("iPod") != -1)){
-                window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+" &amp;ll=");
+                window.open("maps://maps.google.com/maps?daddr="+data.ride.droplatlng[0]+","+data.ride.droplatlng[1]+" &amp;ll=");
              }else{
-                window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+"&amp;ll=");
+                window.open("https://maps.google.com/maps?daddr="+data.ride.droplatlng[0]+","+data.ride.droplatlng[1]+"&amp;ll=");
              } /* else use Google */
             }
         }
@@ -240,6 +240,7 @@ function loginprocess(){
                             $("#OTP-Content").css({"display":"none"});
                             $("#startRide").css({"display":"none"});
                             $("#finishride").css({"display":"block"});
+                            $("#otpp").val("");
                             openMap();    
                            
                         }
@@ -277,6 +278,7 @@ function loginprocess(){
                     $("#finishride").css({"display":"none"});
                     $("#pickdropfooter").css({"display":"none"});
                     $("#pickdropHead").css({"display":"none"});
+                    $("#amt").text(respon.billAmount)
                 }
 
             });
