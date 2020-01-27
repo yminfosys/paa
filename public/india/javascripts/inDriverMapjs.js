@@ -135,6 +135,7 @@ function reloadBookingStage(stage){
        <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
        $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
        $("#geoNav").val(1); 
+       $("#clineLocated").css({"display":"block"});
    }else{
        if(stage=='startRide'){
         wachLocation();
@@ -185,8 +186,7 @@ function reloadBookingStage(stage){
  }
 
   /////continueNextRide /////////
-  document.getElementById("continueNextRide").addEventListener("click", function(){
-    
+  document.getElementById("continueNextRide").addEventListener("click", function(){    
     $.post('/india/drv/finishEverythingAndSetNormal',{},function(data){
       if(data){
         onlineExicute();
