@@ -800,7 +800,7 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
     pilotID:req.cookies.pilotID
   },function(er , data){
       data.forEach(function(val,indx,arry){
-      totalErning+=Number(val.totalamount)
+      totalErning+=Number(val.driverpayout)
       totalIncentive+=Number(val.driverIncentiv)
       if(indx===arry.length - 1){
         console.log("Earnings",totalErning);
