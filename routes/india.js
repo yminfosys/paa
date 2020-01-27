@@ -4,8 +4,10 @@ var googleApi=require('../module/googleMap');
 var database=require('../module/database');
 const fileUpload = require('express-fileupload');
 const bcrypt = require('bcrypt');
-
 const saltRounds = 10;
+
+const moment = require('moment');
+const today = moment().startOf('day');
 
 router.use(fileUpload({
  
@@ -789,8 +791,27 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
     });
   });
 
-  
- 
+   //////////Driver finishEverythingAndSetNormal //////
+   router.post('/drv/bookingIncentiveDetails', function(req, res, next) {
+    var totalErning=0;
+    var totalIncentive=0;
+  database.ride.find({
+    date:{$gte: today.toDate(), $lte:moment(today).endOf('day').toDate() },
+    pilotID:req.cookies.pilotID
+  },function(er , data){
+      data.forEach(function(val,indx,arry){
+      totalErning+=Number(val.totalamount)
+      totalIncentive+=Number(val.driverIncentiv)
+      if(indx===arry.length - 1){
+        console.log("Earnings",totalErning);
+        console.log("Incentive",totalIncentive)
+        res.send({noOfBooking:arry.length,totalErning:totalErning,totalIncentive:totalIncentive})
+      }
+    });
+    
+    });
+  });
+
   
 
 ///////////////////////////////////////

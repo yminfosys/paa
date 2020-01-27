@@ -192,11 +192,24 @@ function reloadBookingStage(stage){
         onlineExicute();
         $("#billAndfeedback").css({"display":"none"});
         document.getElementById("toggle").checked = true;
+        incetiveAndBooking();
       }
       
     });
     
   });
 
+
+  /////// Incentive and Booking /////////
+
+  function incetiveAndBooking(){
+    $.post('/india/drv/bookingIncentiveDetails',{},function(data){
+      $("#booking").text(data.noOfBooking);
+      $("#earning").text(data.totalErning);
+      $("#inct").text(data.totalIncentive);
+    });
+  }
+
+  incetiveAndBooking();
 } /////End IntMap////////
 
