@@ -187,13 +187,16 @@ content: "Drop"
   var driversMarkeTimer;
   function findPlaceBylntlng(latlng){
     var searchmod=$("#ModeofSearch").val();
-     $.post('/india/geoplace',{lat:latlng.lat,lng:latlng.lng},function(data){
-       
+     $.post('/india/geoplace',{lat:latlng.lat,lng:latlng.lng},function(data){       
     if(searchmod=='0'){
         setCookie("pickuplatlong",JSON.stringify(latlng),1);
         setCookie("picuplocation",data.results[0].formatted_address,1);
         $("#picuplocation").val(data.results[0].formatted_address);
-       // var a=JSON.parse(getCookie("pickuplatlong")) ;
+
+       ///////Update Demand Location////////
+        $.post('/india/updateDemndLocation',{lat:latlng.lat,lng:latlng.lng},function(dd){
+          console.log(dd);
+        })
      
         ///////Add pickup Marker/////       
         pickupMarker.setPosition(latlng)

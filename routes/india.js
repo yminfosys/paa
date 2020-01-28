@@ -364,6 +364,26 @@ console.log(req.body)
   });
   });  
 
+
+  ///////Update Demand Location /////
+  router.post('/updateDemndLocation', function(req, res, next) {  
+    database.demandArea.findOne({CustID:req.cookies.CustID},function(e,data){
+      if(data){
+        database.demandArea.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(e,d){
+          res.send("demand Update")
+        });
+      }else{
+        database.demandArea({
+          CustID:req.cookies.CustID,
+          location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+        }).save(function(er){
+          res.send("demand location save")
+        });
+      }
+    });
+  });
+
+  
 ///////////////////////////////////////
 ///* END CUSTOMER LISTING. *///////////
 ///////////////////////////////////////
@@ -811,6 +831,28 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
     
     });
   });
+
+/////getDemadndArea count and find //////
+router.post('/drv/getDemadndArea', function(req, res, next) {
+  console.log('myposition',req.body)
+  database.index2Ddemand({},function(ss){
+    database.demandArea.find({
+          location: {
+            $near: {
+              $geometry: {
+                 type: "Point" ,
+                 coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
+              },$maxDistance :1000000000
+            }
+          }
+        },function(e,data){
+        console.log('test result',JSON.stringify(data) );
+          res.send({data});
+        })
+  });
+
+});
+
 
   
 

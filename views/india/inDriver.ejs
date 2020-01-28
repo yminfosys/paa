@@ -27,13 +27,14 @@
 
         
     </head>
+
     <body>
   <!-- Check is Any Incomplete booking -->
   <input id="orderStage" type="hidden" value="<%=driver.orderStage%>">
      <!-- For Pickup Drop Content -->
      <div id="OTP-Content">
          <h3>Enter OTP</h3>
-         <input onkeyup="otpinput()" id="otpp" maxlength="4" id="rideOtp">
+         <input onkeyup="otpinput()" id="otpp" maxlength="4" >
      </div>
 
     
@@ -194,9 +195,13 @@
  
                 </script>
             </div>
+            <div id="map-msg">
+                <img src="/india/images/gif/circle1.gif">
+            </div>
             <div id="mapcontent">
                 <div id="map"></div> 
                 <div  id="offline-content">Offline</div>
+                
             </div>
             
             <div id="footer">

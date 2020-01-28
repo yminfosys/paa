@@ -55,7 +55,10 @@ function initMap() {
             
       }else{
         centerMarker.setPosition(pos);
-        map.setCenter(pos)
+          if(getCookie("stopMapSetCenter")!="YES"){
+            map.setCenter(pos);
+          }
+          console.log("stopMapSetCenter",getCookie("stopMapSetCenter"))
         map.setZoom(14); 
         circle.setRadius(position.coords.accuracy);
 
@@ -65,6 +68,98 @@ function initMap() {
     
   }
  //////End Circle Marker//////
+
+    ////////Map Ctrl Marker//////
+        var demand=0;
+         $('<div/>').addClass('demandArea').appendTo(map.getDiv())
+         //do something onclick
+         .click(function() {
+           if(demand==1){
+            //////Set Normal/////
+            clearDemandArea();
+            demand=0; 
+           }else{
+             demand=1;
+             demandArea();
+           
+           }
+           
+         });
+         $('<div/>').addClass('demandUpdate').appendTo(map.getDiv())
+         //do something onclick
+         .click(function() {
+          demandArea();
+         });
+
+         function demandArea(){
+         /////Get Demand Area Marker//////
+         $("#map-msg").appendTo(map.getDiv())
+          $("#map-msg").css({"display":"block"});
+         $.post('/india/drv/getDemadndArea',{lat:map.getCenter().toJSON().lat,lng:map.getCenter().toJSON().lng},function(data){
+          console.log(data)
+          $("#map-msg").css({"display":"none"});
+            if(data){
+              var driverlist=[];        
+              data.forEach(function(val,key,arr){          
+                 driverlist.push({lat:Number(val.location.coordinates[1]), lng:Number(val.location.coordinates[0])})
+                if(key === arr.length -1){ 
+                  AllDemandMarker(driverlist);           
+                  }
+              });
+             
+            }
+          
+         });
+
+          $(".demandUpdate").css({"display":"block"});
+          setCookie("stopMapSetCenter","YES",1);
+         }
+
+         function clearDemandArea(){
+          alert("clerdemand");
+          $(".demandUpdate").css({"display":"none"});
+          setCookie("stopMapSetCenter","NO",1);
+          $("#map-msg").css({"display":"none"});
+         }
+
+           ///////Nearest Driver Marker////////
+    var DemandMarkers=[];
+    var angleDegrees=90;
+    function AllDemandMarker(DemandLocetion,type){    
+    clearDriverMarker();
+    DemandLocetion.forEach(function(val,indx){
+     
+      DemandMarkers.push(new google.maps.Marker({
+        position: {lat:val.lat, lng:val.lng},
+        //icon:new google.maps.MarkerImage('/images/ic_bike.png'),
+        icon:{
+            url: "/india/images/DriverMarker1.png", // url
+            scaledSize: new google.maps.Size(50, 25), // scaled size
+            origin: new google.maps.Point(0,0), // origin
+            anchor: new google.maps.Point(22, 22), // anchor
+            
+            
+        },
+        map: map,
+        }));
+        
+        
+
+    })
+    }
+
+///////Clear Demand Marker////////
+    function clearDemandMarker(){
+    if(DemandMarkers.length>0){
+      DemandMarkers.forEach(function(valu,key,arry){
+        valu.setMap(null);
+        if(key===arry.length-1){
+          DemandMarkers=[];
+        }
+    });
+    }
+
+    }
 
    /////////GPS location update driver tracking///////
    function driverLocationUpdate(position){
@@ -88,11 +183,13 @@ function initMap() {
       })
       clearWachposition();
       setCookie("ringToneControl","OFF",1);
+      clearDemandArea();
     }
   }); 
   
   function onlineExicute(){
     wachLocation();
+    clearDemandArea();
     $("#map").css({"display":"block"});
     $("#offline-content").css({"display":"none"});
     $.post('/india/drv/dutyUpdate',{duty:'online'},function(data){
@@ -211,5 +308,7 @@ function reloadBookingStage(stage){
   }
 
   incetiveAndBooking();
+
+  
 } /////End IntMap////////
 

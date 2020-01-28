@@ -31,10 +31,10 @@ function index2Dpilot(int,cb){
   //     db.pilotcollections.createIndex({ "location" : "2dsphere" });
   //     cb({success:'1'});
   //   }
-  function index2Dcust(int,cb){
+  function index2Ddemand(int,cb){
     console.log()
-      const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['custcollections']);
-      db.custcollections.createIndex({ "location" : "2dsphere" });
+      const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['demandcollections']);
+      db.demandcollections.createIndex({ "location" : "2dsphere" });
       cb({success:'1'})
     }
 function mongCon(){
@@ -185,7 +185,25 @@ priceandOfferSchema.plugin(autoIncrement.plugin, { model: 'priceandOffercollecti
 
 var priceandOffermodul = mongoose.model('priceandOffercollections', priceandOfferSchema);
 
+////Demand Area Schema
+var demandSchema = new mongoose.Schema({ 
+  CustID:String,
+  location: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      
+    }
+  }
+});
 
+
+var demandmodul = mongoose.model('demandcollections', demandSchema);
 
 
 var sampleSchema=new mongoose.Schema({ 
@@ -265,7 +283,8 @@ var sampleModule = mongoose.model('dadacollections', sampleSchema);
 module.exports.customer=custmodul;
 module.exports.pilot=pilotmodul;
 module.exports.index2Dpilot=index2Dpilot;
-module.exports.index2Dcust=index2Dcust;
+module.exports.index2Ddemand=index2Ddemand;
 module.exports.ride=ridemodul;
 module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
+module.exports.demandArea=demandmodul;
