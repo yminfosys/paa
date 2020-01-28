@@ -120,6 +120,7 @@ function initMap() {
           $(".demandUpdate").css({"display":"none"});
           setCookie("stopMapSetCenter","NO",1);
           $("#map-msg").css({"display":"none"});
+          clearDemandMarker();
          }
 
            ///////Nearest Driver Marker////////
