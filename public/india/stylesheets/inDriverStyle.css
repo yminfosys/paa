@@ -39,9 +39,9 @@
    #map .demandArea {
     position: absolute;
     /*url of the marker*/
-    background: url(/india/images/gpsloc.png) no-repeat;
+    background: url(/india/images/demand.png) no-repeat;
     /*center the marker*/
-    top: 55%;
+    top: 52%;
     left: 90%;
     z-index: 6;
     /*fix offset when needed*/
@@ -53,6 +53,25 @@
     cursor: pointer;
   }
 
+ 
+
+  #map .demandUpdate {
+    position: absolute;
+    /*url of the marker*/
+    background: url(/india/images/update.png) no-repeat;
+    /*center the marker*/
+    top: 46%;
+    left: 90%;
+    z-index: 6;
+    /*fix offset when needed*/
+    /* margin-left: -10px;
+    margin-top: -35px; */
+    /*size of the image*/
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+    display: none;
+  }
   #map-msg{
     position: fixed;
     height: 20vh;
@@ -63,24 +82,6 @@
     display: none;
   }
   #map-msg img{ width: 100%; height: 100%;}
-
-  #map .demandUpdate {
-    position: absolute;
-    /*url of the marker*/
-    background: url(/india/images/gpsloc.png) no-repeat;
-    /*center the marker*/
-    top: 45%;
-    left: 90%;
-    z-index: 6;
-    /*fix offset when needed*/
-    /* margin-left: -10px;
-    margin-top: -35px; */
-    /*size of the image*/
-    height: 32px;
-    width: 32px;
-    cursor: pointer;
-    display: none;
-  }
 
    #offline-content{
     width: 50%; height: 10%; margin-top: 45%; 

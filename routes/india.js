@@ -371,6 +371,7 @@ console.log(req.body)
       if(data){
         database.demandArea.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(e,d){
           res.send("demand Update")
+          deleteDemand(req.cookies.CustID);
         });
       }else{
         database.demandArea({
@@ -383,7 +384,14 @@ console.log(req.body)
     });
   });
 
-  
+  function deleteDemand(CustID){
+    setTimeout(function(){
+      database.demandArea.findOneAndUpdate({CustID:CustID},{$set:{location:{type:'Point',coordinates:[0.0, 0.0]}}},function(e,d){
+      
+      });
+    }, 1000*60*5);
+    
+  }
 ///////////////////////////////////////
 ///* END CUSTOMER LISTING. *///////////
 ///////////////////////////////////////
@@ -842,7 +850,7 @@ router.post('/drv/getDemadndArea', function(req, res, next) {
               $geometry: {
                  type: "Point" ,
                  coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
-              },$maxDistance :1000000000
+              },$maxDistance :10000
             }
           }
         },function(e,data){

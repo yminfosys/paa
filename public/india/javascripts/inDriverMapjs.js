@@ -134,10 +134,10 @@ function initMap() {
         position: {lat:val.lat, lng:val.lng},
         //icon:new google.maps.MarkerImage('/images/ic_bike.png'),
         icon:{
-            url: "/india/images/DriverMarker1.png", // url
-            scaledSize: new google.maps.Size(50, 25), // scaled size
+            url: "/india/images/demand-marker.png", // url
+            scaledSize: new google.maps.Size(20, 20), // scaled size
             origin: new google.maps.Point(0,0), // origin
-            anchor: new google.maps.Point(22, 22), // anchor
+            anchor: new google.maps.Point(10, 10), // anchor
             
             
         },
