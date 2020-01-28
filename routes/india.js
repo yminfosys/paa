@@ -847,7 +847,7 @@ router.post('/drv/getDemadndArea', function(req, res, next) {
           }
         },function(e,data){
         console.log('test result',JSON.stringify(data) );
-          res.send({data});
+          res.send(data);
         })
   });
 

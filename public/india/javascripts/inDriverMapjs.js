@@ -116,7 +116,7 @@ function initMap() {
          }
 
          function clearDemandArea(){
-          alert("clerdemand");
+          //alert("clerdemand");
           $(".demandUpdate").css({"display":"none"});
           setCookie("stopMapSetCenter","NO",1);
           $("#map-msg").css({"display":"none"});
@@ -126,7 +126,7 @@ function initMap() {
     var DemandMarkers=[];
     var angleDegrees=90;
     function AllDemandMarker(DemandLocetion,type){    
-    clearDriverMarker();
+      clearDemandMarker();
     DemandLocetion.forEach(function(val,indx){
      
       DemandMarkers.push(new google.maps.Marker({
