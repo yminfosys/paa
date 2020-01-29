@@ -57,9 +57,10 @@ function initMap() {
         centerMarker.setPosition(pos);
           if(getCookie("stopMapSetCenter")!="YES"){
             map.setCenter(pos);
+            map.setZoom(14); 
           }
           console.log("stopMapSetCenter",getCookie("stopMapSetCenter"))
-        map.setZoom(14); 
+        
         circle.setRadius(position.coords.accuracy);
 
         // $("#centerLocation").val(''+position.coords.latitude+','+position.coords.longitude+'');

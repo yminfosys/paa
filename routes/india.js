@@ -833,7 +833,8 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
 
   database.ride.find({
     date:{$gte: todayStart.toDate(), $lte:todayend.toDate() },
-    pilotID:req.cookies.pilotID
+    pilotID:req.cookies.pilotID,
+    callbookingStatus:"Accept"
   },function(er , data){
       data.forEach(function(val,indx,arry){
       totalErning+=Number(val.driverpayout)
