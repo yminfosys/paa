@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 const moment = require('moment');
-const today = moment().startOf('day');
+
 
 router.use(fileUpload({
  
@@ -371,7 +371,7 @@ console.log(req.body)
       if(data){
         database.demandArea.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(e,d){
           res.send("demand Update")
-          deleteDemand(req.cookies.CustID);
+        
         });
       }else{
         database.demandArea({
@@ -384,14 +384,19 @@ console.log(req.body)
     });
   });
 
-  function deleteDemand(CustID){
-    setTimeout(function(){
-      database.demandArea.findOneAndUpdate({CustID:CustID},{$set:{location:{type:'Point',coordinates:[0.0, 0.0]}}},function(e,d){
-      
+  //////DELETE ALL DEMAND /////////
+var  DemandTime;
+  function deleteDemand(){    
+    DemandTime=setInterval(function(){
+      database.demandArea.deleteMany({},function(e, d){
+        console.log("Reset Demand")
       });
     }, 1000*60*5);
     
   }
+  
+  deleteDemand();
+
 ///////////////////////////////////////
 ///* END CUSTOMER LISTING. *///////////
 ///////////////////////////////////////
@@ -823,8 +828,11 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
    router.post('/drv/bookingIncentiveDetails', function(req, res, next) {
     var totalErning=0;
     var totalIncentive=0;
+   var todayStart = moment().startOf('day').utc();
+   var todayend = moment().endOf('day').utc();
+
   database.ride.find({
-    date:{$gte: today.toDate(), $lte:moment(today).endOf('day').toDate() },
+    date:{$gte: todayStart.toDate(), $lte:todayend.toDate() },
     pilotID:req.cookies.pilotID
   },function(er , data){
       data.forEach(function(val,indx,arry){
@@ -862,7 +870,6 @@ router.post('/drv/getDemadndArea', function(req, res, next) {
 });
 
 
-  
 
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////
