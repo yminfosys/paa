@@ -385,17 +385,17 @@ console.log(req.body)
   });
 
   //////DELETE ALL DEMAND /////////
-var  DemandTime;
-  function deleteDemand(){    
-    DemandTime=setInterval(function(){
-      database.demandArea.deleteMany({},function(e, d){
-        console.log("Reset Demand")
-      });
-    }, 1000*60*5);
+// var  DemandTime;
+//   function deleteDemand(){    
+//     DemandTime=setInterval(function(){
+//       database.demandArea.deleteMany({},function(e, d){
+//         console.log("Reset Demand")
+//       });
+//     }, 1000*60*5);
     
-  }
+//   }
   
-  deleteDemand();
+//   deleteDemand();
 
 ///////////////////////////////////////
 ///* END CUSTOMER LISTING. *///////////
