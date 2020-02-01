@@ -225,27 +225,7 @@
         </script>
         
 
-        <script>
-            window.onbeforeunload = function (event) {
-               console.log("gggg")
-               ////////DELETE DEMAND ///////
-               $.post('/india/deleteDemand',{},function(data){
-                   if(data){
-                    console.log("Detete Demand area",data) 
-                   }
-                
-               })
-                // var message = 'Important: Please click on \'Save\' button to leave this page.';
-                // if (typeof event == 'undefined') {
-                //     event = window.event;
-                // }
-                // if (event) {
-                //     event.returnValue = message;
-                // }
-                // return message;
-            };
-
-            </script>
+        
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
         <!-- Bootstrap JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>

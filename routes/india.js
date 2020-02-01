@@ -370,7 +370,7 @@ console.log(req.body)
     database.demandArea.findOne({CustID:req.cookies.CustID},function(e,data){
       if(data){
         database.demandArea.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(e,d){
-          deleteDemand();
+          deleteDemand(req.cookies.CustID);
           res.send("demand Update")
         
         });
@@ -384,26 +384,17 @@ console.log(req.body)
       }
     });
   });
-////////DElete Demand Area//////
-  router.post('/deleteDemand', function(req, res, next) {
-     database.demandArea.deleteMany({CustID:req.cookies.CustID},function(e, d){
-       if(d){
-        res.send('DemandDeleted');
-       }
-        
-      });
-   });
-  
+
   //DELETE ALL DEMAND /////////
-var  DemandTime;
-  function deleteDemand(){
-    if(!DemandTime){
-      DemandTime=setInterval(function(){
-        database.demandArea.deleteMany({},function(e, d){
+
+  function deleteDemand(CustID){
+    
+     setTimeout(function(){
+        database.demandArea.deleteMany({CustID:CustID},function(e, d){
           console.log("Reset Demand")
         });
-      }, 1000*60*5);
-    }
+      }, 1000*5*60);
+  
 
     
   }
@@ -714,10 +705,20 @@ router.post('/drv/completeReg', function(req, res, next) {
     console.log('body',req.body)
     database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(err,data){
     console.log(data)
+    reSetLocetion(req.cookies.pilotID)
     });
     res.send(req.body.lat)
     
   });
+
+  //////Reset Drivet Location////
+  function reSetLocetion(pilotID){
+    setTimeout(function(){
+      database.pilot.findOneAndUpdate({pilotID:pilotID},{$set:{location:{type:'Point',coordinates:[0, 0]}}},function(err,data){
+       console.log("location update")
+        });
+    },1000*60*5)
+  }
 
    //////////Update Driver Duty Offline and online//////
    router.post('/drv/dutyUpdate', function(req, res, next) {
