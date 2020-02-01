@@ -393,7 +393,7 @@ console.log(req.body)
         database.demandArea.deleteMany({CustID:CustID},function(e, d){
           console.log("Reset Demand")
         });
-      }, 1000*5*60);
+      }, 1000*29);
   
 
     
@@ -555,7 +555,15 @@ router.post('/drv/otpSend', function(req, res, next) {
   res.send({status: 'success'})
   });
 
- 
+  //   googleApi.otpsend({  
+  //   apikey : 'mWdlAOiE5nY-dlNUZ6linXXcgKhTCMq1MzoQJPAerf',
+  //   message : 'Your One Time Password : 1234 to very PaaCab. Kindly do not share with anyone.',
+  //   numbers : '+919733241080',
+  //   sender : 'TXTLCL'
+  // },function(data){
+  // console.log(data);
+  // //res.send(data);
+  // })
 
   ///////Register New Driver////////
 router.post('/drv/driverReg', function(req, res, next) {
@@ -717,7 +725,7 @@ router.post('/drv/completeReg', function(req, res, next) {
       database.pilot.findOneAndUpdate({pilotID:pilotID},{$set:{location:{type:'Point',coordinates:[0, 0]}}},function(err,data){
        console.log("location update")
         });
-    },1000*60*5)
+    },1000*29)
   }
 
    //////////Update Driver Duty Offline and online//////

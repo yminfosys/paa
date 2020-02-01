@@ -319,7 +319,7 @@ content: "Drop"
                 var totalprice=$("#tmPrice"+travelmod+"").val();
                 $("#totalAmt").text(totalprice);
                 $("#totalDistance").val(distance);
-                $("#booimg").html('<img class="modeImg img-rounded" src="/india/images/tm'+travelmod+'.png">')
+                $("#booimg").html('<img class="tm-img" src="/india/images/tm'+travelmod+'.png">')
 
                 }              
             });
@@ -371,7 +371,8 @@ content: "Drop"
  } 
 
    
-
+////////Notification ////////
+$("#notification").appendTo(map.getDiv());
  
 
 } ///////End IntMap  

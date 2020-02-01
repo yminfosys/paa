@@ -240,7 +240,7 @@ function loginprocess(){
     if($("#tmPrice"+tm+"").val()){
       //alert($("#tmPrice"+tm+"").val());
       $("#totalAmt").text($("#tmPrice"+tm+"").val());
-      $("#booimg").html('<img class="modeImg img-rounded" src="/india/images/tm'+tm+'.png">')
+      $("#booimg").html('<img class="tm-img" src="/india/images/tm'+tm+'.png">')
     }   
     for(var i=0; i<10; i++){
       if(i!=tm){

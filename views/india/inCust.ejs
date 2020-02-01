@@ -78,6 +78,7 @@
 
             <div id="mapcontent">
                 <div id="map"></div>
+                <div id="notification">ffg</div>
                 <div id="content-pickup">
                     Pickup Location
                 </div>
@@ -147,7 +148,7 @@
                     <input name="ModeofTravel" id="ModeofTravel" type="hidden" value="1">
                     <input name="ModeofSearch" id="ModeofSearch" type="hidden" value="0">
 
-                   <div  id="footer-content">                       
+                   <div  id="footer-content" >                       
                        <div class="row">
                            <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
                             <div class="form-group">
@@ -175,22 +176,23 @@
                        </div>
                     </div> <!--End Footer-content -->
 
-                   <div  id="footer-prebooking">
-                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
-                        <div style="border-bottom: 1px solid #000; height: 25%;" class="row">
-                        <div id="booimg" class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                        <img class="modeImg img-rounded" src="/india/images/tm1.png">
-                        </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                                <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Coupon Code" >
-                               </div>
+                   <div  id="footer-prebooking" class="container">   
+                    <div class="col-xs-12 col-sm-12  ">
+                        <div style="border-bottom: 1px solid #000; " class="row">
+                            <div id="booimg" class="col-xs-2 col-sm-3 col-md-3 col-lg-2">
+                            <img class="img-rounded" src="/india/images/tm1.png" width="100">
                             </div>
-                            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-                             <label style="position: relative; float: left; font-size: 25px;">&#8377;</label> 
-                             <div style="position: relative; float: left; font-size: 25px;" id="totalAmt">20</div> 
-                             <input  id="totalDistance" type="hidden">                            
+                            
+                            <div class="col-xs-3 col-sm-3 ">
+                                <label style="position: relative; float: left; font-size: 18px;">&#8377;</label> 
+                                <div style="position: relative; float: left; font-size: 18px; letter-spacing:0px;" id="totalAmt">20</div> 
+                                <input  id="totalDistance" type="hidden">                            
                             </div>
+                            
+                            <div class="col-xs-7 col-sm-7">
+                               <p style="font-size: 12px; color: rgb(23, 100, 21); font-weight: bolder;">Reduce price @ &#8377;3/km Select Pre-Ride</p>
+                            </div>
+
                         </div>
                         <div style="border-bottom: 1px solid #000; height: 25%;" class="row">
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
@@ -208,7 +210,8 @@
                         </div>
                         <div style=" height: 25%; margin-top: 5px;" class="row">
                         <div id="bookingMsg" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <button onclick="confirmBooking()" id="confrmBtn" type="button" class="btn btn-large btn-block btn-primary">Confirm PaaCab</button>
+                        <button onclick="confirmBooking()" id="confrmBtn" type="button" class="btn  btn-primary ">Confirm PaaCab</button>
+                        <button onclick="confirmBooking()" id="confrmBtn" type="button" class="btn   btn-success ">Pre-Ride &#8377; 36</button>
                         </div>
                         </div></div>
                    </div>
