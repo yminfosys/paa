@@ -370,6 +370,7 @@ console.log(req.body)
     database.demandArea.findOne({CustID:req.cookies.CustID},function(e,data){
       if(data){
         database.demandArea.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(e,d){
+          deleteDemand();
           res.send("demand Update")
         
         });
@@ -393,18 +394,21 @@ console.log(req.body)
       });
    });
   
-  //////DELETE ALL DEMAND /////////
-// var  DemandTime;
-//   function deleteDemand(){    
-//     DemandTime=setInterval(function(){
-      // database.demandArea.deleteMany({},function(e, d){
-      //   console.log("Reset Demand")
-      // });
-//     }, 1000*60*5);
+  //DELETE ALL DEMAND /////////
+var  DemandTime;
+  function deleteDemand(){
+    if(!DemandTime){
+      DemandTime=setInterval(function(){
+        database.demandArea.deleteMany({},function(e, d){
+          console.log("Reset Demand")
+        });
+      }, 1000*60*5);
+    }
+
     
-//   }
+  }
   
-//   deleteDemand();
+  
 
 ///////////////////////////////////////
 ///* END CUSTOMER LISTING. *///////////
