@@ -95,7 +95,7 @@ function initMap() {
      }
 
        ///////Driver StartRide Stage///////
-       
+       var timerR;
        function getDriverposition2(reqs){
               timerR=setInterval(function(){
               $.post('/india/getDriverposition',{pilotID:reqs.pilotID},function(resp){
@@ -117,7 +117,7 @@ function initMap() {
 
 
     ///////Driver StartRide Stage///////
-    
+    var timerR;
     function getDriverposition3(reqs){
            timerR=setInterval(function(){
            $.post('/india/getFinishBooking',{bookingID:reqs.bookingID},function(resp){
@@ -167,6 +167,9 @@ function initMap() {
                         $("#billAndfeedback").css({"display":"block"});
                         $("#tamt").text(resp.totalamount)
                     });
+                }else{
+                    
+                    window.location='/india'
                 }
 
             }

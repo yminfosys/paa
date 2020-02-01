@@ -383,14 +383,23 @@ console.log(req.body)
       }
     });
   });
-
+////////DElete Demand Area//////
+  router.post('/deleteDemand', function(req, res, next) {
+     database.demandArea.deleteMany({CustID:req.cookies.CustID},function(e, d){
+       if(d){
+        res.send('DemandDeleted');
+       }
+        
+      });
+   });
+  
   //////DELETE ALL DEMAND /////////
 // var  DemandTime;
 //   function deleteDemand(){    
 //     DemandTime=setInterval(function(){
-//       database.demandArea.deleteMany({},function(e, d){
-//         console.log("Reset Demand")
-//       });
+      // database.demandArea.deleteMany({},function(e, d){
+      //   console.log("Reset Demand")
+      // });
 //     }, 1000*60*5);
     
 //   }
@@ -409,7 +418,7 @@ console.log(req.body)
   /////Listin Cust Ride Conform//////    
     router.get('/ride', function(req, res, next) {
       if(req.cookies.CustID){         
-        database.pilot.findOne({CustID:req.body.CustID},function(err,cust){     
+        database.customer.findOne({CustID:req.cookies.CustID},function(err,cust){     
         res.render('india/inCustRideConfrm',{YOUR_API_KEY:process.env.API_KEY,orderStage:cust.orderStage})
         })
       }else{
@@ -730,10 +739,13 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   
   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept'}},function(err, ride){
     if(ride){
-      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept'}},function(er,cust){
+      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept',}},function(er,cust){
         database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{duty:'offline',orderStage:'accept'}},function(re, ou){
           res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
           res.send({ride:ride,cust:cust,RideOTP:OTP});
+          database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
+            console.log("Reset Demand")
+          });
         });
        
       });
