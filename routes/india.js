@@ -386,14 +386,14 @@ console.log(req.body)
   });
 
   //DELETE ALL DEMAND /////////
-
-  function deleteDemand(CustID){
-    
-     setTimeout(function(){
+  var deleteDemandTimer;
+  function deleteDemand(CustID){ 
+    clearTimeout(deleteDemandTimer);   
+    deleteDemandTimer=setTimeout(function(){
         database.demandArea.deleteMany({CustID:CustID},function(e, d){
           console.log("Reset Demand")
         });
-      }, 1000*29);
+      }, 1000*60*5);
   
 
     
@@ -720,12 +720,14 @@ router.post('/drv/completeReg', function(req, res, next) {
   });
 
   //////Reset Drivet Location////
+  var reSetLocetionTimer;
   function reSetLocetion(pilotID){
-    setTimeout(function(){
+    clearTimeout(reSetLocetionTimer);
+    reSetLocetionTimer=setTimeout(function(){
       database.pilot.findOneAndUpdate({pilotID:pilotID},{$set:{location:{type:'Point',coordinates:[0, 0]}}},function(err,data){
        console.log("location update")
         });
-    },1000*29)
+    },1000*60*5)
   }
 
    //////////Update Driver Duty Offline and online//////
