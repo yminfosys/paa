@@ -239,9 +239,26 @@ function loginprocess(){
     AlldrivingModeNearestTime(); 
     if($("#tmPrice"+tm+"").val()){
       //alert($("#tmPrice"+tm+"").val());
-      $("#totalAmt").text($("#tmPrice"+tm+"").val());
-      $("#booimg").html('<img class="tm-img" src="/india/images/tm'+tm+'.png">')
-    }   
+      //$("#totalAmt").text($("#tmPrice"+tm+"").val());
+     // $("#booimg").html('<img class="tm-img" src="/india/images/tm'+tm+'.png">')
+        var totalprice=$("#tmPrice"+tm+"").val();
+        $("#confrmBtn").html('Ride Now &#8377; '+totalprice+'')
+        var tmPreRidePrice= $("#tmPreRidePrice"+tm+"").val();
+        var distance=$("#totalDistance").val();
+        if(Number(tmPreRidePrice)>0){
+          $("#promoMsg").css({"display":"block"});
+          $("#preRideBtn").css({"display":"block"});
+          $("#confrmBtn").css({"width":"50%"})
+          $("#promoMsg").html('<marquee>Reduce price @ &#8377;'+tmPreRidePrice+'/km Tab on Pre-Ride button</marquee>')
+          $("#preRideBtn").html('Pre-Ride &#8377; '+ Number(distance) * Number(tmPreRidePrice)+'')
+        }else{
+          $("#promoMsg").css({"display":"none"});
+          $("#preRideBtn").css({"display":"none"});
+          $("#confrmBtn").css({"width":"100%"})
+          
+        }
+    } 
+
     for(var i=0; i<10; i++){
       if(i!=tm){
         $("#modeImg"+i+"").css({"border": "1px solid #000"});

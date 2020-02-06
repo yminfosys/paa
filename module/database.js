@@ -63,6 +63,9 @@ var custSchema = new mongoose.Schema({
     custRating:String,   
     userType:String,
     orderStage:String,
+    preRidePriceperKm:[],
+    regdate: { type: Date, default: Date.now },
+    lastLogindate: { type: Date },
     location: {
       type: {
         type: String, // Don't do `{ location: { type: String } }`
@@ -94,6 +97,8 @@ var pilotSchema = new mongoose.Schema({
   isdCode:String,    
   pilotID:String,
   pilotRating:String,
+  /////price per km 
+  pilotGetperKm:String,
   accountStatus:String,
   completereg:String,   
   userType:String,
@@ -201,7 +206,6 @@ var demandSchema = new mongoose.Schema({
     }
   }
 });
-
 
 var demandmodul = mongoose.model('demandcollections', demandSchema);
 

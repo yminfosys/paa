@@ -311,16 +311,30 @@ content: "Drop"
               $("#tm"+dataa.travelmod+"").css({"display":"block"})
               $("#tm"+dataa.travelmod+"").html('&#8377;'+dataa.price+'');
               $("#tmPrice"+dataa.travelmod+"").val(dataa.price);
+              $("#tmPreRidePrice"+dataa.travelmod+"").val(dataa.preRidePrice[Number(dataa.travelmod)-1]);
+
               countt++;                        
               if(countt==$(".modeImg").length-1){
                 $("#footer-content").css({"display":"none"});
                 $("#footer-prebooking").css({"display":"block"});                
                 $("#modeImg"+travelmod+"").css({"border": "4px solid rgb(42, 204, 36)"});
                 var totalprice=$("#tmPrice"+travelmod+"").val();
-                $("#totalAmt").text(totalprice);
+                //$("#totalAmt").text(totalprice);
                 $("#totalDistance").val(distance);
-                $("#booimg").html('<img class="tm-img" src="/india/images/tm'+travelmod+'.png">')
-
+                $("#confrmBtn").html('Ride Now &#8377; '+totalprice+'')
+                //$("#booimg").html('<img class="tm-img" src="/india/images/tm'+travelmod+'.png">');
+                var tmPreRidePrice= $("#tmPreRidePrice"+travelmod+"").val();
+                if(Number(tmPreRidePrice)>0){
+                  $("#promoMsg").css({"display":"block"});
+                  $("#promoMsg").html('<marquee>Reduce price @ &#8377;'+tmPreRidePrice+'/km Tab on Pre-Ride button</marquee>')
+                  $("#preRideBtn").html('Pre-Ride &#8377; '+ Number(distance) * Number(tmPreRidePrice)+'')
+                }else{
+                  $("#promoMsg").css({"display":"none"});
+                  $("#preRideBtn").css({"display":"none"});
+                  $("#confrmBtn").css({"width":"100%"})
+                  
+                }
+                
                 }              
             });
           });
@@ -373,6 +387,8 @@ content: "Drop"
    
 ////////Notification ////////
 $("#notification").appendTo(map.getDiv());
+$("#promoMsg").appendTo(map.getDiv());
+
  
 
 } ///////End IntMap  

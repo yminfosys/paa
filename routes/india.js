@@ -18,6 +18,7 @@ router.use(fileUpload({
 ///////////////////////////////////////
 ///* CUSTOMER LISTING. *///////////////
 ///////////////////////////////////////
+
 router.get('/', function(req, res, next) {  
   if(req.cookies.CustID){ 
     database.customer.findOne({CustID:req.cookies.CustID},function(err,data){
@@ -43,6 +44,7 @@ router.get('/', function(req, res, next) {
 ///////Login Customer listing////////
 router.get('/login', function(req, res, next) {
   if(req.cookies.CustID){
+    
     res.redirect('/india')
   }else{
     res.render('india/inCustLogin',{msg:req.query.msg,lat:req.query.lat,lng:req.query.lng})
@@ -139,6 +141,7 @@ router.post('/custReg', function(req, res, next) {
       mobileNumber:req.body.mobile,
       custRating:'0',
       isdCode:'+91',
+      preRidePriceperKm:[3, null, null, null],
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
       //location:{type:'Point',coordinates:[1.00001, 1.0001]}
     }).save(function(err){
@@ -148,6 +151,7 @@ router.post('/custReg', function(req, res, next) {
     }); 
 
   });
+
 ////////Logout /////////////
   router.get('/logout/cust', function(req, res, next) {
     res.clearCookie("CustID");
@@ -297,8 +301,11 @@ router.post('/getprice', function(req, res, next) {
 
   database.priceOffer.findOne({CustID:req.cookies.CustID,travelmod:req.body.travelmod,distanceKM:req.body.distance},function(err , data){
     if(data){
-      res.send({price:data.price,travelmod:data.travelmod});
-      console.log(data);
+      database.customer.findOne({CustID:req.cookies.CustID},function(er,cust){
+        res.send({price:data.price,travelmod:data.travelmod,preRidePrice:cust.preRidePriceperKm});
+        console.log(data);
+      });
+      
     }
   });
 
