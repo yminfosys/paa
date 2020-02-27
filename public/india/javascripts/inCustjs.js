@@ -171,10 +171,10 @@ function loginprocess(){
               var location=''+origin.lat+' ,'+origin.lng+'';
               out='<a onclick="CloseAll(\'placesearch\')" class="list-group-item active"><i class="fa fa-map-marker" aria-hidden="true"></i></span> &nbsp; Select From Map</a>'
               $.post('/india/placesearch',{quary:quary,location:location},function(data){ 
-                     
+                 
                 if(data.status=='OK'){
                 data.predictions.forEach(function(val,indx){ 
-                 out+='<a id="abc" class="list-group-item searchItem"> '+val.description+'</a>      '
+                 out+='<a id="abc" class="list-group-item searchItem"> '+val.description+' <input type="hidden" value="'+val.place_id+'"/> </a>    '
                 ///{lat:'+val.geometry.location.lat+', lng:'+val.geometry.location.lng+'}
                 })
                 $("#placeList").html(out);
@@ -357,7 +357,21 @@ function loginprocess(){
    } 
 
     
+   /////Pre-Ride Booking///////
+   function preRideBooking(){
+    var originAds=getCookie("picuplocation") ;
+    var distAds=getCookie("droplocation") ;
+    var origin=JSON.parse(getCookie("pickuplatlong")) ;
+    var dist=JSON.parse(getCookie("droplatlong")) ;
+    var travelmod=$("#ModeofTravel").val();
+    var CustID=getCookie("CustID")
+    var totalAmt= $("#tmPreRidePrice"+travelmod+"").val();
+    var totalDistance= $("#totalDistance").val();
+    $("#footer-preRide").css({"display":"block"});
+    $("#preRideAmt").html('Pre-Ride &#8377; '+totalAmt*totalDistance+'')
 
+
+   }
 
 
 

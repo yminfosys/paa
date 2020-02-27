@@ -312,7 +312,6 @@ content: "Drop"
               $("#tm"+dataa.travelmod+"").html('&#8377;'+dataa.price+'');
               $("#tmPrice"+dataa.travelmod+"").val(dataa.price);
               $("#tmPreRidePrice"+dataa.travelmod+"").val(dataa.preRidePrice[Number(dataa.travelmod)-1]);
-
               countt++;                        
               if(countt==$(".modeImg").length-1){
                 $("#footer-content").css({"display":"none"});
@@ -326,6 +325,7 @@ content: "Drop"
                 var tmPreRidePrice= $("#tmPreRidePrice"+travelmod+"").val();
                 if(Number(tmPreRidePrice)>0){
                   $("#promoMsg").css({"display":"block"});
+                  $("#confrmBtn").css({"width":"50%"});
                   $("#promoMsg").html('<marquee>Reduce price @ &#8377;'+tmPreRidePrice+'/km Tab on Pre-Ride button</marquee>')
                   $("#preRideBtn").html('Pre-Ride &#8377; '+ Number(distance) * Number(tmPreRidePrice)+'')
                 }else{
@@ -346,11 +346,13 @@ content: "Drop"
 
       
       document.getElementById("placeList").addEventListener("click", function(e) {
+        //console.log(e.target.querySelector('input').value);
         if (e.target && e.target.matches("a.searchItem")) {
           e.target.className = "searchItem"; // new class name here
-         // alert("clicked " + e.target.innerText);
+        // alert("clicked " + e.target.innerText);
+         //alert("Placeid " + e.target.querySelector('input').value);
          
-          $.post('/india/placeidtogeocod',{address:e.target.innerText},function(data){
+          $.post('/india/placeidtogeocod',{placeid:e.target.querySelector('input').value},function(data){
             if(data.status=='OK'){
               var geoloc=data.results[0].geometry.location
               var placeID=data.results[0].place_id

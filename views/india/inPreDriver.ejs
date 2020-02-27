@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Title Page</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" type="text/css" href="/index/stylesheets/sidebar.css" />
+        <link rel="stylesheet" type="text/css" href="/india/stylesheets/inPreDriverStyle.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.3/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script src="/india/javascripts/socket.io.js"></script>
+        <script src="/india/javascripts/inPreDriverMapjs.js"></script>
+        <script src="/india/javascripts/inPreDriverjs.js"></script>
+        <script src="/index/javascripts/sidebar.js"></script>
+        
+
+        
+    </head>
+
+    <body>
+  <!-- Check is Any Incomplete booking -->
+  <input id="orderStage" type="hidden" value="<%=driver.orderStage%>">
+     <!-- For Pickup Drop Content -->
+     <div id="OTP-Content">
+         <h3>Enter OTP</h3>
+         <input onkeyup="otpinput()" id="otpp" maxlength="4" >
+     </div>
+
+    
+      
+         <!-- For Pickup Drop Content -->
+         <div id="pickDrop-Content">
+            <div class="pickdropHead">
+                <div class="container">
+                    <div class="row pickdropHeadContainer">
+                        <div class="col-xs-12  col-sm-12 ">
+                           <div class="row">
+                             <div class="col-xs-1 col-sm-1 ">
+                                <a href="tel:100"><button type="button" class="btn btn-danger btn-xs">sos</button></a>
+                            </div>
+                             <div class="col-xs-8 col-sm-8 ">
+                                 <p class="text-center"><span class="label label-success ">CRN : <a id="orderNO">123546</a> </span></p></div>
+                             <div id="telsms" class="col-xs-3 col-sm-3 ">
+                                <!-- <a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>
+                                <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a> -->
+                                </div>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div  class="pickdropfooter">
+                    <div class="container">
+                        <div class="row pickupfootrer">
+                            <div id="address" class="col-xs-9 col-sm-9">
+                                    <!-- <p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p> -->
+                            </div>
+                            <div class="col-xs-3 col-sm-3">
+                                <input id="geoNav" type="hidden">
+                                <button onclick="openMap()" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>
+                            </div>
+                        </div>
+                        <div class="row pickupfootrer">
+                            <div id="btnControl" class="col-xs-6 col-sm-6 col-xs-offset-3 col-sm-offset-3">
+                               <input onclick="clineLocated()" id="clineLocated" class="pickupfootrerbtn" type="button" value="Cline Located">
+                               <input onclick="startRide()" id="startRide" class="pickupfootrerbtn" type="button" value="Start Ride">
+                               <input onclick="finishride()" id="finishride" class="pickupfootrerbtn" type="button" value="Finish Ride">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+         </div>
+         <div id="billAndfeedback">                    
+            <div class="container">                        
+                <div class="row">
+                    <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 ">
+                       <h2 style="color: rgb(44, 40, 7); text-align: center;">Collection Amount</h2>
+                       <p style="font-size: 30px; font-weight: bolder;" class="text-center">&#8377; <span id="amt">142.20</span></p>
+                        <p class="text-center">You Need to Collect Above Amount From Cline at End of Journey</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div style="border: 2px solid #000; margin-top: 20px;" class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1 ">
+                        <p class="text-center">How is your cline Behaviour</p>
+                        <p class="text-center">Share your Rating</p>
+                        <div style="width:75%; margin-left: 13%; ">
+                        <div class="rate">
+                            <input type="radio" id="star5" name="rate" value="5" />
+                            <label for="star5" title="text">5 stars</label>
+                            <input type="radio" id="star4" name="rate" value="4" />
+                            <label for="star4" title="text">4 stars</label>
+                            <input type="radio" id="star3" name="rate" value="3" />
+                            <label for="star3" title="text">3 stars</label>
+                            <input type="radio" id="star2" name="rate" value="2" />
+                            <label for="star2" title="text">2 stars</label>
+                            <input type="radio" id="star1" name="rate" value="1" />
+                            <label for="star1" title="text">1 star</label>
+                          </div>
+                        </div>
+                        <br>
+                        
+                    </div>
+                </div>
+
+                <div style="margin-top: 100px;" class="row">                                                           
+                       <button id="continueNextRide"  type="button" class="btn  btn-primary col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">Continue Next Ride</button>
+                </div>
+                
+            </div>                    
+        </div>
+
+
+
+        <!-- For Incomming Call -->
+        <div id="ringtone">            
+            <div class="container">
+                
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <canvas id="myCanvas" class="myCanvascircle" width="500" height="200"></canvas> 
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                      
+                        <div class="picupaddress">
+                            <p><strong>Pickup From</strong></p>
+                            <p id="pickupFrom">Unname road, City Center ,Durgapu Unname road, City Center ,Durgapu</p>
+                        </div>
+                    
+                        
+                    </div>
+
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                      
+                        <div id="btnControl" class="btnBox">                                                       
+                            <input  class="boxbtn" type="button" value="Pass" >
+                            <input onclick="acceptRide()"  class="boxbtn" type="button" value="Accept" >
+                        </div>
+                    
+                        
+                    </div>
+                </div>
+                
+            </div>
+
+        </div>
+     
+
+        <div id="sidebar-waper">
+            <div class="togle-btn" onclick="sidebartoggle()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul class="sidebar-menue">
+            <li class="Dashboard"><a href="/business"> <i class="fa fa-dashboard" aria-hidden="true"></i><span> Dashboard</span></a></li>
+            <li class="Profile">
+              <a href="#ProfileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
+                  <i class="fa fa-cogs"></i>
+                  <span>Profile</span>
+              </a>
+              <ul class="collapse " id="ProfileSubmenu">
+                  <li><a href="/business/profile#ppi">Ppi Upload</a></li>
+                  <li><a href="/business/profile#ppi">Return Address Update</a></li>
+                  <li><a href="/business/profile#ppi">Add Balance</a></li>
+                  <li><a href="/business/profile#ppi">Delivered Order</a></li>
+                  <li><a href="/business/profile#ppi">Add Sale Channel</a></li>
+                  </ul>
+            </li>
+            <li class="Logout"><a href="/india/preDrv/logout"> <span> Logout</span></a></li>
+            </ul>
+        </div>
+        
+        <div id="main-content">
+            
+            <div id="map-msg">
+                <img src="/india/images/gif/circle1.gif">
+            </div>
+            <div id="mapcontent">
+                <div id="map"></div> 
+                <div  id="offline-content">Offline</div>
+                
+            </div>
+            
+            
+              
+        </div> 
+
+        
+       
+        <script src="/india/javascripts/circle.js"></script>   
+        <!-- jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    </script>>
+        <!-- Bootstrap JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script async defer   
+        src="https://maps.googleapis.com/maps/api/js?key=<%=YOUR_API_KEY%>&callback=initMap">
+        </script>
+    </body>
+</html>

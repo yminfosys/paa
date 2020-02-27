@@ -236,17 +236,18 @@ router.post('/placesearch', function(req, res, next) {
 },function(result){
   
   res.send(result)
+
 });
 
 });
 
 
 router.post('/placeidtogeocod', function(req, res, next) {
-  googleApi.placeByadds({
-  address:req.body.address,
+  googleApi.placeByplaceID({
+    placeid:req.body.placeid,
   apik:process.env.API_KEY
 },function(result){
-  //console.log(JSON.stringify(result) )
+  console.log(JSON.stringify(result) )
   res.send(result)
   //console.log(result.results[0])
 });
@@ -909,4 +910,231 @@ router.post('/drv/getDemadndArea', function(req, res, next) {
 ///////////////////////////////////////
 ///* END DRIVER LISTING. */////////////
 ///////////////////////////////////////
+
+///////////////////////////////////////
+///* PRE DRIVER LISTING. */////////////
+///////////////////////////////////////
+router.get('/preDrv', function(req, res, next) {
+  //res.send('respond with a resource I am INDIA');
+  if(req.cookies.pilotID){
+    database.pilot.findOne({completereg:'done',pilotID:req.cookies.pilotID},function(err,data){
+      console.log(req.cookies.pilotID)
+      if(data){          
+        res.render('india/inPreDriver',{YOUR_API_KEY:process.env.API_KEY,driver:data});
+      }else{
+        database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,driver){
+          res.render('india/inPreDriverReg',{YOUR_API_KEY:process.env.API_KEY,driver:driver});
+        });
+        
+      }
+     
+    });
+    
+  }else{
+    res.redirect('/india/preDrv/login')
+  }
+});
+
+router.get('/preDrv/login', function(req, res, next) {
+  if(req.cookies.pilotID){
+    res.redirect('/india/preDrv')
+  }else{
+    res.render('india/inPreDriverLogin',{msg:req.query.msg,lat:req.query.lat,lng:req.query.lng})
+  }
+});
+
+///////////Check Mobile in our system////////////
+router.post('/preDrv/checkMobileExist', function(req, res, next) {
+console.log(req.body)
+
+database.pilot.findOne({mobileNumber:req.body.mobile,isdCode:'+91'},function(err,data){
+  console.log(data)
+  
+  if(data){
+
+    res.send('exist');
+  }else{
+    res.send('notexist');
+  }
+});
+
+});
+
+
+///////Login Driver////////
+router.post('/preDrv/login', function(req, res, next) {
+database.pilot.findOne({mobileNumber:req.body.mobile,isdCode: '+91'},function(err,user){
+  if(user){
+  bcrypt.compare(req.body.password, user.password, function(err, pass) {
+     console.log(pass)
+       if(pass){
+        res.cookie("pilotID", user.pilotID,{maxAge: 30*24*60*60*1000 }); 
+        /////check Prise manager///////          
+        res.send('success');
+       }else{
+         //////Worng Password//////
+         res.send('worngpassword')
+       }
+       });
+      }
+    });
+});
+
+ ////////Logout /////////////
+ router.get('/preDrv/logout', function(req, res, next) {
+  res.clearCookie("pilotID");
+  res.redirect('../../preDrive')
+    
+});
+
+///////Register New Driver////////
+router.post('/preDrv/driverReg', function(req, res, next) {
+bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+  database.pilot({
+    name: req.body.name,
+    email :req.body.email,    
+    password: hash,    
+    mobileNumber:req.body.mobile,
+    isdCode:'+91',
+    pilotRating:'0',
+    location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+    //location:{type:'Point',coordinates:[1.00001, 1.0001]}
+  }).save(function(err){
+    
+    res.redirect('/india/preDrv/login?msg=Registration Success');
+      }); 
+  }); 
+
+});
+
+
+ ///////Continue Registration process////////
+router.post('/preDrv/completeReg', function(req, res, next) {
+   console.log(req.body);
+////upload files  ///////
+   var photo = req.files.file1; 
+   if(photo.size >0){         
+   var urlphoto='driverDocument/photo'+req.body.mobile+'1'+photo.name+''
+   photo.mv('public/india/'+urlphoto+'', function(err) {
+     if(err){console.log(err)  }
+     database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+       photo:urlphoto
+    }},function(e,d){
+     });
+
+    });
+  }
+  var id = req.files.file2;
+   if(id.size > 0){       
+  var urlid='driverDocument/id'+req.body.mobile+'1'+id.name+''
+  id.mv('public/india/'+urlid+'', function(err) {
+    if(err){console.log(err)  }
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      Idproof:urlid 
+    }},function(e,d){
+     });
+ });
+}
+  var dl = req.files.file3;
+  if(dl.size >0){          
+  var urldl='driverDocument/dl'+req.body.mobile+'1'+dl.name+''
+  dl.mv('public/india/'+urldl+'', function(err) {
+    if(err){console.log(err)  }
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      dl:urldl
+    }},function(e,d){
+     });
+  });
+}
+  var rto = req.files.file4;
+  if(rto.size > 0){          
+  var urlrto='driverDocument/rto'+req.body.mobile+'1'+rto.name+''
+  rto.mv('public/india/'+urlrto+'', function(err) {
+    if(err){console.log(err)  }
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      rto:urlrto
+    }},function(e,d){
+     });
+  });
+}
+var insu = req.files.file5;
+if(insu.size > 0){
+var urlinsu='driverDocument/insurance'+req.body.mobile+'1'+insu.name+''
+insu.mv('public/india/'+urlinsu+'', function(err) {
+  if(err){console.log(err)  }
+  database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+    insurence:urlinsu
+  }},function(e,d){
+   });
+  });
+}
+var polu = req.files.file6; 
+if(polu.size > 0){         
+var urlpolu='driverDocument/polution'+req.body.mobile+'1'+polu.name+''
+polu.mv('public/india/'+urlpolu+'', function(err) {
+  if(err){console.log(err)  }
+  database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+    polution:urlpolu
+  }},function(e,d){
+   });
+  });
+}
+  if(req.body.address){
+  database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+    address:req.body.address
+  }},function(e,d){
+
+  });
+}
+
+  if(req.body.riderCheckbox||req.body.deliveryCheckbox||req.body.employeeCheckbox){
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      typeOfWork:[req.body.riderCheckbox,req.body.deliveryCheckbox,req.body.employeeCheckbox]
+    }},function(e,d){
+
+    });
+  }
+
+  if(req.body.employeeCheckbox){
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      jobCategory:req.body.jobcategory,
+      jobSubCategory:req.body.jobSubcategory,
+      ageGroup:req.body.ageGroup,
+      experance:req.body.experance,
+      panNumber:req.body.panNumber,
+      gender:req.body.gender
+    }},function(e,d){
+
+    });
+  }
+
+  if(req.body.travelmod){
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      travelmod:req.body.travelmod,
+      rtoRegno:req.body.RtoNo,
+      carModel:req.body.carModel
+    }},function(e,d){
+
+    });
+  }
+
+  if(req.body.bankAc){
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile, isdCode:req.body.isd},{$set:{
+      bankAccountNo:req.body.bankAc,
+      ifsc:req.body.ifsc,
+    }},function(e,d){
+
+    });
+  }
+  res.redirect('/india/preDrv')
+
+});
+
+
+
+
+///////////////////////////////////////
+///* END PRE DRIVER LISTING. */////////////
+///////////////////////////////////////
+
 module.exports = router;

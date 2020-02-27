@@ -22,6 +22,10 @@ router.get('/drive', function(req, res, next) {
 
   res.render('appDriver', { title: 'Paacab' });
 });
+router.get('/preDrive', function(req, res, next) {
+
+  res.render('appPreDriver', { title: 'Paacab' });
+});
 
 router.post('/geoplace', function(req, res, next) {  //
   googleApi.SearchGeoCodePlaceByLatLng({

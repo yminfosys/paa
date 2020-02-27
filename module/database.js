@@ -188,6 +188,7 @@ var priceandOfferSchema = new mongoose.Schema({
 
 priceandOfferSchema.plugin(autoIncrement.plugin, { model: 'priceandOffercollections', field: 'offerID',startAt: 1, incrementBy: 1 });
 
+
 var priceandOffermodul = mongoose.model('priceandOffercollections', priceandOfferSchema);
 
 ////Demand Area Schema
@@ -208,6 +209,25 @@ var demandSchema = new mongoose.Schema({
 });
 
 var demandmodul = mongoose.model('demandcollections', demandSchema);
+
+////Driver Location Schema
+// var demandSchema = new mongoose.Schema({ 
+//   pilotID:String,
+//   location: {
+//     type: {
+//       type: String, // Don't do `{ location: { type: String } }`
+//       enum: ['Point'], // 'location.type' must be 'Point'
+//       required: true
+//     },
+//     coordinates: {
+//       type: [Number],
+//       required: true,
+      
+//     }
+//   }
+// });
+
+// var demandmodul = mongoose.model('demandcollections', demandSchema);
 
 
 var sampleSchema=new mongoose.Schema({ 
