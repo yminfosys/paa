@@ -7,6 +7,9 @@ var database=require('../module/database');
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
+router.get('/driver', function(req, res, next) {
+  res.render('indexDriver', { title: 'Express' });
+});
 
 router.get('/cust', function(req, res, next) {
 
