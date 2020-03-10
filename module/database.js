@@ -25,6 +25,13 @@ function index2Dpilot(int,cb){
     cb({success:'1'});
   }
 
+  function index2Ddriver(int,cb){
+    console.log()
+      const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['driverLocationcollections'])
+      db.driverLocationcollections.createIndex({ "location" : "2dsphere" });
+      cb({success:'1'});
+    }
+
   // function index2Dpilot(int,cb){
   //   console.log()
   //     const db = mongojs('mongodb://localhost:27017/paacab', ['pilotcollections'])
@@ -211,23 +218,23 @@ var demandSchema = new mongoose.Schema({
 var demandmodul = mongoose.model('demandcollections', demandSchema);
 
 ////Driver Location Schema
-// var demandSchema = new mongoose.Schema({ 
-//   pilotID:String,
-//   location: {
-//     type: {
-//       type: String, // Don't do `{ location: { type: String } }`
-//       enum: ['Point'], // 'location.type' must be 'Point'
-//       required: true
-//     },
-//     coordinates: {
-//       type: [Number],
-//       required: true,
+var driverLocationSchema = new mongoose.Schema({ 
+  pilotID:String,
+  location: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
       
-//     }
-//   }
-// });
+    }
+  }
+});
 
-// var demandmodul = mongoose.model('demandcollections', demandSchema);
+var driverLocationmodul = mongoose.model('driverLocationcollections', driverLocationSchema);
 
 
 var sampleSchema=new mongoose.Schema({ 
@@ -307,8 +314,10 @@ var sampleModule = mongoose.model('dadacollections', sampleSchema);
 module.exports.customer=custmodul;
 module.exports.pilot=pilotmodul;
 module.exports.index2Dpilot=index2Dpilot;
+module.exports.index2Ddriver=index2Ddriver;
 module.exports.index2Ddemand=index2Ddemand;
 module.exports.ride=ridemodul;
 module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
 module.exports.demandArea=demandmodul;
+module.exports.driverLocationArea=driverLocationmodul;
