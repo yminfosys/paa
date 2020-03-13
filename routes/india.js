@@ -1252,19 +1252,29 @@ router.post('/paytm', function(req, res, next) {
 paytm.validate(config,req.body,function(err,data){
   if(err){console.log(err)}
   if(data.status == 'verified'){
-      res.send(data);
+    paytm.status(config,req.session.paymentData.ORDER_ID,function(err,data){
+      if(err){console.log(err)}
+      database.customer.findOne({CustID:req.cookies.CustID},function(er, cust){
+        if(cust){
+          var waletBalance=Number(cust.walletBalance) + Number(data.TXNAMOUNT);
+
+          database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{walletBalance:waletBalance}},function(ert,dd){
+            res.send({data:data});
+          });
+        }
+      });
+
+      
+  
+  
+      // data will contain order details
+    })  
   }
 
   
 })
 
-// paytm.status(config,req.session.paymentData.ORDER_ID,function(err,data){
-//   if(err){
-//       // handle err
-//   }
-// res.send(data)
-//   // data will contain order details
-// })
+
 
 });
 
