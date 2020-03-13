@@ -23,7 +23,7 @@ function initMap() {
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
     }
   
-    wachLocation();
+   
     /////////Clear Watch location////
     function clearWachposition(){
       navigator.geolocation.clearWatch(wachID);
@@ -31,8 +31,8 @@ function initMap() {
 
      /////////GPS location update driver tracking///////
    function driverLocationUpdate(position){
-    $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude},function(data){
-      //console.log(data);
+    $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"preRide"},function(data){
+      console.log(data);
     });
    }
 
@@ -73,5 +73,26 @@ function initMap() {
         
       }
      //////End Circle Marker//////
+
+      /////Off line Online /////////
+    document.getElementById("toggle").addEventListener("click", function(){
+      if(document.getElementById("toggle").checked == true){
+        
+        onlineExicute();
+      }else{
+        $("#offline-content").css({"display":"block"});
+        $("#map").css({"display":"none"});
+        $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
+          console.log(data)
+        })
+        clearWachposition();
+        setCookie("ringToneControl","OFF",1);
+        clearDemandArea();
+      }
+    }); 
+    
+    function onlineExicute(){
+      wachLocation();
+    }
 
 }/////End INITMAP

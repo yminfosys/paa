@@ -203,19 +203,31 @@
                             </div> -->
 
                         </div>
+
                         <div style="border-bottom: 1px solid #000; height: 25%;" class="row">
-                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <p style="font-size: 12px;"><strong>Apply Copon</p></div>
-                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                        <div class="checkbox">
+                      
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+                        <div class="checkbox" style="font-size: 12px;">
                                     <label>
                                         <input type="checkbox" value="">
                                         Cash
                                     </label>
                                 </div>
-                            </div>
-                            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-                            <p><i class="fa fa-google-wallet" aria-hidden="true"></i> &#8377; <br> Wallet(0.00)</p></div>
+                        </div>
+                        <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">                           
+                            <%if(cust.BuyKM){%>
+                                <p style="margin-top: 10px; cursor: pointer; font-size: 12px;"> BuyKM &#8377;(<%= Number(cust.BuyKM)%>)</p>
+                                    <%}else{%>
+                                        <p style="margin-top: 10px; cursor: pointer; font-size: 12px;">BuyKM :1</p>
+                                    <%}%>
+                        </div>
+                            <div class="col-xs-5 col-sm-4 col-md-5 col-lg-5">
+                                <%if(cust.walletBalance){%>
+                            <p onclick="walletReg()" style="margin-top: 10px; cursor: pointer; font-size: 12px;"> Wallet &#8377;(<%= Number(cust.walletBalance)%>)</p>
+                                <%}else{%>
+                                    <p onclick="walletReg()" style="margin-top: 10px; cursor: pointer; font-size: 12px;"> Wallet &#8377;0.00</p>
+                                <%}%>
+                        </div>
                         </div>
 
                         <div style=" margin-top: 5px;" class="row">
@@ -227,6 +239,31 @@
                         </div>
                         </div></div>
                    </div>
+
+                   
+                   <div id="waletPayment" >
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <%if(cust.walletBalance){%>
+                            <p id="preRideAmt">Wallet Balance &#8377; <%= Number(cust.walletBalance)%></p>
+                        <%}else{%>
+                            <p id="preRideAmt">Wallet Balance &#8377; 0.00</p>
+                        <%}%>
+                        <form action="/india/pay" method="POST" class="form-inline" role="form">
+                        <div class="form-group">
+                         <label>Recharge Amount (&#8377;)</label>   
+                         <input style="font-size: 25px;" type="number" name="rechrgAmt" class="form-control" placeholder="Recharge Amount" >                       
+                         <input type="hidden" name="CustID" value="<%=cust.CustID%>">
+                         <input type="hidden" name="walletOrderid" id="walletOrderid">
+                        </div>
+                        
+                        <div class="form-group">
+                            
+                            <input type="submit" value="Recharge" class="btn btn-primary col-xs-12 col-sm-12 ">
+                        </div>
+                        </form>
+                    </div>
+                   </div>
+                   
                    
                    <div  id="footer-preRide" class="container">                        
                         <div class="row">

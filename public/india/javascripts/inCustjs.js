@@ -267,6 +267,18 @@ function loginprocess(){
     }
     };
 
+    ///////Wallet Payment//////
+    function walletReg(){
+      $.post('/india/walletOrderCount',{},function(data){
+        if(data){
+          console.log("wallet",data)
+          $("#walletOrderid").val(data.WOrderID);
+          $("#waletPayment").css({"display":"block"});
+        }
+      });
+      
+    }
+
    ///////Confrim Booking/////
    function confirmBooking(){
     var originAds=getCookie("picuplocation") ;

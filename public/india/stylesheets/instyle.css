@@ -124,6 +124,17 @@
 #booking-process{ margin-top: 10%;
   display: none;
 }
+
+#waletPayment{
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  width: 100%;
+  z-index: 20;
+  background-color: #FFF;
+  display: none;
+}
+
 #footer-preRide{
   position: fixed;
   height: 100vh;

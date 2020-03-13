@@ -67,6 +67,8 @@ var custSchema = new mongoose.Schema({
     mobileNumber:String, 
     isdCode:String,       
     CustID:String,
+    walletBalance:String,
+    BuyKM:String,   
     custRating:String,   
     userType:String,
     orderStage:String,
@@ -178,6 +180,23 @@ var rideCountSchema = new mongoose.Schema({
 
 var rideCountmodul = mongoose.model('rideCountcollections', rideCountSchema);
 
+///Wallet Order Schema Counter
+var walletOrderCountSchema = new mongoose.Schema({ 
+  walletOrderID:  String,   
+});
+
+var walletOrderCountmodul = mongoose.model('walletOrderCountcollections', walletOrderCountSchema);
+
+///Wallet and Buy KM Recharge Schema 
+var WalletBuyKMSchema = new mongoose.Schema({ 
+  walletOrderID:  String,
+  CustID:String,
+  RechargeAmount:String,    
+  BuyKM:String,
+  date: { type: Date, default: Date.now },   
+});
+
+var WalletBuyKMmodul = mongoose.model('WalletBuyKMcollections', WalletBuyKMSchema);
 
 
 ///Price and Offer Mnager
@@ -220,6 +239,7 @@ var demandmodul = mongoose.model('demandcollections', demandSchema);
 ////Driver Location Schema
 var driverLocationSchema = new mongoose.Schema({ 
   pilotID:String,
+  DriverType:String,
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`
@@ -321,3 +341,5 @@ module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
 module.exports.demandArea=demandmodul;
 module.exports.driverLocationArea=driverLocationmodul;
+module.exports.walletOrderCouner=walletOrderCountmodul
+module.exports.WalletBuyKM=WalletBuyKMmodul

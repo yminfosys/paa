@@ -6,6 +6,25 @@ const fileUpload = require('express-fileupload');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
+const paytm = require('paytm-nodejs')
+ 
+const config = {
+    MID : 'xrqCDW62144290715353', // Get this from Paytm console
+    KEY : 'hVLXxaDeNkFDrNf%', // Get this from Paytm console
+    ENV : 'dev', // 'dev' for development, 'prod' for production
+    CHANNEL_ID : 'WAP',
+    INDUSTRY : 'Retail',  
+    WEBSITE : 'WEBSTAGING',
+    CALLBACK_URL : 'https://paacab.com/india/paytm',  // webhook url for verifying payment
+}
+
+
+/////Testing OTP credentials are as follows: 
+//Mobile Number: 7777777777. 
+//Password: Paytm12345. 
+///OTP: 489871.
+
+
 const moment = require('moment');
 
 
@@ -719,24 +738,27 @@ router.post('/drv/completeReg', function(req, res, next) {
   //////////Update Driver Location//////
   router.post('/drv/driverLocatioUpdate', function(req, res, next) {
     console.log('body',req.body)
-    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}}},function(err,data){
-    console.log(data)
-    reSetLocetion(req.cookies.pilotID)
+    database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exist){
+      if(exist){
+        database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}, DriverType:req.body.DriverType}},function(err,data){
+          res.send(req.body.lat)
+        });
+      }else{
+        database.driverLocationArea({
+          pilotID:req.cookies.pilotID,
+          DriverType:req.body.DriverType,
+          location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+        }).save(function(err){
+          res.send(req.body.lat)
+        })
+      }
     });
-    res.send(req.body.lat)
+
+   
     
   });
 
-  //////Reset Drivet Location////
-  var reSetLocetionTimer;
-  function reSetLocetion(pilotID){
-    clearTimeout(reSetLocetionTimer);
-    reSetLocetionTimer=setTimeout(function(){
-      database.pilot.findOneAndUpdate({pilotID:pilotID},{$set:{location:{type:'Point',coordinates:[0, 0]}}},function(err,data){
-       console.log("location update")
-        });
-    },1000*60*5)
-  }
+  
 
    //////////Update Driver Duty Offline and online//////
    router.post('/drv/dutyUpdate', function(req, res, next) {
@@ -1130,11 +1152,123 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
 
 });
 
+///// 
+router.post('/aa', function(req, res, next) {
 
+
+});
 
 
 ///////////////////////////////////////
 ///* END PRE DRIVER LISTING. */////////////
 ///////////////////////////////////////
+
+///////////////////////////////////////
+///* PAYTM PAY. */////////////
+///////////////////////////////////////
+router.post('/walletOrderCount', function(req, res, next) {
+  
+database.walletOrderCouner.findOne({},function(err,data){
+  if(Number(data.walletOrderID)>0){
+    var WOrderID=Number(data.walletOrderID)+1 ;
+    database.walletOrderCouner.findOneAndUpdate({walletOrderID:data.walletOrderID},{$set:{walletOrderID:WOrderID}},function(er, upda){
+      res.send({WOrderID:WOrderID});
+    });
+  }else{
+    database.walletOrderCouner({walletOrderID:'1'}).save(function(ree){
+    res.send({WOrderID:1});
+    });
+  }
+});
+
+});
+
+
+router.post('/pay', function(req, res, next) {
+console.log(req.body)
+
+let data = {
+  TXN_AMOUNT : req.body.rechrgAmt, // request amount
+  ORDER_ID : req.body.walletOrderid, // any unique order id 
+  CUST_ID : req.body.CustID // any unique customer id		
+}
+
+req.session.paymentData=data;
+
+ // create Paytm Payment
+ paytm.createPayment(config,data,function(err,data){
+  if(err){
+     console.log(err);
+  }
+
+  //success will return
+
+  /*{ 
+      MID: '###################',
+      WEBSITE: 'DEFAULT',
+      CHANNEL_ID: 'WAP',
+      ORDER_ID: '#########',
+      CUST_ID: '#########',
+      TXN_AMOUNT: '##',
+      CALLBACK_URL: 'localhost:8080/paytm/webhook',
+      INDUSTRY_TYPE_ID: 'Retail',
+      url: 'https://securegw-stage.paytm.in/order/process',
+      checksum: '####################################' 
+  }*/
+
+  //store the url and checksum
+  let url = data.url;
+  let checksum = data.checksum;
+  req.session.checksum=checksum;
+  /* Prepare HTML Form and Submit to Paytm */
+  res.writeHead(200, {'Content-Type': 'text/html'});
+  res.write('<html>');
+  res.write('<head>');
+  res.write('<title>Merchant Checkout Page</title>');
+  res.write('</head>');
+  res.write('<body>');
+  res.write('<center><h1>Please do not refresh this page...</h1></center>');
+  res.write('<form method="post" action="' + url + '" name="paytm_form">');
+  for(var x in data){
+      res.write('<input type="hidden" name="' + x + '" value="' + data[x] + '">');
+  }
+  res.write('<input type="hidden" name="CHECKSUMHASH" value="' + checksum + '">');
+  res.write('</form>');
+  res.write('<script type="text/javascript">');
+  res.write('document.paytm_form.submit();');
+  res.write('</script>');
+  res.write('</body>');
+  res.write('</html>');
+  res.end();
+  });
+
+});
+
+router.get('/paytm', function(req, res, next) {
+  console.log('PayTM data', req.session.paymentData);
+  console.log('checksum', req.session.checksum);
+  
+////Payment Validate//////
+paytm.validate(config,req.session.checksum,function(err,data){
+  if(err){console.log(err)}
+  if(data.status == 'verified'){
+      res.send("ok all fine")
+  }
+})
+
+// paytm.status(config,req.session.paymentData.ORDER_ID,function(err,data){
+//   if(err){
+//       // handle err
+//   }
+// res.send(data)
+//   // data will contain order details
+// })
+
+});
+
+///////////////////////////////////////
+///* PAYTM PAY END. */////////////
+///////////////////////////////////////
+
 
 module.exports = router;

@@ -165,7 +165,7 @@ function initMap() {
 
    /////////GPS location update driver tracking///////
    function driverLocationUpdate(position){
-    $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude},function(data){
+    $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"General"},function(data){
       //console.log(data);
     });
    }
