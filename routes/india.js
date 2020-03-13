@@ -1252,7 +1252,7 @@ router.post('/paytm', function(req, res, next) {
 paytm.validate(config,req.body,function(err,data){
   if(err){console.log(err)}
   if(data.status == 'verified'){
-      res.send("ok all fine")
+      res.send(data);
   }
 
   
