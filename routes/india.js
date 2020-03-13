@@ -9,12 +9,12 @@ const saltRounds = 10;
 const paytm = require('paytm-nodejs')
  
 const config = {
-    MID : 'xrqCDW62144290715353', // Get this from Paytm console
-    KEY : 'hVLXxaDeNkFDrNf%', // Get this from Paytm console
+    MID : 'hqfetl86344029798463', // Get this from Paytm console
+    KEY : 'iXGHAlR9d3Tuju1w', // Get this from Paytm console
     ENV : 'prod', // 'dev' for development, 'prod' for production
     CHANNEL_ID : 'WAP',
     INDUSTRY : 'Retail',  
-    WEBSITE : 'WEBSTAGING',
+    WEBSITE : 'DEFAULT',
     CALLBACK_URL : 'https://paacab.com/india/paytm',  // webhook url for verifying payment
 }
 
