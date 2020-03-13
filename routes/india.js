@@ -11,7 +11,7 @@ const paytm = require('paytm-nodejs')
 const config = {
     MID : 'xrqCDW62144290715353', // Get this from Paytm console
     KEY : 'hVLXxaDeNkFDrNf%', // Get this from Paytm console
-    ENV : 'dev', // 'dev' for development, 'prod' for production
+    ENV : 'prod', // 'dev' for development, 'prod' for production
     CHANNEL_ID : 'WAP',
     INDUSTRY : 'Retail',  
     WEBSITE : 'WEBSTAGING',
@@ -162,6 +162,7 @@ router.post('/custReg', function(req, res, next) {
       isdCode:'+91',
       preRidePriceperKm:[3, null, null, null],
       walletBalance:'0',
+      BuyKM:'5',
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
       //location:{type:'Point',coordinates:[1.00001, 1.0001]}
     }).save(function(err){
@@ -1247,7 +1248,7 @@ req.session.paymentData=data;
 
 router.post('/paytm', function(req, res, next) {
   console.log('PayTM data', req.session.paymentData);
-  console.log('checksum', req.session.checksum);
+  
   
 ////Payment Validate//////
 paytm.validate(config,req.body,function(err,data){
@@ -1260,6 +1261,7 @@ paytm.validate(config,req.body,function(err,data){
           var waletBalance=Number(cust.walletBalance) + Number(data.TXNAMOUNT);
 
           database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{walletBalance:waletBalance}},function(ert,dd){
+            
             res.redirect('/india')
           });
         }
