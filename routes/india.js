@@ -1259,7 +1259,7 @@ paytm.validate(config,req.body,function(err,data){
           var waletBalance=Number(cust.walletBalance) + Number(data.TXNAMOUNT);
 
           database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{walletBalance:waletBalance}},function(ert,dd){
-            res.send({data:data});
+            res.redirect('/india')
           });
         }
       });
