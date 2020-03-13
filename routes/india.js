@@ -1251,9 +1251,11 @@ router.get('/paytm', function(req, res, next) {
 ////Payment Validate//////
 paytm.validate(config,req.session.checksum,function(err,data){
   if(err){console.log(err)}
-  if(data.status == 'verified'){
-      res.send("ok all fine")
-  }
+  // if(data.status == 'verified'){
+  //     res.send("ok all fine")
+  // }
+
+  res.send(data)
 })
 
 // paytm.status(config,req.session.paymentData.ORDER_ID,function(err,data){
