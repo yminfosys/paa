@@ -22,7 +22,7 @@ const config = {
 /////Testing OTP credentials are as follows: 
 //Mobile Number: 7777777777. 
 //Password: Paytm12345. 
-///OTP: 489871.
+///OTP: 489871.///
 
 
 const moment = require('moment');
@@ -161,6 +161,7 @@ router.post('/custReg', function(req, res, next) {
       custRating:'0',
       isdCode:'+91',
       preRidePriceperKm:[3, null, null, null],
+      walletBalance:'0',
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
       //location:{type:'Point',coordinates:[1.00001, 1.0001]}
     }).save(function(err){
