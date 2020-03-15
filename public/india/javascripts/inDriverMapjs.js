@@ -138,8 +138,7 @@ function initMap() {
             url: "/india/images/demand-marker.png", // url
             scaledSize: new google.maps.Size(20, 20), // scaled size
             origin: new google.maps.Point(0,0), // origin
-            anchor: new google.maps.Point(10, 10), // anchor
-            
+            anchor: new google.maps.Point(10, 10), // anchor            
             
         },
         map: map,
@@ -175,8 +174,7 @@ function initMap() {
 
     /////Off line Online /////////
     document.getElementById("toggle").addEventListener("click", function(){
-    if(document.getElementById("toggle").checked == true){
-      
+    if(document.getElementById("toggle").checked == true){      
       onlineExicute();
     }else{
       $("#offline-content").css({"display":"block"});
@@ -195,9 +193,9 @@ function initMap() {
     clearDemandArea();
     $("#map").css({"display":"block"});
     $("#offline-content").css({"display":"none"});
-    $.post('/india/drv/dutyUpdate',{duty:'online'},function(data){
-      console.log(data)
-    });
+    // $.post('/india/drv/dutyUpdate',{duty:'online'},function(data){
+    //   console.log(data)
+    // });
      ringTimer= setInterval(RingToneHandeler,300);
   }
 

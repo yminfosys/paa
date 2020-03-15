@@ -27,8 +27,8 @@ function index2Dpilot(int,cb){
 
   function index2Ddriver(int,cb){
     console.log()
-      const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['driverLocationcollections'])
-      db.driverLocationcollections.createIndex({ "location" : "2dsphere" });
+      const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['driverlocationcollections'])
+      db.driverlocationcollections.createIndex({ "location" : "2dsphere" });
       cb({success:'1'});
     }
 
@@ -145,6 +145,44 @@ pilotSchema.plugin(autoIncrement.plugin, { model: 'pilotcollections', field: 'pi
 
 var pilotmodul = mongoose.model('pilotcollections', pilotSchema);
 
+
+///Driver Attendence
+var DutyLogSchema = new mongoose.Schema({     
+  pilotID:String, 
+  logonTime:String,
+  logOutTime:String,
+  logOutPurpose:String,
+  date: { type: Date, default: Date.now },  
+  location: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      
+    }
+  }
+});
+
+var DutyLogmodul = mongoose.model('DutyLogcollections', DutyLogSchema);
+
+///Driver Car LogBook
+var CarlogbookSchema = new mongoose.Schema({     
+  pilotID:String, 
+  travalKM:String,
+  StartLocation:String,
+  EndLocation:String,
+  date: { type: Date, default: Date.now },
+  remarks:String 
+  
+});
+
+var Carlogbookmodul = mongoose.model('Carlogbookcollections', CarlogbookSchema);
+
+
 ///Ride book Schema
 var rideSchema = new mongoose.Schema({ 
   bookingID:  String,
@@ -237,9 +275,13 @@ var demandSchema = new mongoose.Schema({
 var demandmodul = mongoose.model('demandcollections', demandSchema);
 
 ////Driver Location Schema
-var driverLocationSchema = new mongoose.Schema({ 
+var driverlocationSchema = new mongoose.Schema({ 
   pilotID:String,
   DriverType:String,
+  rating:String,
+  travelmod:String,
+  accountStatus:String,
+  driverBusy:String,
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`
@@ -253,8 +295,7 @@ var driverLocationSchema = new mongoose.Schema({
     }
   }
 });
-
-var driverLocationmodul = mongoose.model('driverLocationcollections', driverLocationSchema);
+var driverlocationmodul = mongoose.model('driverlocationcollections', driverlocationSchema);
 
 
 var sampleSchema=new mongoose.Schema({ 
@@ -340,6 +381,8 @@ module.exports.ride=ridemodul;
 module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
 module.exports.demandArea=demandmodul;
-module.exports.driverLocationArea=driverLocationmodul;
-module.exports.walletOrderCouner=walletOrderCountmodul
-module.exports.WalletBuyKM=WalletBuyKMmodul
+module.exports.driverLocationArea=driverlocationmodul;
+module.exports.walletOrderCouner=walletOrderCountmodul;
+module.exports.WalletBuyKM=WalletBuyKMmodul;
+module.exports.DutyLog=DutyLogmodul;
+module.exports.Carlogbook=Carlogbookmodul;

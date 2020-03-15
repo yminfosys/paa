@@ -16,6 +16,7 @@ function getCookie(cname) {
   }
 
 
+
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
@@ -294,7 +295,8 @@ function loginprocess(){
     $.post('/india/nearbyRideBooking',{
       lat:origin.lat,
       lng:origin.lng,
-      travelmod:travelmod
+      travelmod:travelmod,
+      DriverType:"General"
      },function(data){
       console.log(data);
       if(data.drivers.length > 0){

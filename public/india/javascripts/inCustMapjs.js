@@ -1,8 +1,6 @@
 var CenterChange='Enable';
 
-
-function initMap() {
-  
+function initMap() { 
 
     var directionsService = new google.maps.DirectionsService;
     var directionsDisplay = new google.maps.DirectionsRenderer({
@@ -103,7 +101,7 @@ directionsService.route(reqst, function(response, status) {
          clearTimeout(centertimer);
         centertimer=setTimeout(function(){
           findPlaceBylntlng({lat:map.getCenter().toJSON().lat,lng:map.getCenter().toJSON().lng});
-         },1000);
+         },300);
         
        }
   })

@@ -76,12 +76,12 @@ function initMap() {
 
       /////Off line Online /////////
     document.getElementById("toggle").addEventListener("click", function(){
-      if(document.getElementById("toggle").checked == true){
-        
+      if(document.getElementById("toggle").checked == true){        
         onlineExicute();
       }else{
         $("#offline-content").css({"display":"block"});
         $("#map").css({"display":"none"});
+        
         $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
           console.log(data)
         })

@@ -203,8 +203,8 @@ router.post('/custReg', function(req, res, next) {
   /////For Neareast One Calculation //////
 router.post('/nearby', function(req, res, next) {
   console.log('myposition',req.body)
-  database.index2Dpilot({},function(ss){
-    database.pilot.find({
+  database.index2Ddriver({},function(ss){
+    database.driverLocationArea.find({
           location: {
             $near: {
               $geometry: {
@@ -212,7 +212,7 @@ router.post('/nearby', function(req, res, next) {
                  coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
               },$maxDistance : 4000
             }
-          },duty:'online',travelmod:req.body.travelmod
+          },accountStatus:'Active',travelmod:req.body.travelmod
         },function(e,data){
         console.log('test nearby',JSON.stringify(data) );
           res.send(data);
@@ -221,6 +221,9 @@ router.post('/nearby', function(req, res, next) {
 
 });
 
+
+
+
   
 
 
@@ -228,8 +231,8 @@ router.post('/nearby', function(req, res, next) {
 /////For Neareast One Calculation //////
 router.post('/nearbytime', function(req, res, next) {
   console.log('myposition',req.body)
-  database.index2Dpilot({},function(ss){
-    database.pilot.find({
+  database.index2Ddriver({},function(ss){
+    database.driverLocationArea.find({
           location: {
             $near: {
               $geometry: {
@@ -237,7 +240,7 @@ router.post('/nearbytime', function(req, res, next) {
                  coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
               },$maxDistance :4000
             }
-          },duty:'online',travelmod:req.body.travelmod
+          },accountStatus:'Active',travelmod:req.body.travelmod
         },function(e,data){
         console.log('test result',JSON.stringify(data) );
           res.send({data:data,count:req.body.travelmod});
@@ -335,8 +338,8 @@ router.post('/getprice', function(req, res, next) {
 
 /////For Neareast RideBooking//////
 router.post('/nearbyRideBooking', function(req, res, next) {    
-  database.index2Dpilot({},function(ss){
-    database.pilot.find({
+  database.index2Ddriver({},function(ss){
+    database.driverLocationArea.find({
           location: {
             $near: {
               $geometry: {
@@ -344,7 +347,7 @@ router.post('/nearbyRideBooking', function(req, res, next) {
                  coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
               },$maxDistance : 4000
             }
-          },duty:'online',travelmod:req.body.travelmod
+          },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType
         },function(e,data){
         database.rideCounter.findOne({},function(e, d){
           if(d){
@@ -464,9 +467,9 @@ router.post('/rideDriverBookingDetails', function(req, res, next) {
 
 ////////getDriverposition/////
 router.post('/getDriverposition', function(req, res, next) {
-  database.pilot.findOne({pilotID:req.body.pilotID},function(err,driver){
+  database.driverLocationArea.findOne({pilotID:req.body.pilotID},function(err,driver){
    console.log(driver.location.coordinates);
-   res.send(driver.location.coordinates) 
+   res.send(driver.location.coordinates);
   }); 
  
 });
@@ -746,13 +749,22 @@ router.post('/drv/completeReg', function(req, res, next) {
           res.send(req.body.lat)
         });
       }else{
-        database.driverLocationArea({
-          pilotID:req.cookies.pilotID,
-          DriverType:req.body.DriverType,
-          location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
-        }).save(function(err){
-          res.send(req.body.lat)
-        })
+        database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
+          if(pilot){
+            database.driverLocationArea({
+              pilotID:req.cookies.pilotID,
+              DriverType:req.body.DriverType,
+              rating:pilot.rating,
+              travelmod:pilot.travelmod,
+              accountStatus:pilot.accountStatus,
+              driverBusy:"free",
+              location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+            }).save(function(err){
+              res.send(req.body.lat)
+            })
+          }
+        });
+        
       }
     });
 
@@ -764,11 +776,13 @@ router.post('/drv/completeReg', function(req, res, next) {
 
    //////////Update Driver Duty Offline and online//////
    router.post('/drv/dutyUpdate', function(req, res, next) {
-    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{duty:req.body.duty}},function(err,data){
-      if(data){
+    if(req.body.duty=='offline'){
+      database.driverLocationArea.deleteMany({pilotID:req.cookies.pilotID},function(e, d){
+        console.log("delete Driver Location")
         res.send(req.body.duty)
-      }
-   });
+      });
+    }   
+   
   });
 
   ////Randanm OTP/////////
@@ -787,12 +801,15 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept'}},function(err, ride){
     if(ride){
       database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept',}},function(er,cust){
-        database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{duty:'offline',orderStage:'accept'}},function(re, ou){
-          res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
-          res.send({ride:ride,cust:cust,RideOTP:OTP});
-          database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
-            console.log("Reset Demand")
+        database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{orderStage:'accept'}},function(re, ou){
+          database.driverLocationArea.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{driverBusy:'busy'}},function(re, drvloc){
+            res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
+            res.send({ride:ride,cust:cust,RideOTP:OTP});
+            database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
+              console.log("Reset Demand")
+            });
           });
+         
         });
        
       });
@@ -826,7 +843,8 @@ router.post('/drv/finishRide', function(req, res, next) {
       if(driver){
         database.ride.findOne({bookingID:req.body.bookingID},function(er, Booking){      
         //// Calculate Distance Last positio driver///////
-        var finishLocation=driver.location.coordinates;
+         database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er, driverLoc){        
+        var finishLocation=driverLoc.location.coordinates;
         var travelmod=driver.travelmod;
             googleApi.distance({
               origins:''+Number(req.body.picuklat)+', '+Number(req.body.picuklng)+'',              
@@ -859,6 +877,8 @@ router.post('/drv/finishRide', function(req, res, next) {
                 });           
            
           });
+        });
+
         });
       }
       
