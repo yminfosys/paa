@@ -282,6 +282,17 @@ function loginprocess(){
 
    ///////Confrim Booking/////
    function confirmBooking(){
+      //////check Wallet and BuyKM and Cash//////
+      if($("#payBycash").prop("checked") == true){
+        setCookie("PaymentMode","Cash",1);
+        continueBooking();
+        getCookie
+        }else{
+          alert("Check Waller blance.");
+        }
+   }
+
+   function continueBooking(){
     var originAds=getCookie("picuplocation") ;
     var distAds=getCookie("droplocation") ;
     var origin=JSON.parse(getCookie("pickuplatlong")) ;
@@ -290,7 +301,8 @@ function loginprocess(){
     var CustID=getCookie("CustID")
     var totalAmt= $("#totalAmt").text();
     var totalDistance= $("#totalDistance").val();
-    var timere;
+    var timere;    
+
     /////Search Driver list/////
     $.post('/india/nearbyRideBooking',{
       lat:origin.lat,
