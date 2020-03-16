@@ -88,15 +88,21 @@ router.post('/login', function(req, res, next) {
                 console.log('mode',mod);
                 for(var km =1; km < 101; km++){
                   console.log('mode',km);
-                  var pric=km*12*mod;
+                  var pric=km*10*mod;
                   if(km==1){
-                    pric=3*mod;
+                    pric=15*mod;
                   }
                   if(km==2){
-                    pric=8*mod;
+                    pric=15*mod;
                   }
                   if(km==3){
-                    pric=18*mod;
+                    pric=24*mod;
+                  }
+                  if(km==4){
+                    pric=32*mod;
+                  }
+                  if(km==5){
+                    pric=42*mod;
                   }
                   database.priceOffer({
                     CustID:user.CustID,
@@ -386,6 +392,7 @@ console.log(req.body)
     droplatlng:[req.body.distLat, req.body.distLng],        
     kmtravels:req.body.totalDistance,
     totalamount:req.body.totalAmt,
+    paymentBy:req.body.payMode,
     discount:"",
     driverpayout:"",
     driverIncentiv:"",
@@ -742,31 +749,63 @@ router.post('/drv/completeReg', function(req, res, next) {
 
   //////////Update Driver Location//////
   router.post('/drv/driverLocatioUpdate', function(req, res, next) {
-    console.log('body',req.body)
-    database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exist){
-      if(exist){
-        database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}, DriverType:req.body.DriverType}},function(err,data){
-          res.send(req.body.lat)
-        });
-      }else{
-        database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
-          if(pilot){
-            database.driverLocationArea({
-              pilotID:req.cookies.pilotID,
-              DriverType:req.body.DriverType,
-              rating:pilot.rating,
-              travelmod:pilot.travelmod,
-              accountStatus:pilot.accountStatus,
-              driverBusy:"free",
-              location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
-            }).save(function(err){
-              res.send(req.body.lat)
-            })
-          }
-        });
+        //  database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
+        //   if(pilot){
+
+            database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exist){
+              if(exist){
+                
+                    database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}, DriverType:req.body.DriverType}},function(err,data){
+                      res.send(req.body.lat)
+                    });
+              }else{
+                database.driverLocationArea({
+                  pilotID:req.cookies.pilotID,
+                  DriverType:req.body.DriverType,
+                  //rating:pilot.rating,
+                  //travelmod:pilot.travelmod,
+                  //accountStatus:pilot.accountStatus,
+                  driverBusy:"free",
+                  location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+                }).save(function(err){
+                  res.send(req.body.lat)
+                });
+              }
+            });
+                
+        //   }
+        // });
+    // console.log('body',req.body)
+    // database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exist){
+    //   if(exist){
         
-      }
-    });
+    //         database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}, DriverType:req.body.DriverType}},function(err,data){
+    //           res.send(req.body.lat)
+    //         });
+    //   }else{
+        
+    //     database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
+    //       if(pilot){
+    //         database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exis){
+    //           if(!exis){
+                  // database.driverLocationArea({
+                  //   pilotID:req.cookies.pilotID,
+                  //   DriverType:req.body.DriverType,
+                  //   rating:pilot.rating,
+                  //   travelmod:pilot.travelmod,
+                  //   accountStatus:pilot.accountStatus,
+                  //   driverBusy:"free",
+                  //   location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+                  // }).save(function(err){
+                  //   res.send(req.body.lat)
+                  // });
+    //         }
+    //         });
+    //       }
+    //     });
+        
+    //   }
+    // });
 
    
     
@@ -867,9 +906,25 @@ router.post('/drv/finishRide', function(req, res, next) {
                   /////send  and update bill details/////
                   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{totalamount:billAmount,driverpayout:driverpayout}},function(er, updatbooking){ 
                     if(updatbooking){
-                      res.io.emit("finishRide",{CustID:req.body.CustID});
-                      res.send({billAmount:billAmount}); 
-                      
+                      //////Wallet Update ////
+                      if(Number(updatbooking.paymentBy)==2){
+                        var walletAmt=Number(cust.walletBalance)-billAmount;
+                        database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{walletBalance:walletAmt}},function(er,cu){
+                          res.io.emit("finishRide",{CustID:req.body.CustID});
+                          res.send({billAmount:0}); 
+                        });
+                      }else{
+                        if(Number(updatbooking.paymentBy)==3){
+                          var buykmAmt=Number(cust.walletBalance)-Number(distance);
+                          database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{BuyKM:buykmAmt}},function(er,n){
+                            res.io.emit("finishRide",{CustID:req.body.CustID});
+                          res.send({billAmount:0}); 
+                          });
+                        }else{
+                          res.io.emit("finishRide",{CustID:req.body.CustID});
+                          res.send({billAmount:billAmount}); 
+                        }
+                      }
                     }
                   });
                   

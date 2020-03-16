@@ -11,12 +11,15 @@ function initMap() {
           map:map
         });
     ////////WatchLocation///////    
-   
+     var driverLocTimer;
     function wachLocation(){
         wachID=navigator.geolocation.watchPosition(function (position){
         ////////Call Circle Center Marker
-        circleMarker(position); 
-        driverLocationUpdate(position);          
+        circleMarker(position);
+        clearTimeout(driverLocTimer);
+        driverLocTimer=setTimeout(function(){          
+            driverLocationUpdate(position);
+           },500);
         
         },function error(msg){
             alert('Please enable your GPS position future.');       
@@ -165,7 +168,7 @@ function initMap() {
    /////////GPS location update driver tracking///////
    function driverLocationUpdate(position){
     $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"General"},function(data){
-      //console.log(data);
+      console.log(data);
     });
    }
    
@@ -177,14 +180,16 @@ function initMap() {
     if(document.getElementById("toggle").checked == true){      
       onlineExicute();
     }else{
-      $("#offline-content").css({"display":"block"});
-      $("#map").css({"display":"none"});
-      $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
-        console.log(data)
-      })
       clearWachposition();
       setCookie("ringToneControl","OFF",1);
       clearDemandArea();
+      $("#offline-content").css({"display":"block"});
+      $("#map").css({"display":"none"});
+      setTimeout(function(){
+        $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
+          console.log(data)
+        })
+      },1000);
     }
   }); 
   

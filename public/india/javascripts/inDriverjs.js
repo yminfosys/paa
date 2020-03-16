@@ -226,7 +226,7 @@ function loginprocess(){
 
             });
             }
-
+            
      function otpinput(){        
          var valu=$("#otpp").val()
         if(valu.length >3){

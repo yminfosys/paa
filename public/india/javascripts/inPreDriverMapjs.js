@@ -10,6 +10,7 @@ function initMap() {
           disableDefaultUI: true,
           map:map
         });
+        
     ////////WatchLocation///////    
    
     function wachLocation(){

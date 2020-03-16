@@ -217,15 +217,20 @@
                         <div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">                           
                             <%if(cust.BuyKM){%>
                                 <p style="margin-top: 10px; cursor: pointer; font-size: 12px;"> BuyKM &#8377;(<%= Number(cust.BuyKM)%>)</p>
-                                    <%}else{%>
-                                        <p style="margin-top: 10px; cursor: pointer; font-size: 12px;">BuyKM :1</p>
-                                    <%}%>
+                                <input type="hidden" id="buyKM" value="<%= Number(cust.BuyKM)%>">
+                                <%}else{%>
+                                    <p style="margin-top: 10px; cursor: pointer; font-size: 12px;">BuyKM :0</p>
+                                    <input type="hidden" id="buyKM" value="0">
+                                 <%}%>
                         </div>
                             <div class="col-xs-5 col-sm-4 col-md-5 col-lg-5">
                                 <%if(cust.walletBalance){%>
                             <p onclick="walletReg()" style="margin-top: 10px; cursor: pointer; font-size: 12px;"> Wallet &#8377;(<%= Number(cust.walletBalance)%>)</p>
+                            <input type="hidden" id="walletBalance" value="<%= Number(cust.walletBalance)%>">
                                 <%}else{%>
                                     <p onclick="walletReg()" style="margin-top: 10px; cursor: pointer; font-size: 12px;"> Wallet &#8377;0.00</p>
+                                    <input type="hidden" id="walletBalance" value="0">
+
                                 <%}%>
                         </div>
                         </div>

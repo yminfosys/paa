@@ -284,15 +284,32 @@ function loginprocess(){
    function confirmBooking(){
       //////check Wallet and BuyKM and Cash//////
       if($("#payBycash").prop("checked") == true){
-        setCookie("PaymentMode","Cash",1);
-        continueBooking();
-        getCookie
+        
+        continueBooking(1);      
         }else{
-          alert("Check Waller blance.");
+          var totalAmt= $("#totalAmt").text();
+          var totalDistance= $("#totalDistance").val();
+          var walletBalance= $("#walletBalance").val();
+          var buyKM= $("#buyKM").val();
+          
+          if(Number(walletBalance)> 0){
+            //alert("wellet accept")
+            
+            continueBooking(2);
+          }else{
+            //alert("wellet not accept");
+            if(Number(buyKM)>Number(totalDistance) ){
+              
+              continueBooking(3);
+            }else{
+              alert("You Don't have available balance cover your jurny please Recharge your Wallet or BuyKM");
+            }
+          }
+          
         }
    }
 
-   function continueBooking(){
+   function continueBooking(payMode){
     var originAds=getCookie("picuplocation") ;
     var distAds=getCookie("droplocation") ;
     var origin=JSON.parse(getCookie("pickuplatlong")) ;
@@ -324,7 +341,8 @@ function loginprocess(){
           travelmod:travelmod,
           CustID:CustID,
           totalAmt:totalAmt,
-          totalDistance:totalDistance
+          totalDistance:totalDistance,
+          payMode:payMode,
         },function(booking){
           console.log(booking);
           $("#booking-process").css({"display":"block"});
