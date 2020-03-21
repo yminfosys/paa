@@ -475,8 +475,11 @@ router.post('/rideDriverBookingDetails', function(req, res, next) {
 ////////getDriverposition/////
 router.post('/getDriverposition', function(req, res, next) {
   database.driverLocationArea.findOne({pilotID:req.body.pilotID},function(err,driver){
-   console.log(driver.location.coordinates);
-   res.send(driver.location.coordinates);
+    if(driver){
+        console.log(driver.location.coordinates);
+        res.send(driver.location.coordinates);
+    }
+   
   }); 
  
 });
@@ -1485,6 +1488,62 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
 
 /////CHECK EXISTING PRE RIDE CALL DETAILS/////
   router.post('/existingPrerideCall', function(req, res, next) {
+    var Record=[];
+    var count =0;
+    var countArray=[];
+    console.log("req Body:", req.body)
+    database.ride.find({pilotID:req.body.pilotID,driverBusy:req.body.driverBusy},function(err, data){
+      console.log("data:", data)
+      data.forEach(function(val,i,ar){
+        count++;
+        gatherRecord({val:val,count:count},function(result){
+          Record.push(result.out);
+          countArray.push(result.count);
+          console.log("countArray.length",countArray.length)
+          console.log("ar.length",ar.length)
+
+          if(countArray.length==ar.length){
+            res.send(Record);
+          }
+        })
+      })
+    });
+
+    function gatherRecord(req,cb){
+      database.customer.findOne({CustID:req.val.CustID},function(er,cust){
+        var out={
+          CustID:cust.CustID,
+          mobileNumber:cust.mobileNumber,
+          isdCode:cust.isdCode,
+          name:cust.name,
+          picuklatlng:req.val.picuklatlng,
+          droplatlng:req.val.droplatlng,
+          picupaddress:req.val.picupaddress,
+          dropaddress:req.val.dropaddress,
+          callbookingStatus:req.val.callbookingStatus
+        }
+        cb({out:out,count:req.count});
+        
+      })
+    }
+
+  });
+
+  function preRideTimeCalculation(req,cb){
+    googleApi.distance({
+      origins:req.orig,
+      destinations:req.diste,
+      apik:process.env.API_KEY,
+      travelmod:req.travelmod
+  },function(result){
+    //console.log(JSON.stringify(result) )
+    cb({time:result.rows[0].elements[0].duration.value, count:req.index})
+  });
+
+  }
+
+  /////PRE RIDE PAGE INITIATE/////
+  router.post('/preRidePageInitiate', function(req, res, next) {
     var Record=[];
     var count =0;
     var countArray=[];

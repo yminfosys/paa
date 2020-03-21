@@ -103,6 +103,38 @@ function initMap() {
       $("#nofofride").css({"display":"block"});
       $("#map").css({"display":"block"});
       var ringTimer= setInterval(RingToneHandeler,300);
+      ///////Page Initiate///////////////
+      var pilotID=getCookie("pilotID");
+      $.post('/india/preRidePageInitiate',{pilotID:pilotID,driverBusy:"busy"},function(rides){
+        var out="";
+        rides.forEach(function(val,indx,ar){
+            out+='<div class="row listItem">\
+            <div class="col-xs-9 col-sm-9 ">\
+            <p class="prerideName">Pickup : '+val.name+'</p>\
+                <p class="prerideads">'+val.picupaddress+'</p>\
+                </div>\
+            <div class="col-xs-3 col-sm-3">\
+            <input id="geoNav" type="hidden">\
+                <button onclick="openMap()" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+            </div>\
+            <div class="col-xs-9 col-sm-9">\
+                <input onclick="clineLocated()" id="clineLocated" class="pickupPreridebtn" type="button" value="Cline Located">\
+                <input onclick="startRide()" id="startRide" class="pickupPreridebtn" type="button" value="Start Ride">\
+                <input onclick="finishride()" id="finishride" class="pickupPreridebtn" type="button" value="Finish Ride">\
+            </div>\
+            <div class="col-xs-3 col-sm-3 telmsg">\
+                <a href="tel:'+val.isdCode+val.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+                <a href="sms:'+val.isdCode+val.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
+            </div>\
+            </div>';
+
+            if(indx===ar.length -1){
+               
+                $("#rideList").html(out);
+            }
+        });
+      });
+
     }
 
     //////Ring tone Handeler////
