@@ -244,7 +244,6 @@
                         </div>
                         </div></div>
                    </div>
-
                    
                    <div id="waletPayment" >
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -259,8 +258,7 @@
                          <input style="font-size: 25px;" type="number" name="rechrgAmt" class="form-control" placeholder="Recharge Amount" >                       
                          <input type="hidden" name="CustID" value="<%=cust.CustID%>">
                          <input type="hidden" name="walletOrderid" id="walletOrderid">
-                        </div>
-                        
+                        </div>                        
                         <div class="form-group">
                             
                             <input type="submit" value="Recharge" class="btn btn-primary col-xs-12 col-sm-12 ">
@@ -273,20 +271,42 @@
                    <div  id="footer-preRide" class="container">                        
                         <div class="row">
                             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                <p id="preRideAmt">Pre-Ride &#8377; 18</p>
+                                <div id="preRideAmount">Pre-Ride &#8377; </div>
                                 <div class="form-group">
                                 <select id="preRideType" class="form-control">
                                     <option value="1">Start Ride with in 30 min</option>                                   
-                                    <option value="3">Buy km for Month</option>
-                                    
+                                    <option value="3">Buy km for Month</option>                                    
                                 </select>
                             </div>
                                 
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-primary col-xs-12 col-sm-12 ">Confrim Paacab</button>
+                                <div class="form-group" id="prerideCnfBtn">
+                                    <button  onclick="conframPreride()" type="button" class="btn btn-primary col-xs-12 col-sm-12 ">Confrim Paacab</button>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row" id="preridesBackbtn">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <br>
+                                <button onclick="backPreride()" type="button" class="btn btn-primary col-xs-12 col-sm-12 ">Back</button> 
+                            </div>
+                        </div>
+
+                        
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                                <div id="prebooking-process">                       
+                                    <div class="row">
+                                        <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10 col-xs-offset-1 col-sm-offset-1 col-md-offset-1 col-lg-offset-1">
+                                         <img style="width: 100%;" src="/india/images/gif/circle1.gif">
+                                         <p class="text-center red"> Call is connecting to Driver</p>  
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        
                         
                    </div>
                  

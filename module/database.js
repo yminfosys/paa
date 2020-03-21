@@ -32,6 +32,14 @@ function index2Dpilot(int,cb){
       cb({success:'1'});
     }
 
+    function index2DdriverDroplocation(int,cb){
+      console.log()
+        const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['driverdropcollections','driverlocationcollections'])
+        db.driverdropcollections.createIndex({ "droplocation" : "2dsphere" });
+        db.driverlocationcollections.createIndex({ "location" : "2dsphere" });
+        cb({success:'1'});
+      }
+
   // function index2Dpilot(int,cb){
   //   console.log()
   //     const db = mongojs('mongodb://localhost:27017/paacab', ['pilotcollections'])
@@ -187,6 +195,7 @@ var Carlogbookmodul = mongoose.model('Carlogbookcollections', CarlogbookSchema);
 var rideSchema = new mongoose.Schema({ 
   bookingID:  String,
   pilotID :String,
+  DriverType:String,
   CustID:String,
   picupaddress:String,
   picuklatlng: [],    
@@ -202,7 +211,10 @@ var rideSchema = new mongoose.Schema({
   discount:String,
   driverpayout:String,
   driverIncentiv:String,
-  callbookingStatus:String  
+  callbookingStatus:String,
+  driverBusy:String,
+  preRideOTP:String
+  
 });
 
 //rideSchema.plugin(autoIncrement.plugin, { model: 'ridecollections', field: 'bookingID',startAt: 1000, incrementBy: 1 });
@@ -293,9 +305,33 @@ var driverlocationSchema = new mongoose.Schema({
       required: true,
       
     }
-  }
+  } 
 });
 var driverlocationmodul = mongoose.model('driverlocationcollections', driverlocationSchema);
+
+////driverDrop Location Update////
+var driverdropSchema = new mongoose.Schema({ 
+  pilotID:String,
+  DriverType:String,
+  rating:String,
+  travelmod:String,
+  accountStatus:String,
+  driverBusy:String,
+  droplocation: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      
+    }
+  }
+});
+
+var driverdropmodul = mongoose.model('driverdropcollections', driverdropSchema);
 
 
 var sampleSchema=new mongoose.Schema({ 
@@ -376,12 +412,14 @@ module.exports.customer=custmodul;
 module.exports.pilot=pilotmodul;
 module.exports.index2Dpilot=index2Dpilot;
 module.exports.index2Ddriver=index2Ddriver;
+module.exports.index2DdriverDroplocation=index2DdriverDroplocation;
 module.exports.index2Ddemand=index2Ddemand;
 module.exports.ride=ridemodul;
 module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
 module.exports.demandArea=demandmodul;
 module.exports.driverLocationArea=driverlocationmodul;
+module.exports.driverdroplocation=driverdropmodul;
 module.exports.walletOrderCouner=walletOrderCountmodul;
 module.exports.WalletBuyKM=WalletBuyKMmodul;
 module.exports.DutyLog=DutyLogmodul;

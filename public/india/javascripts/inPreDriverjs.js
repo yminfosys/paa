@@ -15,6 +15,7 @@ function getCookie(cname) {
     return "";
   }
   
+  
 
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -139,5 +140,45 @@ function loginprocess(){
 
 
  /////////Driver Page ////////////
+
+  ///////Handel Socket io  parameter/////// 
+  var socket = io('//'+document.location.hostname+':'+document.location.port);
+  socket.on('preRideinCommingCall', function (data) {
+  console.log('inCommingCall',data);
+  console.log("test data",data.pilotID)
+  if(data.pilotID==getCookie("pilotID")){
+  setCookie("ringToneControl","ON",1);
+  //setCookie("preRideinCommingCallDetails",JSON.stringify(data),1);
+  $.post('/india/preRideAutoAccepeCall',{
+    pilotID:data.pilotID,
+    CustID:data.CustID,
+    pickuoAddress:data.pickuoAddress,
+    bookingID:data.bookingID,
+    driverBusy:data.driverBusy,
+    
+  },function(dat){
+    $("#rideList").html('<div class="row listItem">\
+    <div class="col-xs-9 col-sm-9 ">\
+    <p class="prerideName">Pickup : Sukanta Saradr</p>\
+        <p class="prerideads">St 2 Benachity , Durgapur</p>\
+        </div>\
+    <div class="col-xs-3 col-sm-3">\
+    <input id="geoNav" type="hidden">\
+        <button onclick="openMap()" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+    </div>\
+    <div class="col-xs-9 col-sm-9">\
+        <input onclick="clineLocated()" id="clineLocated" class="pickupPreridebtn" type="button" value="Cline Located">\
+        <input onclick="startRide()" id="startRide" class="pickupPreridebtn" type="button" value="Start Ride">\
+        <input onclick="finishride()" id="finishride" class="pickupPreridebtn" type="button" value="Finish Ride">\
+    </div>\
+    <div class="col-xs-3 col-sm-3 telmsg">\
+        <a href="tel:'+dat.cust.isdCode+dat.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+        <a href="sms:'+dat.cust.isdCode+dat.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
+    </div>\
+    </div>');
+
+  });
+  }
+  });
 
  

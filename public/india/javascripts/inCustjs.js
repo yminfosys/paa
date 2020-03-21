@@ -14,7 +14,7 @@ function getCookie(cname) {
     }
     return "";
   }
-
+  
 
 
   function setCookie(cname, cvalue, exdays) {
@@ -283,8 +283,7 @@ function loginprocess(){
    ///////Confrim Booking/////
    function confirmBooking(){
       //////check Wallet and BuyKM and Cash//////
-      if($("#payBycash").prop("checked") == true){
-        
+      if($("#payBycash").prop("checked") == true){        
         continueBooking(1);      
         }else{
           var totalAmt= $("#totalAmt").text();
@@ -340,7 +339,7 @@ function loginprocess(){
           distLng:dist.lng,
           travelmod:travelmod,
           CustID:CustID,
-          totalAmt:totalAmt,
+          totalAmt:Number(totalAmt) * Number(totalDistance),
           totalDistance:totalDistance,
           payMode:payMode,
         },function(booking){
@@ -403,18 +402,158 @@ function loginprocess(){
     
    /////Pre-Ride Booking///////
    function preRideBooking(){
-    var originAds=getCookie("picuplocation") ;
-    var distAds=getCookie("droplocation") ;
-    var origin=JSON.parse(getCookie("pickuplatlong")) ;
-    var dist=JSON.parse(getCookie("droplatlong")) ;
+ 
     var travelmod=$("#ModeofTravel").val();
-    var CustID=getCookie("CustID")
-    var totalAmt= $("#tmPreRidePrice"+travelmod+"").val();
-    var totalDistance= $("#totalDistance").val();
+    var totalAmt= $("#tmPreRidePrice"+travelmod+"").val();    
+    var totalDistance= $("#totalDistance").val();    
     $("#footer-preRide").css({"display":"block"});
-    $("#preRideAmt").html('Pre-Ride &#8377; '+totalAmt*totalDistance+'')
+    $("#preRideAmount").html('Aprox Pre-Ride Cost &#8377; '+totalAmt*totalDistance+'');
+    $("#prerideCnfBtn").css({"display":"block"});
+    $("#preridesBackbtn").css({"display":"block"});
+
+    $("#prebooking-process").css({"display":"none"});
 
 
+   }
+
+
+    //////////Confram Pre-Ride//////
+   function conframPreride(){
+    //////check Wallet and BuyKM and Cash//////
+    if($("#payBycash").prop("checked") == true){        
+      continuePreBooking(1);      
+      }else{
+        var totalAmt= $("#totalAmt").text();
+        var totalDistance= $("#totalDistance").val();
+        var walletBalance= $("#walletBalance").val();
+        var buyKM= $("#buyKM").val();
+        
+        if(Number(walletBalance)> 0){
+          //alert("wellet accept")
+          
+          continuePreBooking(2);
+        }else{
+          //alert("wellet not accept");
+          if(Number(buyKM)>Number(totalDistance) ){
+            
+          continuePreBooking(3);
+          }else{
+            alert("You Don't have available balance cover your jurny please Recharge your Wallet or BuyKM");
+          }
+        }
+        
+      }
+
+   }
+
+
+   function continuePreBooking(payMode){ 
+        var originAds=getCookie("picuplocation") ;
+        var distAds=getCookie("droplocation") ;
+        var origin=JSON.parse(getCookie("pickuplatlong")) ;
+        var dist=JSON.parse(getCookie("droplatlong")) ;
+        var CustID=getCookie("CustID")
+        var travelmod=$("#ModeofTravel").val();
+        var totalAmt= $("#tmPreRidePrice"+travelmod+"").val();
+        var totalDistance= $("#totalDistance").val();
+        $("#prebooking-process").css({"display":"block"});
+        $("#prerideCnfBtn").css({"display":"none"});
+        $("#preridesBackbtn").css({"display":"none"});
+        console.log(dist);
+        var preRideTimer;
+      /////Search Pre-ride list/////
+        $.post('/india/nearbyPrerideDriver',{
+          lat:origin.lat,
+          lng:origin.lng,
+          travelmod:travelmod,
+          DriverType:"preRide"
+        },function(data){
+          console.log(data);
+          if(data.drivers.length > 0){
+            //alert(data.bookingID)
+            $.post('/india/newPreRideBooking',{
+              bookingID:data.bookingID,
+              originAds:originAds,
+              distAds:distAds,
+              originLat:origin.lat,
+              originLng:origin.lng,
+              distLat:dist.lat,
+              distLng:dist.lng,
+              travelmod:travelmod,
+              CustID:CustID,
+              totalAmt:Number(totalAmt) * Number(totalDistance),
+              totalDistance:totalDistance,
+              payMode:payMode,              
+            },function(booking){
+               
+              if(data.drivers[0].driverBusy=="busy"){
+                    ////condition for busy driver////
+                    var cout=0;
+                    $.post('/india/CallPreRideDriver',{pilotID:data.drivers[cout].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID,driverBusy:"busy"},function(result){
+                      console.log(result);
+                    }); 
+                    cout++;
+                    preRideTimer=setInterval(function(){
+                      if(cout<data.drivers.length){
+                      $.post('/india/CallPreRideDriver',{pilotID:data.drivers[cout].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID,driverBusy:"busy"},function(result){
+                        console.log(result);
+                      }); 
+                      cout++;
+                    }else{
+                      clearInterval(preRideTimer);
+                      alert("All are  Driver Busy");
+                      $("#footer-preRide").css({"display":"none"});
+                    } 
+                    },10000);   
+  
+              }else{
+                ////condition for Free driver////
+                var cout=0;
+                $.post('/india/CallPreRideDriver',{pilotID:data.drivers[cout].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID,driverBusy:"free"},function(result){
+                  console.log(result);
+                }); 
+                cout++;
+                preRideTimer=setInterval(function(){
+                  if(cout<data.drivers.length){
+                  $.post('/india/CallPreRideDriver',{pilotID:data.drivers[cout].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID,driverBusy:"free"},function(result){
+                    console.log(result);
+                  }); 
+                  cout++;
+                }else{
+                  clearInterval(preRideTimer)
+                  alert("All are  Driver Busy");
+                  $("#footer-preRide").css({"display":"none"});
+                } 
+                },10000);
+              }
+
+              ///Check Socket For PreRide Driver Accepttance////
+            var socket = io('//'+document.location.hostname+':'+document.location.port);
+            socket.on('PreRideDriverAccepeCall', function (data) {
+              if(CustID==data.CustID){
+                clearInterval(preRideTimer);
+                //////Log Call Booling ////////
+                console.log("Call accept by :",JSON.stringify(data))
+                setCookie("RideDetails",JSON.stringify(data),30);
+               
+               window.location='../india/ride'
+              }
+            });
+
+            });
+          }else{
+            ///////Driver ot Found
+            alert("Driver Not Found Try Again");
+            $("#footer-preRide").css({"display":"none"});
+          }
+        });
+
+
+  }
+
+
+   function backPreride(){
+    $("#footer-preRide").css({"display":"none"}); 
    }
 
 

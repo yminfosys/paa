@@ -19,8 +19,7 @@ function initMap() {
         clearTimeout(driverLocTimer);
         driverLocTimer=setTimeout(function(){          
             driverLocationUpdate(position);
-           },500);
-        
+           },500);       
         },function error(msg){
             alert('Please enable your GPS position future.');       
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
@@ -171,10 +170,6 @@ function initMap() {
       console.log(data);
     });
    }
-   
-   
-
-
     /////Off line Online /////////
     document.getElementById("toggle").addEventListener("click", function(){
     if(document.getElementById("toggle").checked == true){      

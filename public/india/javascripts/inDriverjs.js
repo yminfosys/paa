@@ -140,8 +140,7 @@ function loginprocess(){
 
  /////////Driver Page ////////////
 
- ///////Handel Socket io  parameter///////
- 
+ ///////Handel Socket io  parameter/////// 
         var socket = io('//'+document.location.hostname+':'+document.location.port);
         socket.on('inCommingCall', function (data) {
         console.log('inCommingCall',data);

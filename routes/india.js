@@ -749,76 +749,70 @@ router.post('/drv/completeReg', function(req, res, next) {
 
   //////////Update Driver Location//////
   router.post('/drv/driverLocatioUpdate', function(req, res, next) {
-        //  database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
-        //   if(pilot){
+         database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
+          if(pilot){
 
             database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exist){
-              if(exist){
-                
-                    database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}, DriverType:req.body.DriverType}},function(err,data){
+              if(exist){                
+                    database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
+                      location:{type:'Point',coordinates:[req.body.lng, req.body.lat]},
+                      DriverType:req.body.DriverType                      
+                    }},function(err,data){
                       res.send(req.body.lat)
                     });
               }else{
                 database.driverLocationArea({
                   pilotID:req.cookies.pilotID,
                   DriverType:req.body.DriverType,
-                  //rating:pilot.rating,
-                  //travelmod:pilot.travelmod,
-                  //accountStatus:pilot.accountStatus,
+                  rating:pilot.rating,
+                  travelmod:pilot.travelmod,
+                  accountStatus:pilot.accountStatus,
                   driverBusy:"free",
-                  location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
+                  location:{type:'Point',coordinates:[req.body.lng, req.body.lat]},                  
                 }).save(function(err){
-                  res.send(req.body.lat)
+                  database.driverdroplocation.findOne({pilotID:req.cookies.pilotID},function(e, dd){
+                    if(dd){
+                      database.driverdroplocation.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
+                        droplocation:{type:'Point',coordinates:[Number(0.01), Number(0.01)]},
+                        DriverType:req.body.DriverType                     
+                      }},function(err,data){
+                        res.send(req.body.lat)
+                      });
+
+                    }else{
+                      database.driverdroplocation({
+                        pilotID:req.cookies.pilotID,
+                        DriverType:req.body.DriverType,
+                        rating:pilot.rating,
+                        travelmod:pilot.travelmod,
+                        accountStatus:pilot.accountStatus,
+                        driverBusy:"free",
+                        droplocation:{type:'Point',coordinates:[Number(0.01), Number(0.01)]}
+                      }).save(function(er){
+                        res.send(req.body.lat)
+                      })
+                    }
+                  });
+                  
+                  
                 });
               }
             });
                 
-        //   }
-        // });
-    // console.log('body',req.body)
-    // database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exist){
-    //   if(exist){
-        
-    //         database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}, DriverType:req.body.DriverType}},function(err,data){
-    //           res.send(req.body.lat)
-    //         });
-    //   }else{
-        
-    //     database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
-    //       if(pilot){
-    //         database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exis){
-    //           if(!exis){
-                  // database.driverLocationArea({
-                  //   pilotID:req.cookies.pilotID,
-                  //   DriverType:req.body.DriverType,
-                  //   rating:pilot.rating,
-                  //   travelmod:pilot.travelmod,
-                  //   accountStatus:pilot.accountStatus,
-                  //   driverBusy:"free",
-                  //   location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
-                  // }).save(function(err){
-                  //   res.send(req.body.lat)
-                  // });
-    //         }
-    //         });
-    //       }
-    //     });
-        
-    //   }
-    // });
+          }
+        });
 
-   
-    
   });
-
-  
 
    //////////Update Driver Duty Offline and online//////
    router.post('/drv/dutyUpdate', function(req, res, next) {
     if(req.body.duty=='offline'){
       database.driverLocationArea.deleteMany({pilotID:req.cookies.pilotID},function(e, d){
-        console.log("delete Driver Location")
-        res.send(req.body.duty)
+        database.driverdroplocation.deleteMany({pilotID:req.cookies.pilotID},function(e, ddd){
+          console.log("delete Driver Location")
+          res.send(req.body.duty)
+        });
+       
       });
     }   
    
@@ -1228,13 +1222,279 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
   res.redirect('/india/preDrv')
 
 });
+/////For Neareast PreRide Driver//////
+router.post('/nearbyPrerideDriver', function(req, res, next) {
+  database.index2DdriverDroplocation({},function(ss){
+      /////Check Free Driver for 3KM //////
+      database.driverLocationArea.find({
+        location: {
+          $near: {
+            $geometry: {
+               type: "Point" ,
+               coordinates: [Number(req.body.lng), Number(req.body.lat)]
+            },$maxDistance : 3000
+          }
+        },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,driverBusy:"free"
+      },function(e,freeDriver){
+        if(freeDriver.length > 0){
+          /////select this driver//////
+          GenbookingID({},function(bokid){
+            console.log("BokID",bokid)
+            res.send({drivers:freeDriver,bookingID:bokid.bookingID});
+          })
+        }else{
+          //////check Busy driver for 3KM////
+          database.driverdroplocation.find({
+            droplocation: {
+                  $near: {
+                    $geometry: {
+                       type: "Point" ,
+                       coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
+                    },$maxDistance : 3000
+                  }
+                },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,driverBusy:"busy"
+              },function(e,busyDriver){
+                if(busyDriver.length > 0){
+                  /////select this driver//////
+                  GenbookingID({},function(bokid){
+                    console.log("BokID",bokid)
+                    res.send({drivers:busyDriver,bookingID:bokid.bookingID});
+                  })
 
-///// 
-router.post('/aa', function(req, res, next) {
+                }else{
+                  ///////Check free driver with in 10km///////
+                  database.driverLocationArea.find({
+                    location: {
+                      $near: {
+                        $geometry: {
+                           type: "Point" ,
+                           coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
+                        },$maxDistance : 10000
+                      }
+                    },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,driverBusy:"free"
+                  },function(e,freeDriver10){
+                    if(freeDriver10.length > 0){
+                      /////select this driver//////
+                      GenbookingID({},function(bokid){
+                        console.log("BokID",bokid)
+                        res.send({drivers:freeDriver10,bookingID:bokid.bookingID});
+                      })
 
+                    }else{
+                      ///////Check Busy Driver 10KM/////
+                      database.driverdroplocation.find({
+                        droplocation: {
+                              $near: {
+                                $geometry: {
+                                   type: "Point" ,
+                                   coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
+                                },$maxDistance : 10000
+                              }
+                            },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,driverBusy:"busy"
+                          },function(e,busyDriver10){
+                            if(busyDriver10.length > 0){
+                              /////select this driver//////
+                              GenbookingID({},function(bokid){
+                                console.log("BokID",bokid)
+                                res.send({drivers:busyDriver10,bookingID:bokid.bookingID});
+                              })
+      
+                            }else{
+                              //////send Driver not available /////
+                              res.send({drivers:[],bookingID:0});
+                            }
+                          });
+                    }
+                  });
+
+                }
+              });
+
+        }
+      });
+          
+      
+
+  });  
+  
+
+  function GenbookingID(rq,cb){
+            database.rideCounter.findOne({},function(e, d){
+          if(d){
+            var newId=Number(d.bookingID)+1;
+            database.rideCounter.findOneAndUpdate({bookingID:d.bookingID},{$set:{bookingID:newId}},function(e, dd){
+              cb({bookingID:newId}); 
+            })
+          }else{
+            database.rideCounter({bookingID:1}).save(function(er){
+             cb({bookingID:1});
+            });
+          }
+        });
+  }
 
 });
 
+
+
+
+
+
+////////Create New Pre Ride Booking/////
+router.post('/newPreRideBooking', function(req, res, next) {  
+  console.log(req.body)
+    database.ride({
+      bookingID:req.body.bookingID,   
+      CustID:req.body.CustID,
+      pilotID:req.body.pilotID,
+      picupaddress:req.body.originAds,
+      picuklatlng: [req.body.originLat, req.body.originLng],    
+      dropaddress:req.body.distAds,     
+      droplatlng:[req.body.distLat, req.body.distLng],        
+      kmtravels:req.body.totalDistance,
+      totalamount:req.body.totalAmt,
+      paymentBy:req.body.payMode,
+      discount:"",
+      driverpayout:"",
+      driverIncentiv:"",
+      callbookingStatus:"waiting"    
+    }).save(function(err){     
+      res.send("new Booking Created")
+    });
+    }); 
+    
+    ////PreRide Driver Call//////
+  router.post('/CallPreRideDriver', function(req, res, next) {
+  res.io.emit("preRideinCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,driverBusy:req.body.driverBusy});
+  res.send('ReqEmited');
+  });
+
+    ////////Call Driver accept notification/////
+router.post('/preRideAutoAccepeCall', function(req, res, next) { 
+  var OTP=randamNumber(); 
+  console.log('incomecalldetails',req.body)
+    if(req.body.driverBusy=="busy"){
+      /////write for Busy Ddriver//////
+      
+      var totalTime=0; 
+       var count=0;
+       var countArray=[];   
+      database.ride.find({pilotID:req.body.pilotID,driverBusy:req.body.driverBusy},function(err,booking){        
+        booking.forEach(function(val, index, arr){
+          var org=''+Number(val.picuklatlng[0])+', '+Number(val.picuklatlng[1])+'';
+          var dist=''+Number(val.droplatlng[0])+', '+Number(val.droplatlng[1])+''; 
+          count++;       
+          preRideTimeCalculation({
+            orig:org,
+            diste:dist,                        
+            travelmod:val.travelmod,
+            index:count
+          },function(result){
+            //console.log("total Time",time)
+            totalTime=Number(totalTime)+ Number(result.time);
+            countArray.push(result.count);
+            console.log("index",result.count)
+            console.log("arr.length",arr.length)
+            console.log("countArray",countArray.length)
+            if(countArray.length == arr.length){
+              if(totalTime <= 1800 ){
+              database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept',driverBusy:"busy",DriverType:"preRide",preRideOTP:OTP}},function(err, ride){
+                if(ride){
+                  database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept',}},function(er,cust){
+                   // database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{orderStage:'accept'}},function(re, ou){
+                      database.driverLocationArea.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
+                        driverBusy:'busy',
+                       // droplocation:{type:'Point',coordinates:[Number(ride.droplatlng[1]), Number(ride.droplatlng[0])]}
+                      }},function(re, drvloc){
+                        database.driverdroplocation.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
+                          driverBusy:'busy',
+                          droplocation:{type:'Point',coordinates:[Number(ride.droplatlng[1]), Number(ride.droplatlng[0])]}
+                        }},function(re, drvloc){
+                          res.io.emit("PreRideDriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP,DriverType:"preRide",time:totalTime});
+                          res.send({ride:ride,cust:cust,RideOTP:OTP,time:totalTime});
+                          database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
+                          console.log("Reset Demand")
+                        });
+                        });
+                        
+                      });
+                     
+                    //});
+                   
+                  });
+                }
+              });
+            }
+              /////
+            }
+          })
+        });
+      })
+   
+    }else{
+    ////Write for Free Driver/////    
+      database.driverLocationArea.findOne({pilotID:req.body.pilotID},function(err,driver){      
+        if(driver){          
+          var driverlocation=''+Number(driver.location.coordinates[1])+', '+Number(driver.location.coordinates[0])+'';
+          database.ride.findOne({bookingID:req.body.bookingID},function(er,booking){
+            var picup=''+Number(booking.picuklatlng[0])+', '+Number(booking.picuklatlng[1])+'';
+            preRideTimeCalculation({
+              orig:driverlocation,
+              diste:picup,            
+              travelmod:booking.travelmod,
+              index:0
+            },function(result){
+                                         
+              database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept',driverBusy:"busy",DriverType:"preRide",preRideOTP:OTP}},function(err, ride){
+                if(ride){
+                  database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept',}},function(er,cust){
+                    //database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{orderStage:'accept'}},function(re, ou){
+                      database.driverLocationArea.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
+                        driverBusy:'busy',
+                        //droplocation:{type:'Point',coordinates:[Number(booking.droplatlng[1]), Number(booking.droplatlng[0])]}
+                      }},function(re, drvloc){                        
+                          database.driverdroplocation.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
+                            driverBusy:'busy',
+                            droplocation:{type:'Point',coordinates:[Number(booking.droplatlng[1]), Number(booking.droplatlng[0])]}
+                          }},function(re, drvloc){
+                            res.io.emit("PreRideDriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP,DriverType:"preRide",time:result.time});
+                            res.send({ride:ride,cust:cust,RideOTP:OTP,time:result.time});
+                            database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
+                            console.log("Reset Demand")
+                            });
+                          });
+                        
+                      });
+                     
+                    ///});
+                   
+                  });
+                }
+              });
+
+
+            })
+          })
+        }
+      });
+
+    }  
+ 
+ 
+  });
+
+  function preRideTimeCalculation(req,cb){
+    googleApi.distance({
+      origins:req.orig,
+      destinations:req.diste,
+      apik:process.env.API_KEY,
+      travelmod:req.travelmod
+  },function(result){
+    //console.log(JSON.stringify(result) )
+    cb({time:result.rows[0].elements[0].duration.value, count:req.index})
+  });
+
+  }
 
 ///////////////////////////////////////
 ///* END PRE DRIVER LISTING. */////////////
@@ -1359,6 +1619,44 @@ paytm.validate(config,req.body,function(err,data){
 ///////////////////////////////////////
 ///* PAYTM PAY END. */////////////
 ///////////////////////////////////////
+
+
+
+//for(var i=0; i<10; i++){
+// database.index2Ddriver({},function(ss){
+//   database.driverLocationArea.find({
+//     location: {
+//       $near: {
+//         $geometry: {
+//            type: "Point" ,
+//            coordinates: [ Number(87.84598852164488), Number(22.973649017041968) ]
+//         },$maxDistance : 3000
+//       }
+//     },accountStatus:'Active',travelmod:"1",DriverType:"preRide",driverBusy:"free"
+//   },function(e,freeDriver){
+//     console.log("freeDriver",freeDriver)
+//   })
+// })
+
+//  database.index2DdriverDroplocation({},function(ss){
+
+//   database.driverdroplocation.find({
+//     droplocation: {
+//           $near: {
+//             $geometry: {
+//                type: "Point" ,
+//                coordinates: [ Number(87.84598852164488), Number(22.973649017041968) ]
+//             },$maxDistance : 3000
+//           }
+//         },accountStatus:'Active',travelmod:"1",DriverType:"preRide"
+//       },function(e,busyDriver){
+//         console.log("busyDriver",busyDriver)
+//       })
+// })
+// }
+         
+          
+       
 
 
 module.exports = router;

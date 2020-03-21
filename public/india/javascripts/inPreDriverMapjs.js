@@ -12,12 +12,15 @@ function initMap() {
         });
         
     ////////WatchLocation///////    
-   
+    var driverLocTimer;
     function wachLocation(){
         wachID=navigator.geolocation.watchPosition(function (position){
         ////////Call Circle Center Marker
-        circleMarker(position); 
-        driverLocationUpdate(position);          
+        circleMarker(position);         
+        clearTimeout(driverLocTimer);
+        driverLocTimer=setTimeout(function(){          
+            driverLocationUpdate(position);
+        },500);           
         
         },function error(msg){
             alert('Please enable your GPS position future.');       
@@ -80,20 +83,44 @@ function initMap() {
       if(document.getElementById("toggle").checked == true){        
         onlineExicute();
       }else{
-        $("#offline-content").css({"display":"block"});
+        $("#Offline").css({"display":"block"});
         $("#map").css({"display":"none"});
-        
-        $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
-          console.log(data)
-        })
+        $("#nofofride").css({"display":"none"});
         clearWachposition();
-        setCookie("ringToneControl","OFF",1);
-        clearDemandArea();
+        setCookie("ringToneControl","OFF",1);        
+        setTimeout(function(){
+          $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
+            console.log(data)
+          })
+        },1000);
+        
       }
     }); 
     
     function onlineExicute(){
       wachLocation();
+      $("#Offline").css({"display":"none"});
+      $("#nofofride").css({"display":"block"});
+      $("#map").css({"display":"block"});
+      var ringTimer= setInterval(RingToneHandeler,300);
     }
+
+    //////Ring tone Handeler////
+  var  myAudio= new Audio('/india/audio/car_horn.mp3');
+  function RingToneHandeler(){
+    var OnOff=getCookie("ringToneControl");
+    if(OnOff=='ON'){
+      myAudio.addEventListener('ended', function() {
+      this.currentTime = 0;
+      this.play();
+      }, false);        
+      myAudio.play();
+      window.navigator.vibrate(200);
+      setTimeout(function(){
+        setCookie("ringToneControl","OFF",30);
+        myAudio.pause();
+      },3000)
+    }
+  }    
 
 }/////End INITMAP
