@@ -1411,7 +1411,7 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
                           droplocation:{type:'Point',coordinates:[Number(ride.droplatlng[1]), Number(ride.droplatlng[0])]}
                         }},function(re, drvloc){
                           res.io.emit("PreRideDriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP,DriverType:"preRide",time:totalTime});
-                          res.send({ride:ride,cust:cust,RideOTP:OTP,time:totalTime});
+                          res.send({ride:ride,cust:cust,RideOTP:OTP,pilotID:req.body.pilotID,time:totalTime});
                           database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
                           console.log("Reset Demand")
                         });
@@ -1458,7 +1458,7 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
                             droplocation:{type:'Point',coordinates:[Number(booking.droplatlng[1]), Number(booking.droplatlng[0])]}
                           }},function(re, drvloc){
                             res.io.emit("PreRideDriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP,DriverType:"preRide",time:result.time});
-                            res.send({ride:ride,cust:cust,RideOTP:OTP,time:result.time});
+                            res.send({ride:ride,cust:cust,RideOTP:OTP,pilotID:req.body.pilotID,time:result.time});
                             database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
                             console.log("Reset Demand")
                             });
@@ -1481,6 +1481,49 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
     }  
  
  
+  });
+
+/////CHECK EXISTING PRE RIDE CALL DETAILS/////
+  router.post('/existingPrerideCall', function(req, res, next) {
+    var Record=[];
+    var count =0;
+    var countArray=[];
+    console.log("req Body:", req.body)
+    database.ride.find({pilotID:req.body.pilotID,driverBusy:req.body.driverBusy},function(err, data){
+      console.log("data:", data)
+      data.forEach(function(val,i,ar){
+        count++;
+        gatherRecord({val:val,count:count},function(result){
+          Record.push(result.out);
+          countArray.push(result.count);
+          console.log("countArray.length",countArray.length)
+          console.log("ar.length",ar.length)
+
+          if(countArray.length==ar.length){
+            res.send(Record);
+          }
+        })
+      })
+    });
+
+    function gatherRecord(req,cb){
+      database.customer.findOne({CustID:req.val.CustID},function(er,cust){
+        var out={
+          CustID:cust.CustID,
+          mobileNumber:cust.mobileNumber,
+          isdCode:cust.isdCode,
+          name:cust.name,
+          picuklatlng:req.val.picuklatlng,
+          droplatlng:req.val.droplatlng,
+          picupaddress:req.val.picupaddress,
+          dropaddress:req.val.dropaddress,
+          callbookingStatus:req.val.callbookingStatus
+        }
+        cb({out:out,count:req.count});
+        
+      })
+    }
+
   });
 
   function preRideTimeCalculation(req,cb){
