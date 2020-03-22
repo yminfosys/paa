@@ -167,14 +167,14 @@ function loginprocess(){
             <p class="prerideName">Pickup : '+val.name+'</p>\
                 <p class="prerideads">'+val.picupaddress+'</p>\
                 </div>\
-            <div class="col-xs-3 col-sm-3">\
-            <input id="geoNav" type="hidden">\
-                <button onclick="openMap()" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+                <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
+                <button id="mapBtn" onclick="googlemapbtn(\'' + 1 + '\',\'' + val.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
             </div>\
             <div class="col-xs-9 col-sm-9">\
-                <input onclick="clineLocated()" id="clineLocated" class="pickupPreridebtn" type="button" value="Cline Located">\
-                <input onclick="startRide()" id="startRide" class="pickupPreridebtn" type="button" value="Start Ride">\
-                <input onclick="finishride()" id="finishride" class="pickupPreridebtn" type="button" value="Finish Ride">\
+            <input type="hidden" id="preRideOTP'+indx+'" value="'+val.preRideOTP+'">\
+                <input onclick="clineLocated(\''+indx+'\')" id="clineLocated" class="pickupPreridebtn" type="button" value="Cline Located">\
+                <input onclick="startRide(\''+indx+'\')" id="startRide" class="pickupPreridebtn" type="button" value="Start Ride">\
+                <input onclick="finishride(\''+indx+'\')" id="finishride" class="pickupPreridebtn" type="button" value="Finish Ride">\
             </div>\
             <div class="col-xs-3 col-sm-3 telmsg">\
                 <a href="tel:'+val.isdCode+val.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
@@ -195,4 +195,80 @@ function loginprocess(){
   }
   });
 
+
+  ///////Google Map BTN //////////
+  function googlemapbtn(a,b){
+      var lanlng=[b];
+     console.log("picuklatlng",lanlng)
+    if(a==1){
+        if /* if we're on iOS, open in Apple Maps */
+        ((navigator.platform.indexOf("iPhone") != -1) || 
+         (navigator.platform.indexOf("iPad") != -1) || 
+         (navigator.platform.indexOf("iPod") != -1)){
+            window.open("maps://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+", &amp;ll=");
+         }else{
+            window.open("https://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+"&amp;ll=");
+         } /* else use Google */
+    }else{
+        if(a==2){
+       // alert("drop")
+        if /* if we're on iOS, open in Apple Maps */
+    ((navigator.platform.indexOf("iPhone") != -1) || 
+     (navigator.platform.indexOf("iPad") != -1) || 
+     (navigator.platform.indexOf("iPod") != -1)){
+        window.open("maps://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+" &amp;ll=");
+     }else{
+        window.open("https://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+"&amp;ll=");
+     } /* else use Google */
+    }
+  }
+}
  
+
+////////// On Cline Clocated/////////
+function clineLocated(indx){
+    var CustID=$("#CustID"+indx+"").val();    
+    $.post('/india/drv/clinelocated',{CustID:CustID},function(respon){
+    console.log("respon",respon)
+        if(respon){                    
+            $("#clineLocated"+indx+"").css({"display":"none"});
+            $("#startRide"+indx+"").css({"display":"block"});
+            $("#listItem"+indx+"").css({"background-color":"#91bb2f"})
+        }
+
+    });
+}
+
+/////////Start Ride ////////
+function startRide(indx){        
+    var OTP=$("#preRideOTP"+indx+"").val();   
+    $("#OTP-Content").css({"display":"block"});
+    $("#OTP-Content").html('<h3>Enter OTP</h3>\
+    <input type="number" onkeyup="otpinput(\''+OTP+'\',\''+indx+'\')" id="otpp" maxlength="4" >')
+}
+
+function otpinput(otp,indx){         
+    var valu=$("#otpp").val()
+    var CustID=$("#CustID"+indx+"").val(); 
+    var bookingID=$("#bookingID"+indx+"").val();
+    var name=$("#name"+indx+"").val();
+    var dropaddress=$("#dropaddress"+indx+"").val();
+    var droplatlng=$("#droplatlng"+indx+"").val();
+   if(valu.length >3){       
+       if(otp==valu){
+           $.post('/india/preRideStartRide',{CustID:CustID,bookingID:bookingID},function(responce){
+                if(responce){
+                    $("#OTP-Content").css({"display":"none"});
+                    $("#startRide"+indx+"").css({"display":"none"});
+                    $("#finishride"+indx+"").css({"display":"block"});
+                    $("#mapBtn"+indx+"").html('<button id="mapBtn" onclick="googlemapbtn(\'' + 2 + '\',\'' + droplatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>')
+                    $("#nameAds"+indx+"").html('<p class="prerideName">Drop To : '+name+'</p>\
+                    <p class="prerideads">'+dropaddress+'</p>');                    
+                    googlemapbtn(2,droplatlng);
+                }
+           })
+       }else{
+        $("#otpp").css({"background-color": "#df0d0d","color": "#FFF" })
+       }
+    }
+}

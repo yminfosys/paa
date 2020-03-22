@@ -107,26 +107,35 @@ function initMap() {
       var pilotID=getCookie("pilotID");
       $.post('/india/preRidePageInitiate',{pilotID:pilotID,driverBusy:"busy"},function(rides){
         var out="";
+        console.log("Rides detals",rides)
         rides.forEach(function(val,indx,ar){
-            out+='<div class="row listItem">\
-            <div class="col-xs-9 col-sm-9 ">\
-            <p class="prerideName">Pickup : '+val.name+'</p>\
+        
+            out+='<div id="listItem'+indx+'" class="row listItem">\
+            <div id="nameAds'+indx+'" class="col-xs-9 col-sm-9">\
+            <p class="prerideName">Pickup Form : '+val.name+'</p>\
                 <p class="prerideads">'+val.picupaddress+'</p>\
-                </div>\
-            <div class="col-xs-3 col-sm-3">\
-            <input id="geoNav" type="hidden">\
-                <button onclick="openMap()" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+            </div>\
+            <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
+                <button id="mapBtn" onclick="googlemapbtn(\'' + 1 + '\',\'' + val.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
             </div>\
             <div class="col-xs-9 col-sm-9">\
-                <input onclick="clineLocated()" id="clineLocated" class="pickupPreridebtn" type="button" value="Cline Located">\
-                <input onclick="startRide()" id="startRide" class="pickupPreridebtn" type="button" value="Start Ride">\
-                <input onclick="finishride()" id="finishride" class="pickupPreridebtn" type="button" value="Finish Ride">\
+            <input type="hidden" id="preRideOTP'+indx+'" value="'+val.preRideOTP+'">\
+            <input type="hidden" id="CustID'+indx+'" value="'+val.CustID+'">\
+            <input type="hidden" id="pilotID'+indx+'" value="'+val.pilotID+'">\
+            <input type="hidden" id="droplatlng'+indx+'" value="'+val.droplatlng+'">\
+            <input type="hidden" id="dropaddress'+indx+'" value="'+val.dropaddress+'">\
+            <input type="hidden" id="name'+indx+'" value="'+val.name+'">\
+            <input type="hidden" id="bookingID'+indx+'" value="'+val.bookingID+'">\
+                <input onclick="clineLocated(\''+indx+'\')" id="clineLocated'+indx+'" class="pickupPreridebtn" type="button" value="Cline Located">\
+                <input onclick="startRide(\''+indx+'\')" id="startRide'+indx+'" class="pickupPreridebtn1" type="button" value="Start Ride">\
+                <input onclick="finishride(\''+indx+'\')" id="finishride'+indx+'" class="pickupPreridebtn1" type="button" value="Finish Ride">\
             </div>\
             <div class="col-xs-3 col-sm-3 telmsg">\
                 <a href="tel:'+val.isdCode+val.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
                 <a href="sms:'+val.isdCode+val.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>\
             </div>\
             </div>';
+
 
             if(indx===ar.length -1){
                
@@ -136,6 +145,7 @@ function initMap() {
       });
 
     }
+
 
     //////Ring tone Handeler////
   var  myAudio= new Audio('/india/audio/car_horn.mp3');
@@ -153,6 +163,9 @@ function initMap() {
         myAudio.pause();
       },3000)
     }
-  }    
+  } 
+  
+  
+  
 
 }/////End INITMAP

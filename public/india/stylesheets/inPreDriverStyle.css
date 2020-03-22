@@ -134,11 +134,13 @@
    }
    .prerideName{font-size: 12px; font-weight: bold;}
    .prerideads{margin-top: -10px;}
-   .pickupPreridebtn{border:1px solid rgb(71, 7, 7) ; 
+   .pickupPreridebtn{border:1px solid rgb(71, 7, 7) ;
     color: #facb3d; padding: 5px;background-color: #1c201d; border-radius: 5px;
     text-align: center; width:100%;}
-    #startRide{display: none;} 
-    #finishride{display: none;} 
+    .pickupPreridebtn1{border:1px solid rgb(71, 7, 7) ;
+      color: #facb3d; padding: 5px;background-color: #1c201d; border-radius: 5px;
+      text-align: center; width:100%;display: none;}
+   
    .mybtn{font-size: 20px; margin-top: 5px; margin-bottom: 4px;}
    .listItem{ border-bottom: 1px solid rgb(49, 47, 47); padding-bottom: 5px;}
    .telmsg{margin-top: 5px;}
@@ -160,7 +162,19 @@
     color: red;
   }
 
-  
+  #OTP-Content{
+    position: fixed;
+    height: 63vh;
+    top: 7vh;
+    width: 100%;  
+    z-index: 100;
+    background-color: #213328; 
+    text-align: center; 
+    color: #facb3d;
+    color: #df0d0d;
+    display:none;
+  }
+  #OTP-Content input{ text-align: center; font-size: 25px; letter-spacing: 10px; width: 150px;  color: #575757; }
 
 
 

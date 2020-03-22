@@ -1520,7 +1520,9 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
           droplatlng:req.val.droplatlng,
           picupaddress:req.val.picupaddress,
           dropaddress:req.val.dropaddress,
-          callbookingStatus:req.val.callbookingStatus
+          callbookingStatus:req.val.callbookingStatus,
+          pilotID:req.val.pilotID,
+          preRideOTP:req.val.preRideOTP
         }
         cb({out:out,count:req.count});
         
@@ -1576,7 +1578,9 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
           droplatlng:req.val.droplatlng,
           picupaddress:req.val.picupaddress,
           dropaddress:req.val.dropaddress,
-          callbookingStatus:req.val.callbookingStatus
+          callbookingStatus:req.val.callbookingStatus,
+          pilotID:req.val.pilotID,
+          preRideOTP:req.val.preRideOTP
         }
         cb({out:out,count:req.count});
         
@@ -1597,6 +1601,19 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
   });
 
   }
+
+  //////Start Pre Ride/////////////
+  router.post('/preRideStartRide', function(req, res, next) {
+    // database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'startRide'}},function(er,cust){
+    //   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:'startRide'}},function(re, ou){
+    //     res.io.emit("StartRide",{CustID:req.body.CustID});
+    //     res.send("emitStartRide") 
+    //   });
+     
+    // });
+    res.send("emitStartRide") 
+  
+  })
 
 ///////////////////////////////////////
 ///* END PRE DRIVER LISTING. */////////////
