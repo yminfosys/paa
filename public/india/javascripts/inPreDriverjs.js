@@ -272,3 +272,37 @@ function otpinput(otp,indx){
        }
     }
 }
+
+
+////////Finish Ride///////   
+function finishride(indx){
+    var CustID=$("#CustID"+indx+"").val(); 
+    var bookingID=$("#bookingID"+indx+"").val();
+    var picuklatlng=$("#picuklatlng"+indx+"").val();
+    picuklatlng=picuklatlng.split(",");
+    
+        $.post('/india/preRideFinish',{
+            CustID:CustID,
+            bookingID:bookingID,
+            picuklat:picuklatlng[0], 
+            picuklng:picuklatlng[1]
+            
+        },function(respon){
+            console.log("respon",respon)
+                if(respon){ 
+                    
+                   // $("#pickDrop-Content").css({"display":"none"});
+                   $("#listItem"+indx+"").css({"display":"none"})
+                    $("#billAndfeedback").css({"display":"block"});                  
+                    $("#OTP-Content").css({"display":"none"});
+                    $("#startRide"+indx+"").css({"display":"none"});
+                    $("#finishride"+indx+"").css({"display":"none"});
+                    //$("#pickdropfooter"+indx+"").css({"display":"none"});
+                    //$("#pickdropHead"+indx+"").css({"display":"none"});
+                    $("#amt").text(respon.billAmount)
+                    $("#bookingIDFinish").val(bookingID);
+                }
+
+            });
+        
+}

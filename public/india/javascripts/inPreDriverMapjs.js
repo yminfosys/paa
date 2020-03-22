@@ -123,6 +123,7 @@ function initMap() {
             <input type="hidden" id="CustID'+indx+'" value="'+val.CustID+'">\
             <input type="hidden" id="pilotID'+indx+'" value="'+val.pilotID+'">\
             <input type="hidden" id="droplatlng'+indx+'" value="'+val.droplatlng+'">\
+            <input type="hidden" id="picuklatlng'+indx+'" value="'+val.picuklatlng+'">\
             <input type="hidden" id="dropaddress'+indx+'" value="'+val.dropaddress+'">\
             <input type="hidden" id="name'+indx+'" value="'+val.name+'">\
             <input type="hidden" id="bookingID'+indx+'" value="'+val.bookingID+'">\
@@ -165,7 +166,19 @@ function initMap() {
     }
   } 
   
-  
+  /////continueNextRide /////////
+  document.getElementById("continueNextRide").addEventListener("click", function(){ 
+    var bookingID=$("#bookingIDFinish").val();   
+    $.post('/india/finishandUpdateRide',{bookingID:bookingID},function(data){
+      if(data){
+        onlineExicute();
+        $("#billAndfeedback").css({"display":"none"});
+        document.getElementById("toggle").checked = true;        
+      }
+      
+    });
+    
+  });
   
 
 }/////End INITMAP
