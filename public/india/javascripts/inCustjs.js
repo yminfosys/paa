@@ -315,7 +315,7 @@ function loginprocess(){
     var dist=JSON.parse(getCookie("droplatlong")) ;
     var travelmod=$("#ModeofTravel").val();
     var CustID=getCookie("CustID")
-    var totalAmt= $("#totalAmt").text();
+    var totalAmt= $("#tmPrice"+travelmod+"").val();
     var totalDistance= $("#totalDistance").val();
     var timere;    
 
@@ -329,6 +329,7 @@ function loginprocess(){
       console.log(data);
       if(data.drivers.length > 0){
         ////////Create New Ride Booking///////
+        alert(Number(totalAmt))
         $.post('/india/newRideBooking',{
           bookingID:data.bookingID,
           originAds:originAds,
@@ -339,7 +340,7 @@ function loginprocess(){
           distLng:dist.lng,
           travelmod:travelmod,
           CustID:CustID,
-          totalAmt:Number(totalAmt) * Number(totalDistance),
+          totalAmt:Number(totalAmt) ,
           totalDistance:totalDistance,
           payMode:payMode,
         },function(booking){
@@ -404,7 +405,7 @@ function loginprocess(){
    function preRideBooking(){
  
     var travelmod=$("#ModeofTravel").val();
-    var totalAmt= $("#tmPreRidePrice"+travelmod+"").val();    
+    var totalAmt= $("#tmPreRidePrice"+travelmod+"").val();   /////Pre KM Price  
     var totalDistance= $("#totalDistance").val();    
     $("#footer-preRide").css({"display":"block"});
     $("#preRideAmount").html('Aprox Pre-Ride Cost &#8377; '+totalAmt*totalDistance+'');

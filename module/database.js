@@ -14,27 +14,27 @@ const mongojs = require('mongojs');
 //var uri='mongodb://sukanta82:sukanta82@ds149138.mlab.com:49138/mws';
 //var uri='mongodb://sukanta82:sukanta82@ds163517.mlab.com:63517/mws';
 //var uri='mongodb://localhost:27017/paacab';
-//var uri='mongodb://127.0.0.1:27017/admin';
-var uri='mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority';
+var uri='mongodb://127.0.0.1:27017/paaindia';
+//var uri='mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority';
 ///&connectTimeoutMS=1000&bufferCommands=false
 ///2dsphar indexing creat///////
 function index2Dpilot(int,cb){
   console.log()
-    const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['pilotcollections'])
+    const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['pilotcollections'])
     db.pilotcollections.createIndex({ "location" : "2dsphere" });
     cb({success:'1'});
   }
 
   function index2Ddriver(int,cb){
     console.log()
-      const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['driverlocationcollections'])
+      const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['driverlocationcollections'])
       db.driverlocationcollections.createIndex({ "location" : "2dsphere" });
       cb({success:'1'});
     }
 
     function index2DdriverDroplocation(int,cb){
       console.log()
-        const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['driverdropcollections','driverlocationcollections'])
+        const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['driverdropcollections','driverlocationcollections'])
         db.driverdropcollections.createIndex({ "droplocation" : "2dsphere" });
         db.driverlocationcollections.createIndex({ "location" : "2dsphere" });
         cb({success:'1'});
@@ -48,7 +48,7 @@ function index2Dpilot(int,cb){
   //   }
   function index2Ddemand(int,cb){
     console.log()
-      const db = mongojs('mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority', ['demandcollections']);
+      const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['demandcollections']);
       db.demandcollections.createIndex({ "location" : "2dsphere" });
       cb({success:'1'})
     }

@@ -38,7 +38,8 @@ router.use(fileUpload({
 ///* CUSTOMER LISTING. *///////////////
 ///////////////////////////////////////
 
-router.get('/', function(req, res, next) {  
+router.get('/', function(req, res, next) { 
+ 
   if(req.cookies.CustID){ 
     database.customer.findOne({CustID:req.cookies.CustID},function(err,data){
       if(data){
