@@ -165,7 +165,13 @@ function initMap() {
                     $.post('/india/getFinishBooking',{bookingID:data.ride.bookingID},function(resp){
                         console.log(resp.totalamount);
                         $("#billAndfeedback").css({"display":"block"});
-                        $("#tamt").text(resp.totalamount)
+                        $("#tamt").text(Number(resp.totalamount));
+                        $("#tamt1").text(Number(resp.totalamount));
+                        $("#timeF").text(Number(resp.timefare));
+                        $("#distFare").text(Number(resp.totalamount) - Number(resp.timefare) );
+                        
+                        
+
                     });
                 }else{
                     

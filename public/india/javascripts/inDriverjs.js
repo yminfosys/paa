@@ -224,14 +224,14 @@ function loginprocess(){
                 }
 
             });
-            }
+    }
             
      function otpinput(){        
          var valu=$("#otpp").val()
         if(valu.length >3){
             var data=JSON.parse(getCookie("rideBookingDetails"));
             if(data.RideOTP==valu){
-                $.post('/india/drv/startRide',{CustID:data.cust.CustID},function(respon){
+                $.post('/india/drv/startRide',{CustID:data.cust.CustID,bookingID:data.ride.bookingID},function(respon){
                     console.log("respon",respon)
                         if(respon){
                             $("#address").html('<p>Drop To: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.dropaddress+'</p>');

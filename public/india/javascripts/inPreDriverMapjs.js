@@ -168,7 +168,8 @@ function initMap() {
   
   /////continueNextRide /////////
   document.getElementById("continueNextRide").addEventListener("click", function(){ 
-    var bookingID=$("#bookingIDFinish").val();   
+    var bookingID=$("#bookingIDFinish").val(); 
+    alert(bookingID)  
     $.post('/india/finishandUpdateRide',{bookingID:bookingID},function(data){
       if(data){
         onlineExicute();

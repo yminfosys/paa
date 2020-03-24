@@ -162,19 +162,26 @@ function loginprocess(){
         console.log("Ride Details",rides)
         var out="";
         rides.forEach(function(val,indx,ar){
-            out+='<div class="row listItem">\
-            <div class="col-xs-9 col-sm-9 ">\
-            <p class="prerideName">Pickup : '+val.name+'</p>\
+            out+='<div id="listItem'+indx+'" class="row listItem">\
+            <div id="nameAds'+indx+'" class="col-xs-9 col-sm-9">\
+            <p class="prerideName">Pickup Form : '+val.name+'</p>\
                 <p class="prerideads">'+val.picupaddress+'</p>\
-                </div>\
-                <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
+            </div>\
+            <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
                 <button id="mapBtn" onclick="googlemapbtn(\'' + 1 + '\',\'' + val.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
             </div>\
             <div class="col-xs-9 col-sm-9">\
             <input type="hidden" id="preRideOTP'+indx+'" value="'+val.preRideOTP+'">\
-                <input onclick="clineLocated(\''+indx+'\')" id="clineLocated" class="pickupPreridebtn" type="button" value="Cline Located">\
-                <input onclick="startRide(\''+indx+'\')" id="startRide" class="pickupPreridebtn" type="button" value="Start Ride">\
-                <input onclick="finishride(\''+indx+'\')" id="finishride" class="pickupPreridebtn" type="button" value="Finish Ride">\
+            <input type="hidden" id="CustID'+indx+'" value="'+val.CustID+'">\
+            <input type="hidden" id="pilotID'+indx+'" value="'+val.pilotID+'">\
+            <input type="hidden" id="droplatlng'+indx+'" value="'+val.droplatlng+'">\
+            <input type="hidden" id="picuklatlng'+indx+'" value="'+val.picuklatlng+'">\
+            <input type="hidden" id="dropaddress'+indx+'" value="'+val.dropaddress+'">\
+            <input type="hidden" id="name'+indx+'" value="'+val.name+'">\
+            <input type="hidden" id="bookingID'+indx+'" value="'+val.bookingID+'">\
+                <input onclick="clineLocated(\''+indx+'\')" id="clineLocated'+indx+'" class="pickupPreridebtn" type="button" value="Cline Located">\
+                <input onclick="startRide(\''+indx+'\')" id="startRide'+indx+'" class="pickupPreridebtn1" type="button" value="Start Ride">\
+                <input onclick="finishride(\''+indx+'\')" id="finishride'+indx+'" class="pickupPreridebtn1" type="button" value="Finish Ride">\
             </div>\
             <div class="col-xs-3 col-sm-3 telmsg">\
                 <a href="tel:'+val.isdCode+val.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\

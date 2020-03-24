@@ -81,6 +81,8 @@ var custSchema = new mongoose.Schema({
     userType:String,
     orderStage:String,
     preRidePriceperKm:[],
+    preRideperMinutCharge:[],
+    GenarelPerMinutCharge:[],
     regdate: { type: Date, default: Date.now },
     lastLogindate: { type: Date },
     location: {
@@ -208,19 +210,25 @@ var rideSchema = new mongoose.Schema({
   totalamount:String,
   paymentBy:String,
   driverCashCollectio:String,
+  driverCashDeposit:String,
   discount:String,
   driverpayout:String,
   driverIncentiv:String,
   callbookingStatus:String,
   driverBusy:String,
-  preRideOTP:String
+  preRideOTP:String,
+  startTime:{ type: Date},
+  endTime:{ type: Date},
+  totalTime:String,
+  timefare:String,
+  gstCharge:String
   
 });
+
 
 //rideSchema.plugin(autoIncrement.plugin, { model: 'ridecollections', field: 'bookingID',startAt: 1000, incrementBy: 1 });
 
 var ridemodul = mongoose.model('ridecollections', rideSchema);
-
 ///Ride book Schema Counter
 var rideCountSchema = new mongoose.Schema({ 
   bookingID:  String,   
