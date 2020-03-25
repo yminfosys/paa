@@ -32,7 +32,7 @@ function initMap() {
         wachID=navigator.geolocation.watchPosition(function (position){
         ////////Call Circle Center Marker
         circleMarker(position);           
-        
+        cityLocation(position);
         },function error(msg){
             alert('Please enable your GPS position future.');       
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
@@ -389,7 +389,28 @@ content: "Drop"
 $("#notification").appendTo(map.getDiv());
 $("#promoMsg").appendTo(map.getDiv());
 
- 
+  //////Get City Location For Price Control//////
+  var getLocation=0;
+  function cityLocation(position){
+    // var pos={lat:position.coords.latitude,lng:position.coords.longitude}; 
+    if(getLocation==0){
+      $.post('/india/preRideUpdateCitywisePrice',{lat:position.coords.latitude, lng:position.coords.longitude},function(data){
+        if(data){
+          //getLocation=1;
+          console.log("city Location",data)
+          data.results[0].address_components.forEach(function(val){
+           
+            if(val.types[0]=='administrative_area_level_2'){
+                  console.log(val.long_name);
+                  console.log("Address Component",val.long_name)
+                  alert(val.long_name)
+                
+                }
+          })
+        }
+      });
+    }
+  }
 
 } ///////End IntMap  
 

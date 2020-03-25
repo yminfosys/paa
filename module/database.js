@@ -271,9 +271,20 @@ var priceandOfferSchema = new mongoose.Schema({
 });
 
 priceandOfferSchema.plugin(autoIncrement.plugin, { model: 'priceandOffercollections', field: 'offerID',startAt: 1, incrementBy: 1 });
-
-
 var priceandOffermodul = mongoose.model('priceandOffercollections', priceandOfferSchema);
+
+///City Waise Price Variation
+var cityPriceSchema = new mongoose.Schema({ 
+  CityName:  String,
+  CuntryName:String,
+  PerKMPrice:String,
+  minimumPricePer:String,
+  minimumKM:String,
+  travelMode: String,    
+  rideIncetiv:String 
+});
+
+var cityPricemodul = mongoose.model('citypricecollections', cityPriceSchema);
 
 ////Demand Area Schema
 var demandSchema = new mongoose.Schema({ 
@@ -425,6 +436,7 @@ module.exports.index2Ddemand=index2Ddemand;
 module.exports.ride=ridemodul;
 module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
+module.exports.cityPrice=cityPricemodul;
 module.exports.demandArea=demandmodul;
 module.exports.driverLocationArea=driverlocationmodul;
 module.exports.driverdroplocation=driverdropmodul;

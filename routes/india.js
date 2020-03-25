@@ -1746,7 +1746,28 @@ router.post('/preRideFinish', function(req, res, next) {
     }},function(err, data){
       res.send(data);
     })
-  })
+  });
+
+  //////////Update City Price/////////
+  router.post('/preRideUpdateCitywisePrice', function(req, res, next){
+    googleApi.SearchGeoCodePlaceByLatLng({
+          lat:Number(req.body.lat),
+          lng:Number(req.body.lng),
+          apik:process.env.API_KEY,
+      },function(data){
+        console.log("City Name",data.results[0]);
+      res.send(data)
+    //console.log(data.results[0]);
+      // data.results[0].address_components.forEach(function(val){
+      //   //console.log(val.types[0]); 
+      //   if(val.types[0]=='country'){
+      //     console.log(val.long_name);
+      //     res.send(val.long_name); 
+      //   }
+      //     })
+      });
+    //res.send("123")
+  });
   
 
 ///////////////////////////////////////

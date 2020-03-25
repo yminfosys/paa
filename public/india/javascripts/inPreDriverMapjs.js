@@ -15,7 +15,8 @@ function initMap() {
     var driverLocTimer;
     function wachLocation(){
         wachID=navigator.geolocation.watchPosition(function (position){
-        ////////Call Circle Center Marker
+        ////////Call Circle Center 
+       
         circleMarker(position);         
         clearTimeout(driverLocTimer);
         driverLocTimer=setTimeout(function(){          
@@ -180,6 +181,8 @@ function initMap() {
     });
     
   });
+
+ 
   
 
 }/////End INITMAP

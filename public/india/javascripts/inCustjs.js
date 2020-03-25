@@ -329,7 +329,7 @@ function loginprocess(){
       console.log(data);
       if(data.drivers.length > 0){
         ////////Create New Ride Booking///////
-        alert(Number(totalAmt))
+       // alert(Number(totalAmt))
         $.post('/india/newRideBooking',{
           bookingID:data.bookingID,
           originAds:originAds,
