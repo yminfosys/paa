@@ -276,12 +276,13 @@ var priceandOffermodul = mongoose.model('priceandOffercollections', priceandOffe
 ///City Waise Price Variation
 var cityPriceSchema = new mongoose.Schema({ 
   CityName:  String,
-  CuntryName:String,
+  preRidekmprice:String,
   PerKMPrice:String,
   minimumPricePer:String,
   minimumKM:String,
   travelMode: String,    
-  rideIncetiv:String 
+  rideIncetiv:String,
+  driverpayout:String 
 });
 
 var cityPricemodul = mongoose.model('citypricecollections', cityPriceSchema);

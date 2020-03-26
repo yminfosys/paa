@@ -34,7 +34,7 @@ router.get('/preDrive', function(req, res, next) {
   res.render('appPreDriver', { title: 'Paacab' });
 });
 
-router.post('/geoplace', function(req, res, next) {  //
+router.post('/geoplace', function(req, res, next) { 
   googleApi.SearchGeoCodePlaceByLatLng({
     lat:Number(req.body.lat),
     lng:Number(req.body.lng),

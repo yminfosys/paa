@@ -1751,8 +1751,10 @@ router.post('/preRideFinish', function(req, res, next) {
   //////////Update City Price/////////
   router.post('/preRideUpdateCitywisePrice', function(req, res, next){
     googleApi.SearchGeoCodePlaceByLatLng({
-          lat:Number(req.body.lat),
-          lng:Number(req.body.lng),
+          // lat:Number(req.body.lat),
+          // lng:Number(req.body.lng),
+          lat:Number(22.8895),
+          lng:Number(88.4220),
           apik:process.env.API_KEY,
       },function(data){
         console.log("City Name",data.results[0]);
