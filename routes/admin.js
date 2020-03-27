@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
 router.post('/addnewPrice', function(req, res, next) {
 // res.send(req.body);
-database.cityPrice.findOneAndUpdate({CityName: req.body.city},{$set:{
+database.cityPrice.findOneAndUpdate({CityName: req.body.city, travelMode: req.body.travelmode},{$set:{
   CityName: req.body.city,
   preRidekmprice:req.body.preRidekmprice,
   PerKMPrice:req.body.kmprice,

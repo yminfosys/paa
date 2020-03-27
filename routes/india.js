@@ -84,10 +84,10 @@ router.post('/login', function(req, res, next) {
           database.priceOffer.findOne({CustID:user.CustID},function(err, price){
             if(!price){
               ///////// Add Price manager/////
-              ;
+              
               for(var mod =1; mod < 5; mod++){
                 console.log('mode',mod);
-                for(var km =1; km < 101; km++){
+                for(var km =1; km < 201; km++){
                   console.log('mode',km);
                   var pric=km*8*mod;
                   if(km==1){
@@ -1751,25 +1751,82 @@ router.post('/preRideFinish', function(req, res, next) {
   //////////Update City Price/////////
   router.post('/preRideUpdateCitywisePrice', function(req, res, next){
     googleApi.SearchGeoCodePlaceByLatLng({
-          // lat:Number(req.body.lat),
-          // lng:Number(req.body.lng),
-          lat:Number(22.8895),
-          lng:Number(88.4220),
+          lat:Number(req.body.lat),
+          lng:Number(req.body.lng),
+          //lat:Number(22.8895),
+          //lng:Number(88.4220),
           apik:process.env.API_KEY,
       },function(data){
         console.log("City Name",data.results[0]);
-      res.send(data)
-    //console.log(data.results[0]);
-      // data.results[0].address_components.forEach(function(val){
-      //   //console.log(val.types[0]); 
-      //   if(val.types[0]=='country'){
-      //     console.log(val.long_name);
-      //     res.send(val.long_name); 
-      //   }
-      //     })
+      
+      data.results[0].address_components.forEach(function(val){           
+        if(val.types[0]=='administrative_area_level_2'){
+              //console.log(val.long_name);
+              //console.log("Address Component",val.long_name)
+             /////
+             database.cityPrice.find({CityName:val.long_name},function(er, city){
+              console.log("city list",city)
+              city.forEach(function(val,kk){
+                priceUpdate({
+                  CustID:req.cookies.CustID,
+                  CityName: val.CityName,
+                  preRidekmprice: val.preRidekmprice,
+                  PerKMPrice: val.PerKMPrice,
+                  minimumPricePer: val.minimumPricePer,
+                  minimumKM: val.minimumKM,
+                  travelMode: val.travelMode,
+                  rideIncetiv: val.rideIncetiv
+                })
+                if(kk===city.length -1){
+                  res.send(data)
+                }
+              });
+             })
+            
+            }
       });
-    //res.send("123")
   });
+})
+
+function priceUpdate(req){
+  //////For General Driver
+  var pric=0;
+  for(var km =1; km < 200; km++){
+      if(km <= req.minimumKM){
+        pric=Number(req.minimumPricePer);
+      }else{
+        pric=Number(km*req.kmprice); 
+        pric=Number(pric) - Number(req.minimumPricePer);
+      }    
+    database.priceOffer.findOneAndUpdate({CustID:req.CustID, travelmod:req.travelMode,distanceKM:km},{$set:{
+      price:pric
+    }},function(e, d){
+      console.log("General Price Updated")
+    });     
+   
+  }
+  /////For Pre Ride Driver////
+    var key=Number(req.travelMode)-1;
+  database.customer.findOne({CustID:req.CustID},function(ee,cust){
+    if(cust){
+      prerideprice=cust.preRidePriceperKm;
+      prerideprice[key]=req.preRidekmprice;
+      console.log("PreRide KEY",key)
+      console.log("PreRide KM",req.preRidekmprice)
+      console.log("PreRide Price Updated",prerideprice)
+
+      database.customer.findOneAndUpdate({CustID:req.CustID},{$set:{
+        preRidePriceperKm:prerideprice
+      }},function(e,d){
+        console.log("PreRide Price Updated",prerideprice)
+      })
+
+    }
+  })
+
+ 
+
+}
   
 
 ///////////////////////////////////////
