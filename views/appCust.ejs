@@ -57,6 +57,7 @@
             
             function error() {
               status.textContent = 'Unable to retrieve your location';
+              alert("GPS Not Found")
             }
             
             if (!navigator.geolocation) {

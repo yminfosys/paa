@@ -39,7 +39,7 @@ router.use(fileUpload({
 ///////////////////////////////////////
 
 router.get('/', function(req, res, next) { 
- 
+  //res.clearCookie("CustID");
   if(req.cookies.CustID){ 
     database.customer.findOne({CustID:req.cookies.CustID},function(err,data){
       if(data){
@@ -79,44 +79,7 @@ router.post('/login', function(req, res, next) {
     bcrypt.compare(req.body.password, user.password, function(err, pass) {
        console.log(pass)
          if(pass){
-          res.cookie("CustID", user.CustID, {maxAge: 30*24*60*60*1000 }); 
-          /////check Prise manager///////
-          database.priceOffer.findOne({CustID:user.CustID},function(err, price){
-            if(!price){
-              ///////// Add Price manager/////
-              
-              for(var mod =1; mod < 5; mod++){
-                console.log('mode',mod);
-                for(var km =1; km < 201; km++){
-                  console.log('mode',km);
-                  var pric=km*8*mod;
-                  if(km==1){
-                    pric=13*mod;
-                  }
-                  if(km==2){
-                    pric=13*mod;
-                  }
-                  if(km==3){
-                    pric=16*mod;
-                  }
-                  if(km==4){
-                    pric=21*mod;
-                  }
-                  if(km==5){
-                    pric=28*mod;
-                  }
-                  database.priceOffer({
-                    CustID:user.CustID,
-                    travelmod:mod,
-                    price:pric,                     
-                    distanceKM:km,
-                  }).save(function(erro){
-
-                  });
-                }
-              }
-            }
-          });
+          res.cookie("CustID", user.CustID, {maxAge: 30*24*60*60*1000 });        
           res.send('success');
          }else{
            //////Worng Password//////
@@ -167,15 +130,21 @@ router.post('/custReg', function(req, res, next) {
       mobileNumber:req.body.mobile,
       custRating:'0',
       isdCode:'+91',
+      generalMinimumKm:[2, 2, 2, 2],
       preRidePriceperKm:[3, null, null, null],
       preRideperMinutCharge:[0.5, 0.75, 1, 1.25 ],
       GenarelPerMinutCharge:[1.5, 1.75, 2, 2.5],
+      generalPriceperKm:[8, 10, 15, 20],
+      generalMinimumprice:[13, 40, 90, 90],
+      generalBasePrice:[0, 30, 90, 90],
+      driverPayout:[6, 8, 9, 10],
+      shareRide:[0, 0, 0, 0],
       walletBalance:'0',
       BuyKM:'5',
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
       //location:{type:'Point',coordinates:[1.00001, 1.0001]}
     }).save(function(err){
-      database.priceOffer({})
+      
       res.redirect('/india/login?msg=Registration Success');
         }); 
     }); 
@@ -331,18 +300,20 @@ router.post('/getDistance', function(req, res, next) {
 
 });
 
-router.post('/getprice', function(req, res, next) {
-
-  database.priceOffer.findOne({CustID:req.cookies.CustID,travelmod:req.body.travelmod,distanceKM:req.body.distance},function(err , data){
-    if(data){
-      database.customer.findOne({CustID:req.cookies.CustID},function(er,cust){
-        res.send({price:data.price,travelmod:data.travelmod,preRidePrice:cust.preRidePriceperKm});
-        console.log(data);
-      });
-      
-    }
-  });
-
+router.post('/getprice', function(req, res, next) { 
+      var key=Number(req.body.travelmod)-1;
+      var price=0;
+      database.customer.findOne({CustID:req.cookies.CustID},function(er,cust){ 
+        console.log("customer data", cust)  
+        console.log("req.body", req.body)      
+        if(Number(req.body.distance) <= Number(cust.generalMinimumKm[key])){
+          price=Number(cust.generalMinimumprice[key]) + Number(cust.generalBasePrice[key]);
+        }else{
+          var dist=Number(req.body.distance) - Number(cust.generalMinimumKm[key]);
+         price= (Number(dist) * Number(cust.generalPriceperKm[key])) + (Number(cust.generalMinimumprice[key])+ Number(cust.generalBasePrice[key])) 
+        }
+        res.send({price:price,travelmod:req.body.travelmod,preRidePrice:cust.preRidePriceperKm});
+        });
 });
 
 /////For Neareast RideBooking//////
@@ -905,25 +876,29 @@ router.post('/drv/finishRide', function(req, res, next) {
                 var travelm=Number(travelmod)-1; 
                 var timefare=Number(cust.GenarelPerMinutCharge[travelm])* Number(totalTime);
                 timefare=timefare.toFixed(0);
-                database.priceOffer.findOne({travelmod:travelmod,distanceKM:distance},function(e,price){
-                  console.log("Price :",price.price, "Bookin Price", Booking.totalamount)
-                  var billAmount=0;
-                  var driverpayout=Number(distance) *6;
-                    if(Number(distance)==1){
-                      driverpayout=12;
-                    }else{
-                      if(Number(distance==2)==1){
-                        driverpayout=12;
-                      }
-                    }                 
-                  if(price.price >= Booking.totalamount){
-                     billAmount=Number(price.price) + Number(timefare) ;
+               // database.priceOffer.findOne({travelmod:travelmod,distanceKM:distance},function(e,price){
+                  
+                  var billAmount=0;                  
+                  var price=0;
+                  var driverpayout=0;
+
+                  if(Number(distance) <= Number(cust.generalMinimumKm[travelm])){
+                    price=Number(cust.generalMinimumprice[travelm])  + Number(cust.generalBasePrice[travelm]);
+                    driverpayout=Number(cust.generalMinimumKm[travelm]) * Number(cust.driverPayout[travelm])
+                  }else{
+                    var dist=Number(distance) - Number(cust.generalMinimumKm[travelm]);
+                   price= (Number(dist) * Number(cust.generalPriceperKm[travelm])) + (Number(cust.generalMinimumprice[travelm]) + Number(cust.generalBasePrice[travelm])) 
+                   driverpayout=Number(distance) * Number(cust.driverPayout[travelm])
+                  }
+                                   
+                  if(price >= Booking.totalamount){
+                     billAmount=Number(price) + Number(timefare)  ;
                     
                   }else{
                      billAmount=Number(Booking.totalamount)+ Number(timefare);                     
                   }
                   /////send  and update bill details/////
-                  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{totalamount:billAmount,driverpayout:driverpayout,totalTime:totalTime,timefare:timefare}},function(er, updatbooking){ 
+                  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{totalamount:billAmount,driverpayout:driverpayout,totalTime:totalTime,timefare:timefare,generalBasePrice:Number(cust.generalBasePrice[travelm])}},function(er, updatbooking){ 
                     if(updatbooking){
                       //////Wallet Update ////
                       if(Number(updatbooking.paymentBy)==2){
@@ -952,7 +927,7 @@ router.post('/drv/finishRide', function(req, res, next) {
                   });
                   
 
-                });           
+               // }); /////          
            
           });
 
@@ -1761,27 +1736,54 @@ router.post('/preRideFinish', function(req, res, next) {
       
       data.results[0].address_components.forEach(function(val){           
         if(val.types[0]=='administrative_area_level_2'){
-              //console.log(val.long_name);
-              //console.log("Address Component",val.long_name)
-             /////
-             database.cityPrice.find({CityName:val.long_name},function(er, city){
-              console.log("city list",city)
-              city.forEach(function(val,kk){
-                priceUpdate({
-                  CustID:req.cookies.CustID,
-                  CityName: val.CityName,
-                  preRidekmprice: val.preRidekmprice,
-                  PerKMPrice: val.PerKMPrice,
-                  minimumPricePer: val.minimumPricePer,
-                  minimumKM: val.minimumKM,
-                  travelMode: val.travelMode,
-                  rideIncetiv: val.rideIncetiv
+          database.cityPrice.find({CityName:val.long_name},function(er, city){
+            database.customer.findOne({CustID:req.cookies.CustID},function(ee,cust){
+              if(cust){
+                generalPriceperKm=cust.generalPriceperKm;
+                generalMinimumprice=cust.generalMinimumprice;
+                generalMinimumKm=cust.generalMinimumKm;
+                generalBasePrice=cust.generalBasePrice;
+                preRidePriceperKm=cust.preRidePriceperKm;
+                preRideperMinutCharge=cust.preRideperMinutCharge;
+                GenarelPerMinutCharge=cust.GenarelPerMinutCharge;
+                shereRide=cust.shereRide;
+                driverPayout=cust.driverPayout;
+
+                city.forEach(function(value, kk, array){
+                  var key=Number(value.travelMode) - 1;
+                  generalPriceperKm[key]=Number(value.PerKMPrice);
+                  generalMinimumprice[key]=Number(value.minimumPricePer);
+                  generalMinimumKm[key]=Number(value.minimumKM);
+                  generalBasePrice[key]=Number(value.basePrice);
+                  preRidePriceperKm[key]=Number(value.preRidekmprice);
+                  preRideperMinutCharge[key]=Number(value.preRideperMinutCharge);
+                  GenarelPerMinutCharge[key]=Number(value.GenarelPerMinutCharge);
+                  shereRide[key]=Number(value.shareRide);
+                  driverPayout[key]=Number(value.driverpayout)
+                  
+                  if(kk===array.length -1){
+                      console.log("preRidePriceperKm",shereRide)
+                      database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{
+                        generalPriceperKm:generalPriceperKm,
+                        generalMinimumprice:generalMinimumprice,
+                        generalMinimumKm:generalMinimumKm,
+                        generalBasePrice:generalBasePrice,
+                        preRidePriceperKm:preRidePriceperKm,
+                        preRideperMinutCharge:preRideperMinutCharge,
+                        GenarelPerMinutCharge:GenarelPerMinutCharge,
+                        shereRide:shereRide,
+                        driverPayout:driverPayout
+                        }},function(e,d){
+                          res.send("price Update")
+                        });
+                   
+                  }
                 })
-                if(kk===city.length -1){
-                  res.send(data)
-                }
-              });
-             })
+                
+              }
+            });
+           
+          });  
             
             }
       });
@@ -1790,21 +1792,21 @@ router.post('/preRideFinish', function(req, res, next) {
 
 function priceUpdate(req){
   //////For General Driver
-  var pric=0;
-  for(var km =1; km < 200; km++){
-      if(km <= req.minimumKM){
-        pric=Number(req.minimumPricePer);
-      }else{
-        pric=Number(km*req.kmprice); 
-        pric=Number(pric) - Number(req.minimumPricePer);
-      }    
-    database.priceOffer.findOneAndUpdate({CustID:req.CustID, travelmod:req.travelMode,distanceKM:km},{$set:{
-      price:pric
-    }},function(e, d){
-      console.log("General Price Updated")
-    });     
+  // var pric=0;
+  // for(var km =1; km < 200; km++){
+  //     if(km <= req.minimumKM){
+  //       pric=Number(req.minimumPricePer);
+  //     }else{
+  //       pric=Number(km*req.kmprice); 
+  //       pric=Number(pric) - Number(req.minimumPricePer);
+  //     }    
+  //   database.priceOffer.findOneAndUpdate({CustID:req.CustID, travelmod:req.travelMode,distanceKM:km},{$set:{
+  //     price:pric
+  //   }},function(e, d){
+  //     console.log("General Price Updated")
+  //   });     
    
-  }
+  // }
   /////For Pre Ride Driver////
     var key=Number(req.travelMode)-1;
   database.customer.findOne({CustID:req.CustID},function(ee,cust){
@@ -1813,7 +1815,10 @@ function priceUpdate(req){
       prerideprice[key]=req.preRidekmprice;
       console.log("PreRide KEY",key)
       console.log("PreRide KM",req.preRidekmprice)
-      console.log("PreRide Price Updated",prerideprice)
+      console.log("PreRide Price Updated",prerideprice);
+      generalPrice=cust.generalPriceperKm;
+      generalPrice[key]=
+
 
       database.customer.findOneAndUpdate({CustID:req.CustID},{$set:{
         preRidePriceperKm:prerideprice

@@ -80,9 +80,15 @@ var custSchema = new mongoose.Schema({
     custRating:String,   
     userType:String,
     orderStage:String,
+    generalPriceperKm:[],
+    generalMinimumprice:[],
+    generalMinimumKm:[],
+    generalBasePrice:[],
     preRidePriceperKm:[],
     preRideperMinutCharge:[],
     GenarelPerMinutCharge:[],
+    driverPayout:[],
+    shereRide:[],
     regdate: { type: Date, default: Date.now },
     lastLogindate: { type: Date },
     location: {
@@ -208,6 +214,7 @@ var rideSchema = new mongoose.Schema({
   endTime:String,
   kmtravels:String,
   totalamount:String,
+  generalBasePrice:String,
   paymentBy:String,
   driverCashCollectio:String,
   driverCashDeposit:String,
@@ -278,11 +285,15 @@ var cityPriceSchema = new mongoose.Schema({
   CityName:  String,
   preRidekmprice:String,
   PerKMPrice:String,
+  basePrice:String,
   minimumPricePer:String,
   minimumKM:String,
   travelMode: String,    
   rideIncetiv:String,
-  driverpayout:String 
+  driverpayout:String,
+  shareRide:String,
+  preRideperMinutCharge:String,
+  GenarelPerMinutCharge:String
 });
 
 var cityPricemodul = mongoose.model('citypricecollections', cityPriceSchema);

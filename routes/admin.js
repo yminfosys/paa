@@ -9,34 +9,52 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/addnewPrice', function(req, res, next) {
-// res.send(req.body);
-database.cityPrice.findOneAndUpdate({CityName: req.body.city, travelMode: req.body.travelmode},{$set:{
-  CityName: req.body.city,
-  preRidekmprice:req.body.preRidekmprice,
-  PerKMPrice:req.body.kmprice,
-  minimumPricePer:req.body.minimumprice,
-  minimumKM:req.body.minimumkm,
-  travelMode: req.body.travelmode,    
-  rideIncetiv:req.body.incentive,
-  driverpayout:req.body.driverpayout
-}},function(er ,data){
-  if(data){
+ //res.send(req.body);
+database.cityPrice.findOne({CityName: req.body.city, travelMode: req.body.travelmode},function(err, city){
+if(city){
+  database.cityPrice.findOneAndUpdate({CityName: req.body.city, travelMode: req.body.travelmode},{$set:{
+    CityName:req.body.city,
+    preRidekmprice:req.body.preRidekmprice,
+    PerKMPrice:req.body.kmprice,
+    basePrice:req.body.basePrice,
+    minimumPricePer:req.body.minimumprice,
+    minimumKM:req.body.minimumkm,
+    travelMode: req.body.travelmode,    
+    rideIncetiv:req.body.incentive,
+    driverpayout:req.body.driverpayout,
+    shareRide:req.body.shareride,
+    preRideperMinutCharge:req.body.preRidePerminuteCharge,
+    GenarelPerMinutCharge:req.body.gneralPreMuniteCharge
+  }},function(er ,data){
     res.redirect('/admin');
-  }else{
-    database.cityPrice({
-      CityName: req.body.city,
-      preRidekmprice:req.body.preRidekmprice,
-      PerKMPrice:req.body.kmprice,
-      minimumPricePer:req.body.minimumprice,
-      minimumKM:req.body.minimumkm,
-      travelMode: req.body.travelmode,    
-      rideIncetiv:req.body.incentive,
-      driverpayout:req.body.driverpayout
-    }).save(function(err){
-      res.redirect('/admin');
-    })
-  }
+  });
+
+}else{
+  database.cityPrice({
+    CityName:req.body.city,
+    preRidekmprice:req.body.preRidekmprice,
+    PerKMPrice:req.body.kmprice,
+    basePrice:req.body.basePrice,
+    minimumPricePer:req.body.minimumprice,
+    minimumKM:req.body.minimumkm,
+    travelMode: req.body.travelmode,    
+    rideIncetiv:req.body.incentive,
+    driverpayout:req.body.driverpayout,
+    shareRide:req.body.shareride,
+    preRideperMinutCharge:req.body.preRidePerminuteCharge,
+    GenarelPerMinutCharge:req.body.gneralPreMuniteCharge
+  }).save(function(err){
+   res.redirect('/admin');
+  })
+
+}
+
 })
+
+
+
+
+  
 
   
 });

@@ -394,9 +394,12 @@ $("#promoMsg").appendTo(map.getDiv());
   function cityLocation(position){
     
     if(getLocation==0){
+      getLocation=1;
+      //alert("gg");
       $.post('/india/preRideUpdateCitywisePrice',{lat:position.coords.latitude, lng:position.coords.longitude},function(data){
         if(data){
-          getLocation=1;
+          console.log(data)
+       
         }
       });
     }
