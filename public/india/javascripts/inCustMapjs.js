@@ -310,6 +310,12 @@ content: "Drop"
               $("#tm"+dataa.travelmod+"").html('&#8377;'+dataa.price+'');
               $("#tmPrice"+dataa.travelmod+"").val(dataa.price);
               $("#tmPreRidePrice"+dataa.travelmod+"").val(dataa.preRidePrice[Number(dataa.travelmod)-1]);
+                if(dataa.shereRideCapacity[Number(dataa.travelmod)-1] > 0){
+              $("#tmShareRide"+dataa.travelmod+"").val(dataa.price / dataa.shereRideCapacity[Number(dataa.travelmod)-1]);
+              console.log("share price",dataa.price / dataa.shereRideCapacity[Number(dataa.travelmod)-1])
+              }else{
+                $("#tmShareRide"+dataa.travelmod+"").val(0);
+              }
               countt++;                        
               if(countt==$(".modeImg").length-1){
                 $("#footer-content").css({"display":"none"});
@@ -332,6 +338,16 @@ content: "Drop"
                   $("#confrmBtn").css({"width":"100%"})
                   
                 }
+                var tmShareRide= $("#tmShareRide"+travelmod+"").val();
+                  if(Number(tmShareRide)>0){
+                    $("#shareRideBtn").css({"display":"block"});
+                    $("#shareRideBtn").html('Share-Ride &#8377; '+ Number(tmShareRide).toFixed(0)+'')
+                    
+                  }else{
+                    $("#shareRideBtn").css({"display":"none"});
+                    $("#shareRideBtn").html('Share-Ride')
+                  }
+
                 
                 }              
             });

@@ -124,7 +124,7 @@ function loginprocess(){
     var mobile=$("#mobile").val();
     $.post('/india/login',{password:password,mobile:mobile},function(data){
         if(data=='success'){
-            window.location='/india'
+            window.location='/india/servecemode'
         }else{
             $("#password").css({"background-color": "#c44630","color":"#FFF"});
             alert('Password dose not match')
@@ -146,8 +146,7 @@ function loginprocess(){
     CenterChange='Enable';
     }
 ////////CAll pickup placesearch content//////
-    function pickupsearch(a){
-  
+    function pickupsearch(a){  
         $("#placesearch").css({"display":"Block"});        
         $("#searchPlace").focus()
         $("#searchPlace").val("")
@@ -258,6 +257,16 @@ function loginprocess(){
           $("#confrmBtn").css({"width":"100%"})
           
         }
+
+        var tmShareRide= $("#tmShareRide"+tm+"").val();
+                  if(Number(tmShareRide)>0){
+                    $("#shareRideBtn").css({"display":"block"});
+                    $("#shareRideBtn").html('Share-Ride &#8377; '+ Number(tmShareRide).toFixed(0)+'')
+                    
+                  }else{
+                    $("#shareRideBtn").css({"display":"none"});
+                    $("#shareRideBtn").html('Share-Ride')
+                  }
     } 
 
     for(var i=0; i<10; i++){

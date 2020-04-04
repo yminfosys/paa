@@ -89,6 +89,7 @@ var custSchema = new mongoose.Schema({
     GenarelPerMinutCharge:[],
     driverPayout:[],
     shereRide:[],
+    shereRideCapacity:[],
     regdate: { type: Date, default: Date.now },
     lastLogindate: { type: Date },
     location: {
@@ -292,6 +293,7 @@ var cityPriceSchema = new mongoose.Schema({
   rideIncetiv:String,
   driverpayout:String,
   shareRide:String,
+  shereRideCapacity:String,
   preRideperMinutCharge:String,
   GenarelPerMinutCharge:String
 });

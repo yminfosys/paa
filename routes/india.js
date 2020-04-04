@@ -61,6 +61,13 @@ router.get('/', function(req, res, next) {
   }
   
 });
+
+  ////////// SELECT SERVICE MODE////////
+  router.get('/servecemode', function(req, res, next) {
+    
+    res.render('india/servecemode')
+   })
+
 ///////Login Customer listing////////
 router.get('/login', function(req, res, next) {
   if(req.cookies.CustID){
@@ -139,6 +146,7 @@ router.post('/custReg', function(req, res, next) {
       generalBasePrice:[0, 30, 90, 90],
       driverPayout:[6, 8, 9, 10],
       shareRide:[0, 0, 0, 0],
+      shereRideCapacity:[0, 0, 0, 0],
       walletBalance:'0',
       BuyKM:'5',
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
@@ -312,7 +320,7 @@ router.post('/getprice', function(req, res, next) {
           var dist=Number(req.body.distance) - Number(cust.generalMinimumKm[key]);
          price= (Number(dist) * Number(cust.generalPriceperKm[key])) + (Number(cust.generalMinimumprice[key])+ Number(cust.generalBasePrice[key])) 
         }
-        res.send({price:price,travelmod:req.body.travelmod,preRidePrice:cust.preRidePriceperKm});
+        res.send({price:price,travelmod:req.body.travelmod,preRidePrice:cust.preRidePriceperKm,shereRideCapacity:cust.shereRideCapacity});
         });
 });
 
@@ -1747,6 +1755,7 @@ router.post('/preRideFinish', function(req, res, next) {
                 preRideperMinutCharge=cust.preRideperMinutCharge;
                 GenarelPerMinutCharge=cust.GenarelPerMinutCharge;
                 shereRide=cust.shereRide;
+                shereRideCapacity=cust.shereRideCapacity
                 driverPayout=cust.driverPayout;
 
                 city.forEach(function(value, kk, array){
@@ -1759,6 +1768,7 @@ router.post('/preRideFinish', function(req, res, next) {
                   preRideperMinutCharge[key]=Number(value.preRideperMinutCharge);
                   GenarelPerMinutCharge[key]=Number(value.GenarelPerMinutCharge);
                   shereRide[key]=Number(value.shareRide);
+                  shereRideCapacity[key]=Number(value.shereRideCapacity)
                   driverPayout[key]=Number(value.driverpayout)
                   
                   if(kk===array.length -1){
@@ -1772,6 +1782,7 @@ router.post('/preRideFinish', function(req, res, next) {
                         preRideperMinutCharge:preRideperMinutCharge,
                         GenarelPerMinutCharge:GenarelPerMinutCharge,
                         shereRide:shereRide,
+                        shereRideCapacity:shereRideCapacity,
                         driverPayout:driverPayout
                         }},function(e,d){
                           res.send("price Update")

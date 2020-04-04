@@ -23,6 +23,7 @@ if(city){
     rideIncetiv:req.body.incentive,
     driverpayout:req.body.driverpayout,
     shareRide:req.body.shareride,
+    shereRideCapacity:req.body.passengerCapacity,
     preRideperMinutCharge:req.body.preRidePerminuteCharge,
     GenarelPerMinutCharge:req.body.gneralPreMuniteCharge
   }},function(er ,data){
@@ -41,6 +42,7 @@ if(city){
     rideIncetiv:req.body.incentive,
     driverpayout:req.body.driverpayout,
     shareRide:req.body.shareride,
+    shereRideCapacity:req.body.passengerCapacity,
     preRideperMinutCharge:req.body.preRidePerminuteCharge,
     GenarelPerMinutCharge:req.body.gneralPreMuniteCharge
   }).save(function(err){

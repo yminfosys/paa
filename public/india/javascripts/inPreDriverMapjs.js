@@ -109,11 +109,23 @@ function initMap() {
       $.post('/india/preRidePageInitiate',{pilotID:pilotID,driverBusy:"busy"},function(rides){
         var out="";
         console.log("Rides detals",rides)
+        var smalest=0;
+        var smalIndx=0
         rides.forEach(function(val,indx,ar){
+          if(indx==0){
+            smalest=val.bookingID;
+            smalIndx=indx;
+        }else{
+            if(smalest > val.bookingID){
+                smalest=val.bookingID;
+                smalIndx=indx;
+            }                
+
+        }
         
             out+='<div id="listItem'+indx+'" class="row listItem">\
             <div id="nameAds'+indx+'" class="col-xs-9 col-sm-9">\
-            <p class="prerideName">Pickup Form : '+val.name+'</p>\
+            <p class="prerideName"><span>Order ID: '+val.bookingID+'</span><br>Pickup Form : '+val.name+'</p>\
                 <p class="prerideads">'+val.picupaddress+'</p>\
             </div>\
             <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
@@ -142,6 +154,7 @@ function initMap() {
             if(indx===ar.length -1){
                
                 $("#rideList").html(out);
+                $("#listItem"+smalIndx+"").css({"background-color":"#91bb2f"})
             }
         });
       });
@@ -170,7 +183,7 @@ function initMap() {
   /////continueNextRide /////////
   document.getElementById("continueNextRide").addEventListener("click", function(){ 
     var bookingID=$("#bookingIDFinish").val(); 
-    alert(bookingID)  
+    //alert(bookingID)  
     $.post('/india/finishandUpdateRide',{bookingID:bookingID},function(data){
       if(data){
         onlineExicute();
