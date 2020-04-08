@@ -1849,6 +1849,7 @@ function priceUpdate(req){
 ////////PRE RIDE BACGROUND LOCATION UPDATE IN  NATIVE DEDICE////
 router.get('/locationUpdate', function(req, res, next) {
   database.testLocation({
+    pilotID:req.cookies.pilotID,
     travalKM:"sukanta"
   }).save(function(err){
 
