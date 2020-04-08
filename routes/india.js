@@ -64,8 +64,11 @@ router.get('/', function(req, res, next) {
 
   ////////// SELECT SERVICE MODE////////
   router.get('/servecemode', function(req, res, next) {
-    
+    if(req.cookies.CustID){ 
     res.render('india/servecemode')
+    }else{
+      res.redirect('/india/login')
+    }
    })
 
 ///////Login Customer listing////////
@@ -1843,7 +1846,15 @@ function priceUpdate(req){
  
 
 }
-  
+////////PRE RIDE BACGROUND LOCATION UPDATE IN  NATIVE DEDICE////
+router.get('/locationUpdate', function(req, res, next) {
+  database.testLocation({
+    travalKM:"sukanta"
+  }).save(function(err){
+
+  })
+res.send("gggg")
+});
 
 ///////////////////////////////////////
 ///* END PRE DRIVER LISTING. */////////////

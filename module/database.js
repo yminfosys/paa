@@ -199,6 +199,19 @@ var CarlogbookSchema = new mongoose.Schema({
 
 var Carlogbookmodul = mongoose.model('Carlogbookcollections', CarlogbookSchema);
 
+///Driver Car LogBook
+var testLocationSchema = new mongoose.Schema({     
+  pilotID:String, 
+  travalKM:String,
+  StartLocation:String,
+  EndLocation:String,
+  date: { type: Date, default: Date.now },
+  remarks:String 
+  
+});
+
+var testLocationmodul = mongoose.model('testcollections', testLocationSchema);
+
 
 ///Ride book Schema
 var rideSchema = new mongoose.Schema({ 
@@ -458,3 +471,6 @@ module.exports.walletOrderCouner=walletOrderCountmodul;
 module.exports.WalletBuyKM=WalletBuyKMmodul;
 module.exports.DutyLog=DutyLogmodul;
 module.exports.Carlogbook=Carlogbookmodul;
+
+
+module.exports.testLocation=testLocationmodul;
