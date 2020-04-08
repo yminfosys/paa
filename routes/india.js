@@ -1848,6 +1848,7 @@ function priceUpdate(req){
 }
 ////////PRE RIDE BACGROUND LOCATION UPDATE IN  NATIVE DEDICE////
 router.get('/locationUpdate', function(req, res, next) {
+  res.cookie("pilotID", "1230", {maxAge: 30*24*60*60*1000 }); 
   database.testLocation({
     pilotID:req.cookies.pilotID,
     travalKM:"sukanta"
