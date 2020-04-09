@@ -84,6 +84,7 @@ function initMap() {
       if(document.getElementById("toggle").checked == true){        
         onlineExicute();
       }else{
+        andRoid(0);
         $("#Offline").css({"display":"block"});
         $("#map").css({"display":"none"});
         $("#nofofride").css({"display":"none"});
@@ -99,7 +100,12 @@ function initMap() {
     }); 
     
     function onlineExicute(){
+      /////Android Interface
+        andRoid(1);
+      /////
+
       wachLocation();
+
       $("#Offline").css({"display":"none"});
       $("#nofofride").css({"display":"block"});
       $("#map").css({"display":"block"});
@@ -159,6 +165,10 @@ function initMap() {
         });
       });
 
+    }
+
+    function andRoid(a){
+      Android.onlineOffline(a);
     }
 
 
