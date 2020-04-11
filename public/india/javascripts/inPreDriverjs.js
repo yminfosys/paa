@@ -147,7 +147,8 @@ function loginprocess(){
   console.log('inCommingCall',data);
   console.log("test data",data.pilotID)
   if(data.pilotID==getCookie("pilotID")){
-  setCookie("ringToneControl","ON",1);
+
+//   setCookie("ringToneControl","ON",1);
   //setCookie("preRideinCommingCallDetails",JSON.stringify(data),1);
   $.post('/india/preRideAutoAccepeCall',{
     pilotID:data.pilotID,
@@ -157,6 +158,14 @@ function loginprocess(){
     driverBusy:data.driverBusy,
     
   },function(dat){
+
+    ////////Play Ringtone for 30Sec in Android Device//////
+    Android.startRingtone();
+    setInterval(function(){
+        Android.stopRingtone();
+    },30000);
+
+
       ////Check existing call////
       $.post('/india/existingPrerideCall',{pilotID:dat.pilotID,driverBusy:"busy"},function(rides){
         console.log("Ride Details",rides)
