@@ -126,10 +126,17 @@ function initMap() {
       var pilotID=getCookie("pilotID");
 
       $.post('/india/preRidePageInitiate',{pilotID:pilotID,driverBusy:"busy"},function(rides){
-        var out="";
+        
         console.log("Rides detals",rides)
         var smalest=0;
         var smalIndx=0
+
+        var out="";
+        var addressPart="";
+        var btnPart="";
+        var callpart="";
+        var hiddenPart="";
+
         rides.forEach(function(val,indx,ar){
           if(indx==0){
             smalest=val.bookingID;
@@ -141,16 +148,53 @@ function initMap() {
             }                
 
         }
+
+            ////////check callbookingStatus ///////
+
+            if(val.callbookingStatus=="clineLocate"){
+              addressPart='<div id="listItem'+indx+'" class="row listItem">\
+              <div id="nameAds'+indx+'" class="col-xs-9 col-sm-9">\
+              <p class="prerideName"><span>Order ID: '+val.bookingID+'</span><br>Pickup Form : '+val.name+'</p>\
+                  <p class="prerideads">'+val.picupaddress+'</p>\
+              </div>\
+              <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
+                  <button id="mapBtn" onclick="googlemapbtn(\'' + 1 + '\',\'' + val.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+              </div>';
+              btnPart='<input onclick="clineLocated(\''+indx+'\')" id="clineLocated'+indx+'" class="pickupPreridebtn1" type="button" value="Cline Located">\
+              <input onclick="startRide(\''+indx+'\')" id="startRide'+indx+'" class="pickupPreridebtn" type="button" value="Start Ride">\
+              <input onclick="finishride(\''+indx+'\')" id="finishride'+indx+'" class="pickupPreridebtn1" type="button" value="Finish Ride">';
+            
+            }else{
+              if(val.callbookingStatus=="startRide"){
+                addressPart='<div id="listItem'+indx+'" class="row listItem">\
+                <div id="nameAds'+indx+'" class="col-xs-9 col-sm-9">\
+                <p class="prerideName"><span>Order ID: '+val.bookingID+'</span><br>Drop To : '+val.name+'</p>\
+                    <p class="prerideads">'+val.dropaddress+'</p>\
+                </div>\
+                <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
+                    <button id="mapBtn" onclick="googlemapbtn(\'' + 2 + '\',\'' + val.droplatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+                </div>';
+                btnPart='<input onclick="clineLocated(\''+indx+'\')" id="clineLocated'+indx+'" class="pickupPreridebtn1" type="button" value="Cline Located">\
+                <input onclick="startRide(\''+indx+'\')" id="startRide'+indx+'" class="pickupPreridebtn1" type="button" value="Start Ride">\
+                <input onclick="finishride(\''+indx+'\')" id="finishride'+indx+'" class="pickupPreridebtn" type="button" value="Finish Ride">';
+                
+              }else{
+                addressPart='<div id="listItem'+indx+'" class="row listItem">\
+                <div id="nameAds'+indx+'" class="col-xs-9 col-sm-9">\
+                <p class="prerideName"><span>Order ID: '+val.bookingID+'</span><br>Pickup Form : '+val.name+'</p>\
+                    <p class="prerideads">'+val.picupaddress+'</p>\
+                </div>\
+                <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
+                    <button id="mapBtn" onclick="googlemapbtn(\'' + 1 + '\',\'' + val.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
+                </div>';
+                btnPart='<input onclick="clineLocated(\''+indx+'\')" id="clineLocated'+indx+'" class="pickupPreridebtn" type="button" value="Cline Located">\
+                <input onclick="startRide(\''+indx+'\')" id="startRide'+indx+'" class="pickupPreridebtn1" type="button" value="Start Ride">\
+                <input onclick="finishride(\''+indx+'\')" id="finishride'+indx+'" class="pickupPreridebtn1" type="button" value="Finish Ride">';
+              }
+
+            }
         
-            out+='<div id="listItem'+indx+'" class="row listItem">\
-            <div id="nameAds'+indx+'" class="col-xs-9 col-sm-9">\
-            <p class="prerideName"><span>Order ID: '+val.bookingID+'</span><br>Pickup Form : '+val.name+'</p>\
-                <p class="prerideads">'+val.picupaddress+'</p>\
-            </div>\
-            <div id="mapBtn'+indx+'" class="col-xs-3 col-sm-3">\
-                <button id="mapBtn" onclick="googlemapbtn(\'' + 1 + '\',\'' + val.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>\
-            </div>\
-            <div class="col-xs-9 col-sm-9">\
+            out+=''+addressPart+'<div class="col-xs-9 col-sm-9">\
             <input type="hidden" id="preRideOTP'+indx+'" value="'+val.preRideOTP+'">\
             <input type="hidden" id="CustID'+indx+'" value="'+val.CustID+'">\
             <input type="hidden" id="pilotID'+indx+'" value="'+val.pilotID+'">\
@@ -159,9 +203,7 @@ function initMap() {
             <input type="hidden" id="dropaddress'+indx+'" value="'+val.dropaddress+'">\
             <input type="hidden" id="name'+indx+'" value="'+val.name+'">\
             <input type="hidden" id="bookingID'+indx+'" value="'+val.bookingID+'">\
-                <input onclick="clineLocated(\''+indx+'\')" id="clineLocated'+indx+'" class="pickupPreridebtn" type="button" value="Cline Located">\
-                <input onclick="startRide(\''+indx+'\')" id="startRide'+indx+'" class="pickupPreridebtn1" type="button" value="Start Ride">\
-                <input onclick="finishride(\''+indx+'\')" id="finishride'+indx+'" class="pickupPreridebtn1" type="button" value="Finish Ride">\
+            '+btnPart+'\
             </div>\
             <div class="col-xs-3 col-sm-3 telmsg">\
                 <a href="tel:'+val.isdCode+val.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\

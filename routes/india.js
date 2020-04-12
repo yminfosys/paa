@@ -1617,6 +1617,15 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
 
   }
 
+  //////////Driver preRide Cline Located //////
+ router.post('/preRideClinelocated', function(req, res, next) {  
+  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:'clineLocate'}},function(re, ou){
+   res.io.emit("clinelocated",{CustID:req.body.CustID});
+res.send("emitClinelocated") 
+  });
+
+})
+
   //////Start Pre Ride/////////////
   router.post('/preRideStartRide', function(req, res, next) {
     database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'startRide'}},function(er,cust){
@@ -1629,6 +1638,8 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
     //res.send("emitStartRide") 
   
   })
+
+
 
 
    //////////Finish Pre Ride //////

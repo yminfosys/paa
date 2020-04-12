@@ -257,8 +257,9 @@ function loginprocess(){
 
 ////////// On Cline Clocated/////////
 function clineLocated(indx){
-    var CustID=$("#CustID"+indx+"").val();    
-    $.post('/india/drv/clinelocated',{CustID:CustID},function(respon){
+    var CustID=$("#CustID"+indx+"").val(); 
+    var bookingID=$("#bookingID"+indx+"").val();   
+    $.post('/india/preRideClinelocated',{CustID:CustID,bookingID:bookingID},function(respon){
     console.log("respon",respon)
         if(respon){                    
             $("#clineLocated"+indx+"").css({"display":"none"});
