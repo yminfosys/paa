@@ -2,7 +2,9 @@ var map;
 var centerMarker;
 var circle;
 var wachID;
-function initMap() {   
+function initMap() {  
+
+ 
     map = new google.maps.Map(document.getElementById('map'), {
           zoom: 7,
          //center: {lat: 23.5659115, lng: 87.2727577},
@@ -79,7 +81,14 @@ function initMap() {
       }
      //////End Circle Marker//////
 
-      /////Off line Online /////////
+  /////Check setSystem ONLINE or OFFLINE
+  var setSystem=getCookie("setSystem");
+  if(setSystem=="ONLINE"){
+    document.getElementById("toggle").checked = true;
+    onlineExicute();
+  }
+
+      /////Off line Online Button  /////////
     document.getElementById("toggle").addEventListener("click", function(){
       if(document.getElementById("toggle").checked == true){        
         onlineExicute();
@@ -89,10 +98,11 @@ function initMap() {
         $("#map").css({"display":"none"});
         $("#nofofride").css({"display":"none"});
         clearWachposition();
-        setCookie("ringToneControl","OFF",1);        
+                
         setTimeout(function(){
           $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
             console.log(data)
+            setCookie("setSystem","OFFLINE",30);
           })
         },1000);
         
@@ -100,6 +110,7 @@ function initMap() {
     }); 
     
     function onlineExicute(){
+      setCookie("setSystem","ONLINE",30);
       /////Android Interface
         andRoid(1);
       /////
@@ -109,9 +120,11 @@ function initMap() {
       $("#Offline").css({"display":"none"});
       $("#nofofride").css({"display":"block"});
       $("#map").css({"display":"block"});
-      var ringTimer= setInterval(RingToneHandeler,300);
+      //var ringTimer= setInterval(RingToneHandeler,300);
+
       ///////Page Initiate///////////////
       var pilotID=getCookie("pilotID");
+
       $.post('/india/preRidePageInitiate',{pilotID:pilotID,driverBusy:"busy"},function(rides){
         var out="";
         console.log("Rides detals",rides)
@@ -168,27 +181,27 @@ function initMap() {
     }
 
     function andRoid(a){
-      Android.onlineOffline(a);
+     Android.onlineOffline(a);
     }
 
 
     //////Ring tone Handeler////
-  var  myAudio= new Audio('/india/audio/car_horn.mp3');
-  function RingToneHandeler(){
-    var OnOff=getCookie("ringToneControl");
-    if(OnOff=='ON'){
-      myAudio.addEventListener('ended', function() {
-      this.currentTime = 0;
-      this.play();
-      }, false);        
-      myAudio.play();
-      window.navigator.vibrate(200);
-      setTimeout(function(){
-        setCookie("ringToneControl","OFF",30);
-        myAudio.pause();
-      },3000)
-    }
-  } 
+  // var  myAudio= new Audio('/india/audio/car_horn.mp3');
+  // function RingToneHandeler(){
+  //   var OnOff=getCookie("ringToneControl");
+  //   if(OnOff=='ON'){
+  //     myAudio.addEventListener('ended', function() {
+  //     this.currentTime = 0;
+  //     this.play();
+  //     }, false);        
+  //     myAudio.play();
+  //     window.navigator.vibrate(200);
+  //     setTimeout(function(){
+  //       setCookie("ringToneControl","OFF",30);
+  //       myAudio.pause();
+  //     },3000)
+  //   }
+  // } 
   
   /////continueNextRide /////////
   document.getElementById("continueNextRide").addEventListener("click", function(){ 
