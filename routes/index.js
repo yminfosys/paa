@@ -16,9 +16,10 @@ router.get('/rider', function(req, res, next) {
 });
 
 router.get('/cust', function(req, res, next) {
-
   res.render('appCust', { title: 'Paacab' });
 });
+
+
 
 router.get('/privacy', function(req, res, next) {
 

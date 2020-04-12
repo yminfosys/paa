@@ -743,8 +743,13 @@ router.post('/drv/completeReg', function(req, res, next) {
             database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er,exist){
               if(exist){                
                     database.driverLocationArea.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
-                      location:{type:'Point',coordinates:[req.body.lng, req.body.lat]},
-                      DriverType:req.body.DriverType                      
+                    pilotID:req.cookies.pilotID,
+                    DriverType:req.body.DriverType,
+                    rating:pilot.rating,
+                    travelmod:pilot.travelmod,
+                    accountStatus:pilot.accountStatus,
+                    driverBusy:exist.driverBusy,
+                    location:{type:'Point',coordinates:[req.body.lng, req.body.lat]},                   
                     }},function(err,data){
                       res.send(req.body.lat)
                     });
@@ -1617,11 +1622,27 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
 
   }
 
+
+  //////////Update Driver Duty initiate//////
+  router.post('/preRideDutyInitiate', function(req, res, next) {
+
+    // if(req.body.duty=='offline'){
+    //   database.driverLocationArea.deleteMany({pilotID:req.cookies.pilotID},function(e, d){
+    //     database.driverdroplocation.deleteMany({pilotID:req.cookies.pilotID},function(e, ddd){
+    //       console.log("delete Driver Location")
+    //       res.send(req.body.duty)
+    //     });
+       
+    //   });
+    // }   
+   
+  });
+
   //////////Driver preRide Cline Located //////
  router.post('/preRideClinelocated', function(req, res, next) {  
   database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:'clineLocate'}},function(re, ou){
    res.io.emit("clinelocated",{CustID:req.body.CustID});
-res.send("emitClinelocated") 
+   res.send("emitClinelocated") 
   });
 
 })
@@ -1739,7 +1760,7 @@ router.post('/preRideFinish', function(req, res, next) {
   router.post('/finishandUpdateRide', function(req, res, next) {
     database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{
       callbookingStatus:"complete",
-      driverBusy:" "
+      driverBusy:""
     }},function(err, data){
       res.send(data);
     })

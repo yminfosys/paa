@@ -111,9 +111,9 @@ function initMap() {
     
     function onlineExicute(){
       ///delete Driver location if exist /////
-      $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
-        console.log(data);        
-      })
+      // $.post('/preRideDutyInitiate',{},function(data){
+      //   console.log(data);        
+      // })
 
       
 
