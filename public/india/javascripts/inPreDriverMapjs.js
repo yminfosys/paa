@@ -110,12 +110,18 @@ function initMap() {
     }); 
     
     function onlineExicute(){
+      ///delete Driver location if exist /////
+      $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
+        console.log(data);        
+      })
+
+      
+
+      wachLocation();
       setCookie("setSystem","ONLINE",30);
       /////Android Interface
         andRoid(1);
       /////
-
-      wachLocation();
 
       $("#Offline").css({"display":"none"});
       $("#nofofride").css({"display":"block"});
