@@ -25,6 +25,15 @@ function index2Dpilot(int,cb){
     cb({success:'1'});
   }
 
+  
+
+  function index2DpreRide(int,cb){
+    console.log()
+      const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['preridedriverlocationcollections'])
+      db.preridedriverlocationcollections.createIndex({ "location" : "2dsphere" });
+      cb({success:'1'});
+    }
+
   function index2Ddriver(int,cb){
     console.log()
       const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['driverlocationcollections'])
@@ -379,6 +388,27 @@ var driverdropSchema = new mongoose.Schema({
 
 var driverdropmodul = mongoose.model('driverdropcollections', driverdropSchema);
 
+////PreRide Driver Location Update////
+var preridedriverlocationSchema = new mongoose.Schema({ 
+  pilotID:String,
+  location: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      
+    }
+  }
+});
+
+var preridedriverlocationmodul = mongoose.model('preridedriverlocationcollections', preridedriverlocationSchema);
+
+
+
 
 var sampleSchema=new mongoose.Schema({ 
   name: String,
@@ -460,6 +490,9 @@ module.exports.index2Dpilot=index2Dpilot;
 module.exports.index2Ddriver=index2Ddriver;
 module.exports.index2DdriverDroplocation=index2DdriverDroplocation;
 module.exports.index2Ddemand=index2Ddemand;
+
+module.exports.index2DpreRide=index2DpreRide;
+
 module.exports.ride=ridemodul;
 module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
@@ -467,6 +500,9 @@ module.exports.cityPrice=cityPricemodul;
 module.exports.demandArea=demandmodul;
 module.exports.driverLocationArea=driverlocationmodul;
 module.exports.driverdroplocation=driverdropmodul;
+
+module.exports.preridedriverlocation=preridedriverlocationmodul;
+
 module.exports.walletOrderCouner=walletOrderCountmodul;
 module.exports.WalletBuyKM=WalletBuyKMmodul;
 module.exports.DutyLog=DutyLogmodul;

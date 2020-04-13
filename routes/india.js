@@ -1879,16 +1879,35 @@ function priceUpdate(req){
 
 }
 ////////PRE RIDE BACGROUND LOCATION UPDATE IN  NATIVE DEDICE////
-router.get('/locationUpdate', function(req, res, next) {
-  //res.cookie("pilotID", "1230", {maxAge: 30*24*60*60*1000 }); 
-  database.testLocation({
-    pilotID:req.cookies.pilotID,
-    travalKM:"sukanta"
-  }).save(function(err){
-
-  })
-res.send("gggg")
+router.get('/preRideBacgroundService', function(req, res, next) {
+  if(req.cookies.pilotID){   
+   res.render('india/inPreDriverBackGroundService',{YOUR_API_KEY:process.env.API_KEY}) 
+  }
 });
+
+////////preRideLocationUpdate/////////
+router.post('/preRideLocationUpdate', function(req, res, next) {  
+
+  database.preridedriverlocation.findOne({pilotID:req.cookies.pilotID},function(err,data){
+    if(data){
+      database.preridedriverlocation.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
+        pilotID:req.cookies.pilotID,        
+        location:{type:'Point',coordinates:[req.body.lng, req.body.lat]},
+      }},function(er, dd){
+        res.send(req.body)
+      });
+    }else{
+      database.preridedriverlocation({
+        pilotID:req.cookies.pilotID,        
+        location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}, 
+      }).save(function(err){
+        res.send(req.body)
+      })
+    }
+  })
+});
+
+
 
 ///////////////////////////////////////
 ///* END PRE DRIVER LISTING. */////////////
