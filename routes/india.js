@@ -739,11 +739,13 @@ router.post('/drv/completeReg', function(req, res, next) {
 
    //////////Update Driver Duty Offline and online//////
    router.post('/drv/dutyUpdate', function(req, res, next) {
-    if(req.body.duty=='offline'){      
+    if(req.body.duty=='offline'){
+      setTimeout(function(){
         database.driverlocation.deleteMany({pilotID:req.cookies.pilotID},function(e, ddd){
           console.log("delete Driver Location")
           res.send(req.body.duty);
         });
+      },3000);
     }   
    
   });
@@ -1492,12 +1494,12 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
 
 
   //////////Update Driver Duty initiate//////
-  router.post('/preRideDutyInitiate', function(req, res, next) { 
-        database.driverlocation.deleteMany({pilotID:req.cookies.pilotID},function(e, ddd){
-          console.log("delete Driver Location")
-          res.send(req.body.duty);
-        });
-  });
+  // router.post('/preRideDutyInitiate', function(req, res, next) { 
+  //       database.driverlocation.deleteMany({pilotID:req.cookies.pilotID},function(e, ddd){
+  //         console.log("delete Driver Location")
+  //         res.send(req.body.duty);
+  //       });
+  // });
 
   //////////Driver preRide Cline Located //////
  router.post('/preRideClinelocated', function(req, res, next) {  

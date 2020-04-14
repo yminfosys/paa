@@ -503,7 +503,7 @@ function loginprocess(){
                     
                     const callRequiestinit = async _ => {                                        
                       for (let index = 0; index < data.drivers.length; index++) {                       
-                        const numFruit =  checkDriverorder({pilotID:data.drivers[index].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID});
+                        const numFruit =  checkDriverorder({pilotID:data.drivers[index].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID,index:index});
                         await numFruit;
                       }
                     }
@@ -518,12 +518,19 @@ function loginprocess(){
                         CustID:requiest.CustID,
                         pickuoAddress:requiest.originAds,
                         bookingID:requiest.bookingID
-                      }, function(datas){
+                      },  function(datas){
                         console.log("Incomming Data",datas)
                          if(Number(datas.totaltime)  < 30){
                             ////////Call to Driver//////
                             $.post('/india/CallPreRideDriver',{pilotID:datas.pilotID,CustID:datas.CustID,pickuoAddress:datas.pickuoAddress,bookingID:datas.bookingID},function(result){
                               console.log(result);
+                              if(result){
+                                setTimeout(function(){
+                                  alert("Network Issue Try again");
+                                  console.log("index",requiest.index);
+                                  $("#footer-preRide").css({"display":"none"});
+                                },10000)
+                              }
                               
                             }); 
                             callRequiestinit.close();                                    

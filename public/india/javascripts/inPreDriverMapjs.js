@@ -102,10 +102,10 @@ function initMap() {
     }); 
     
     function onlineExicute(){
-      /delete Driver location if exist /////
-      $.post('/preRideDutyInitiate',{},function(data){
-        console.log(data);        
-      })
+      ///delete Driver location if exist /////
+      // $.post('/preRideDutyInitiate',{},function(data){
+      //   console.log(data);        
+      // })
 
       
 
