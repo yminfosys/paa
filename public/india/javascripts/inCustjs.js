@@ -457,6 +457,9 @@ function loginprocess(){
    }
 
 
+
+
+   var OrderConfrm="";
    function continuePreBooking(payMode){ 
         var originAds=getCookie("picuplocation") ;
         var distAds=getCookie("droplocation") ;
@@ -505,6 +508,7 @@ function loginprocess(){
                       for (let index = 0; index < data.drivers.length; index++) {                       
                         const numFruit =  checkDriverorder({pilotID:data.drivers[index].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID,index:index});
                         await numFruit;
+                        
                       }
                     }
                      
@@ -521,20 +525,36 @@ function loginprocess(){
                       },  function(datas){
                         console.log("Incomming Data",datas)
                          if(Number(datas.totaltime)  < 30){
+                          var timerCall;
                             ////////Call to Driver//////
+                            var cou=0;
                             $.post('/india/CallPreRideDriver',{pilotID:datas.pilotID,CustID:datas.CustID,pickuoAddress:datas.pickuoAddress,bookingID:datas.bookingID},function(result){
                               console.log(result);
-                              if(result){
-                                setTimeout(function(){
-                                  alert("Network Issue Try again");
-                                  console.log("index",requiest.index);
-                                  $("#footer-preRide").css({"display":"none"});
-                                },10000)
+                              if(OrderConfrm=="ok"){
+                                clearInterval(timerCall)
+                                $("#footer-preRide").css({"display":"none"});
                               }
-                              
-                            }); 
+                              cou++;
+                            });
+
+                            timerCall = setInterval(function(){
+                              cou++;
+                              $.post('/india/CallPreRideDriver',{pilotID:datas.pilotID,CustID:datas.CustID,pickuoAddress:datas.pickuoAddress,bookingID:datas.bookingID},function(result){
+                                console.log(result);
+                              });
+                              if(OrderConfrm=="ok" || cou==3){
+                                clearInterval(timerCall)
+                                $("#footer-preRide").css({"display":"none"});
+                              }
+                            },8000);
+                           
                             callRequiestinit.close();                                    
                         }
+                        if(requiest.index == data.drivers.length -1){
+                          alert("Drivar Not Available");
+                          $("#footer-preRide").css({"display":"none"});
+                        }
+
                        });
                        
                      }
@@ -549,8 +569,6 @@ function loginprocess(){
         });
   }
 
- 
-
   ///Check Socket For PreRide Driver Accepttance////
   var socket = io('//'+document.location.hostname+':'+document.location.port);
   socket.on('PreRideDriverAccepeCall', function (data) {
@@ -559,10 +577,13 @@ function loginprocess(){
       //////Log Call Booling ////////
       console.log("Call accept by :",JSON.stringify(data))
       setCookie("RideDetails",JSON.stringify(data),30);
-      
+      OrderConfrm="ok";
       window.location='../india/ride'
     }
   });
+
+
+  
 
 
   ////// await for loop testing//////
