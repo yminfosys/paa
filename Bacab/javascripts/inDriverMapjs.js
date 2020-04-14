@@ -17,7 +17,9 @@ function initMap() {
         ////////Call Circle Center Marker
         circleMarker(position);
         clearTimeout(driverLocTimer);
-              
+        driverLocTimer=setTimeout(function(){          
+            driverLocationUpdate(position);
+           },500);       
         },function error(msg){
             alert('Please enable your GPS position future.');       
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
@@ -162,7 +164,12 @@ function initMap() {
 
     }
 
-
+   /////////GPS location update driver tracking///////
+   function driverLocationUpdate(position){
+    $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"General"},function(data){
+      console.log(data);
+    });
+   }
     /////Off line Online /////////
     document.getElementById("toggle").addEventListener("click", function(){
     if(document.getElementById("toggle").checked == true){      

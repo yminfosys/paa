@@ -1,3 +1,28 @@
+//////cookie Setting////
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return "";
+  }
+  
+  
+
+  function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
 var wachID;
 function initMap() { 
     wachLocation();
@@ -10,10 +35,39 @@ function initMap() {
     } 
 
     function LocationUpdate(position){
-        $.post('/india/preRideLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude},function(data){
+        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"preRide"},function(data){
             console.log(data);
          });
 
     }
 
 }
+
+ ///////Handel Socket io  parameter/////// 
+var socket = io('//'+document.location.hostname+':'+document.location.port);
+  socket.on('preRideinCommingCall', function (data) {
+//   console.log('inCommingCall',data);
+//   console.log("test data",data.pilotID)
+  if(data.pilotID==getCookie("pilotID")){
+    console.log("call Neeed to be accept")
+    $.post('/india/preRideAutoAccepeCall',{
+        pilotID:data.pilotID,
+        CustID:data.CustID,
+        pickuoAddress:data.pickuoAddress,
+        bookingID:data.bookingID,                
+      },function(dat){
+        console.log("Call Accepted", dat)
+          /////Call for Ringtone/////
+           ////////Play Ringtone for 30Sec in Android Device//////
+                Android.startRingtone();
+                setInterval(function(){
+                    Android.stopRingtone();
+                },10000);
+          /////Request for Refresh Pre Ride Call List///////
+          $.post('/india/preRideRefreshCallList',{driverBusy:dat.driverBusy,pilotID:dat.pilotID},function(d){
+            console.log(d);
+          });
+      });
+
+  }
+  });

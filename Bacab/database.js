@@ -18,23 +18,49 @@ var uri='mongodb://127.0.0.1:27017/paaindia';
 //var uri='mongodb+srv://paacab:a1b1c3b4@paa-x8lgp.mongodb.net/paacab?retryWrites=true&w=majority';
 ///&connectTimeoutMS=1000&bufferCommands=false
 ///2dsphar indexing creat///////
+function index2Dpilot(int,cb){
+  console.log()
+    const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['pilotcollections'])
+    db.pilotcollections.createIndex({ "location" : "2dsphere" });
+    cb({success:'1'});
+  }
 
+  
+
+  function index2DpreRide(int,cb){
+    console.log()
+      const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['preridedriverlocationcollections'])
+      db.preridedriverlocationcollections.createIndex({ "location" : "2dsphere" });
+      cb({success:'1'});
+    }
 
   function index2Ddriver(int,cb){
     console.log()
       const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['driverlocationcollections'])
       db.driverlocationcollections.createIndex({ "location" : "2dsphere" });
       cb({success:'1'});
-    } 
+    }
 
-  
+    function index2DdriverDroplocation(int,cb){
+      console.log()
+        const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['driverdropcollections','driverlocationcollections'])
+        db.driverdropcollections.createIndex({ "droplocation" : "2dsphere" });
+        db.driverlocationcollections.createIndex({ "location" : "2dsphere" });
+        cb({success:'1'});
+      }
+
+  // function index2Dpilot(int,cb){
+  //   console.log()
+  //     const db = mongojs('mongodb://localhost:27017/paacab', ['pilotcollections'])
+  //     db.pilotcollections.createIndex({ "location" : "2dsphere" });
+  //     cb({success:'1'});
+  //   }
   function index2Ddemand(int,cb){
     console.log()
       const db = mongojs('mongodb://127.0.0.1:27017/paaindia', ['demandcollections']);
       db.demandcollections.createIndex({ "location" : "2dsphere" });
       cb({success:'1'})
     }
-
 function mongCon(){
 mongoose.connect(uri,config).
 catch(error => handleError(error));
@@ -182,6 +208,18 @@ var CarlogbookSchema = new mongoose.Schema({
 
 var Carlogbookmodul = mongoose.model('Carlogbookcollections', CarlogbookSchema);
 
+///Driver Car LogBook
+var testLocationSchema = new mongoose.Schema({     
+  pilotID:String, 
+  travalKM:String,
+  StartLocation:String,
+  EndLocation:String,
+  date: { type: Date, default: Date.now },
+  remarks:String 
+  
+});
+
+var testLocationmodul = mongoose.model('testcollections', testLocationSchema);
 
 
 ///Ride book Schema
@@ -192,8 +230,7 @@ var rideSchema = new mongoose.Schema({
   CustID:String,
   picupaddress:String,
   picuklatlng: [],    
-  dropaddress:String, 
-  travalTime:String,    
+  dropaddress:String,     
   droplatlng:[],
   date: { type: Date, default: Date.now },
   startTime:String,   
@@ -327,9 +364,70 @@ var driverlocationSchema = new mongoose.Schema({
 });
 var driverlocationmodul = mongoose.model('driverlocationcollections', driverlocationSchema);
 
+////driverDrop Location Update////
+var driverdropSchema = new mongoose.Schema({ 
+  pilotID:String,
+  DriverType:String,
+  rating:String,
+  travelmod:String,
+  accountStatus:String,
+  driverBusy:String,
+  droplocation: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      
+    }
+  }
+});
+
+var driverdropmodul = mongoose.model('driverdropcollections', driverdropSchema);
+
+////PreRide Driver Location Update////
+var preridedriverlocationSchema = new mongoose.Schema({ 
+  pilotID:String,
+  location: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      
+    }
+  }
+});
+
+var preridedriverlocationmodul = mongoose.model('preridedriverlocationcollections', preridedriverlocationSchema);
 
 
 
+
+var sampleSchema=new mongoose.Schema({ 
+  name: String,
+  location: {
+    type: {
+      type: String, // Don't do `{ location: { type: String } }`
+      enum: ['Point'], // 'location.type' must be 'Point'
+      required: true
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      
+    }
+  }
+})
+sampleSchema.index({ location: '2dsphere'});
+
+var sampleModule = mongoose.model('dadacollections', sampleSchema);
 
 // custmodul({
 //   name:'sukanta sardar',
@@ -388,22 +486,22 @@ var driverlocationmodul = mongoose.model('driverlocationcollections', driverloca
 
 module.exports.customer=custmodul;
 module.exports.pilot=pilotmodul;
-
+module.exports.index2Dpilot=index2Dpilot;
 module.exports.index2Ddriver=index2Ddriver;
-module.exports.driverlocation=driverlocationmodul;
-
+module.exports.index2DdriverDroplocation=index2DdriverDroplocation;
 module.exports.index2Ddemand=index2Ddemand;
 
-
+module.exports.index2DpreRide=index2DpreRide;
 
 module.exports.ride=ridemodul;
 module.exports.rideCounter=rideCountmodul;
 module.exports.priceOffer=priceandOffermodul;
 module.exports.cityPrice=cityPricemodul;
 module.exports.demandArea=demandmodul;
+module.exports.driverLocationArea=driverlocationmodul;
+module.exports.driverdroplocation=driverdropmodul;
 
-
-
+module.exports.preridedriverlocation=preridedriverlocationmodul;
 
 module.exports.walletOrderCouner=walletOrderCountmodul;
 module.exports.WalletBuyKM=WalletBuyKMmodul;
@@ -411,3 +509,4 @@ module.exports.DutyLog=DutyLogmodul;
 module.exports.Carlogbook=Carlogbookmodul;
 
 
+module.exports.testLocation=testLocationmodul;

@@ -2,7 +2,8 @@ var map;
 var centerMarker;
 var circle;
 var wachID;
-function initMap() { 
+function initMap() {  
+
  
     map = new google.maps.Map(document.getElementById('map'), {
           zoom: 7,
@@ -20,7 +21,9 @@ function initMap() {
        
         circleMarker(position);         
         clearTimeout(driverLocTimer);
-                 
+        driverLocTimer=setTimeout(function(){          
+            driverLocationUpdate(position);
+        },500);           
         
         },function error(msg){
             alert('Please enable your GPS position future.');       
@@ -33,7 +36,12 @@ function initMap() {
       navigator.geolocation.clearWatch(wachID);
     }
 
-    
+     /////////GPS location update driver tracking///////
+   function driverLocationUpdate(position){
+    $.post('/india/drv/driverLocatioUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"preRide"},function(data){
+      console.log(data);
+    });
+   }
 
     ///////////Circle Marker/////////
   
@@ -102,10 +110,10 @@ function initMap() {
     }); 
     
     function onlineExicute(){
-      /delete Driver location if exist /////
-      $.post('/preRideDutyInitiate',{},function(data){
-        console.log(data);        
-      })
+      ///delete Driver location if exist /////
+      // $.post('/preRideDutyInitiate',{},function(data){
+      //   console.log(data);        
+      // })
 
       
 

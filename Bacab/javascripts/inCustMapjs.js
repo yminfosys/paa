@@ -64,7 +64,7 @@ function directionRooteService(orgn,dist,mode){
  
 directionsService.route(reqst, function(response, status) {
     if (status === 'OK') {
-      console.log("Direction respons",response);      
+      console.log(response);      
       directionsDisplay.setDirections(response);
     } else {
       window.alert('Directions request failed due to ' + status);
@@ -303,15 +303,8 @@ content: "Drop"
             $.post('/india/getDistance',{travelmod:j,orig:''+Number(origin.lat)+' , '+Number(origin.lng)+'',diste:''+Number(dist.lat)+' , '+Number(dist.lng)+''},function(data){
               //alert(data.rows[0].elements[0].distance.value);          
               var distance=data.result.rows[0].elements[0].distance.value;
-              var time=data.result.rows[0].elements[0].duration.value;
-              
-                      
-              distance=parseInt(distance/1000) + 1; 
-             //////////Set Time for Other Travel mode
-              if(data.travelmod >1){
-                time=Number(time)/60;
-                setCookie("travalTime",time,1);                
-              }           
+              //alert(distance)          
+              distance=parseInt(distance/1000) + 1;            
             $.post('/india/getPrice',{travelmod:data.travelmod,distance:distance},function(dataa){
               $("#tm"+dataa.travelmod+"").css({"display":"block"})
               $("#tm"+dataa.travelmod+"").html('&#8377;'+dataa.price+'');

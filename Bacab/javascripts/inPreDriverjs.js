@@ -143,13 +143,31 @@ function loginprocess(){
 
   ///////Handel Socket io  parameter/////// 
   var socket = io('//'+document.location.hostname+':'+document.location.port);
-  socket.on('refreshPreRideList', function (data) {
+  socket.on('preRideinCommingCall', function (data) {
   console.log('inCommingCall',data);
   console.log("test data",data.pilotID)
   if(data.pilotID==getCookie("pilotID")){
 
+//   setCookie("ringToneControl","ON",1);
+  //setCookie("preRideinCommingCallDetails",JSON.stringify(data),1);
+  $.post('/india/preRideAutoAccepeCall',{
+    pilotID:data.pilotID,
+    CustID:data.CustID,
+    pickuoAddress:data.pickuoAddress,
+    bookingID:data.bookingID,
+    driverBusy:data.driverBusy,
+    
+  },function(dat){
+
+    ////////Play Ringtone for 30Sec in Android Device//////
+    Android.startRingtone();
+    setInterval(function(){
+        Android.stopRingtone();
+    },10000);
+
+
       ////Check existing call////
-      $.post('/india/existingPrerideCall',{pilotID:data.pilotID,driverBusy:data.driverBusy},function(rides){
+      $.post('/india/existingPrerideCall',{pilotID:dat.pilotID,driverBusy:"busy"},function(rides){
         console.log("Ride Details",rides)
         var out="";
         var addressPart="";
@@ -241,7 +259,7 @@ function loginprocess(){
       });
    
 
-  
+  });
   }
   });
 
