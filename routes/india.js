@@ -1256,8 +1256,11 @@ if(d){
 router.post('/savePreRideCallAndBooking', function(req, res, next) {  
   console.log(req.body)
   var dd=req.cookies.booking_count;
-  console.log("Booking Count", dd)
- ///////Create Bookinng////
+  ////Prevent Order Repitate/////
+  if(dd==undefined){
+    res.cookie("booking_count","booking",{maxAge: 30*24*60*60*1000});
+    console.log("Booking created", dd)
+    ///////Create Bookinng////
   GenbookingID({},function(NewBookinid){
     database.ride({
       bookingID:NewBookinid.bookingID,   
@@ -1297,8 +1300,9 @@ router.post('/savePreRideCallAndBooking', function(req, res, next) {
       
     });
   })
-
-
+  }else{
+    console.log("Booking Prevent", dd)
+  }
 }); 
     
     ////PreRide Driver Call Emit//////
