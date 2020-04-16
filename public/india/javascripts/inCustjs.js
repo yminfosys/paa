@@ -508,9 +508,13 @@ function loginprocess(){
    
              ///Check Socket For Driver Accepttance////
             // var socket = io('//'+document.location.hostname+':'+document.location.port);
+            var tt;
              socket.on('PreRideDriverAccepeCall', function (incomdata) {
                if(CustID==incomdata.CustID){
                  clearInterval(timere);
+
+                 clearTimeout(tt);
+                 tt=setTimeout(function(){
                  console.log("PreRideDriverAccepeCall",incomdata)
                  //////Save and Generate Booking////
                  $.post('/india/savePreRideCallAndBooking',{
@@ -537,6 +541,8 @@ function loginprocess(){
                     window.location='../india/ride'
                   }
                  });
+
+                },500);
                 
                 
                }
