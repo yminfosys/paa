@@ -1,4 +1,4 @@
-var socket = io('//'+document.location.hostname+':'+document.location.port);
+
 //////cookie Setting////
 function getCookie(cname) {
     var name = cname + "=";
@@ -45,7 +45,7 @@ function initMap() {
 }
 
  ///////Handel Socket io  parameter/////// 
-
+ var socket = io('//'+document.location.hostname+':'+document.location.port);
   socket.on('preRideinCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
@@ -60,13 +60,7 @@ function initMap() {
 
   }
   });
-  socket.on('startRingtone', function (data) {
-    if(data){
-      console.log("Call Accepted", dat); 
-      ////////Play Ringtone for 30Sec in Android Device//////
-      //Android.startRingtone();      
-    }
-  });
+
   
 
  
