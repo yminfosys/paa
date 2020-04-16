@@ -54,7 +54,8 @@ function initMap() {
         pilotID:data.pilotID,
         CustID:data.CustID,                        
       },function(dat){
-        console.log("Call Accepted", dat);  
+        console.log("Call Accepted", dat);
+        Android.startRingtone();  
       });
 
   }
@@ -63,7 +64,7 @@ function initMap() {
     if(data){
       console.log("Call Accepted", dat); 
       ////////Play Ringtone for 30Sec in Android Device//////
-     // Android.startRingtone();      
+      //Android.startRingtone();      
     }
   });
   

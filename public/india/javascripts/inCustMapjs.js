@@ -303,8 +303,7 @@ content: "Drop"
             $.post('/india/getDistance',{travelmod:j,orig:''+Number(origin.lat)+' , '+Number(origin.lng)+'',diste:''+Number(dist.lat)+' , '+Number(dist.lng)+''},function(data){
               //alert(data.rows[0].elements[0].distance.value);          
               var distance=data.result.rows[0].elements[0].distance.value;
-              var time=data.result.rows[0].elements[0].duration.value;
-              
+              var time=data.result.rows[0].elements[0].duration.value;             
                       
               distance=parseInt(distance/1000) + 1; 
              //////////Set Time for Other Travel mode

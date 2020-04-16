@@ -533,7 +533,7 @@ function loginprocess(){
                   
                  },function(resp){
                   if(resp){
-                    alert(resp)
+                    //alert(resp)
                     window.location='../india/ride'
                   }
                  });

@@ -1463,7 +1463,7 @@ router.post('/preRideFinish', function(req, res, next) {
         var endTime=new Date();
         database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:"finishRide",endTime:endTime}},function(er, Booking){      
         ///////Update pilot TotalTime///////
-        var newTotaltime=Number(driver.preRideTotalTime) - (Number(Booking.travalTime)+2);
+        var newTotaltime=Number(driver.preRideTotalTime) - Number(Booking.travalTime);
         database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
           preRideTotalTime:newTotaltime
         }},function(e, dddddd){ });
