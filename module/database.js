@@ -63,6 +63,7 @@ var custSchema = new mongoose.Schema({
     custRating:String,   
     userType:String,
     orderStage:String,
+    bookingID:String,
     generalPriceperKm:[],
     generalMinimumprice:[],
     generalMinimumKm:[],
@@ -127,6 +128,7 @@ var pilotSchema = new mongoose.Schema({
   gender:String,
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
   orderStage:String,
+  preRideTotalTime:Number,
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`
@@ -193,7 +195,7 @@ var rideSchema = new mongoose.Schema({
   picupaddress:String,
   picuklatlng: [],    
   dropaddress:String, 
-  travalTime:String,    
+  travalTime:Number,    
   droplatlng:[],
   date: { type: Date, default: Date.now },
   startTime:String,   
@@ -312,6 +314,7 @@ var driverlocationSchema = new mongoose.Schema({
   travelmod:String,
   accountStatus:String,
   driverBusy:String,
+  preRideTotalTime:Number,
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`

@@ -1,3 +1,4 @@
+var socket = io('//'+document.location.hostname+':'+document.location.port);
 //////cookie Setting////
 function getCookie(cname) {
     var name = cname + "=";
@@ -44,30 +45,30 @@ function initMap() {
 }
 
  ///////Handel Socket io  parameter/////// 
-var socket = io('//'+document.location.hostname+':'+document.location.port);
+
   socket.on('preRideinCommingCall', function (data) {
-//   console.log('inCommingCall',data);
-//   console.log("test data",data.pilotID)
+
   if(data.pilotID==getCookie("pilotID")){
-    console.log("call Neeed to be accept")
+    console.log("call Neeed to be accept");
+    console.log("inCommingCall data",data);
     $.post('/india/preRideAutoAccepeCall',{
         pilotID:data.pilotID,
-        CustID:data.CustID,
-        pickuoAddress:data.pickuoAddress,
-        bookingID:data.bookingID,                
+        CustID:data.CustID,                        
       },function(dat){
-        console.log("Call Accepted", dat)
-          /////Call for Ringtone/////
-           ////////Play Ringtone for 30Sec in Android Device//////
-                Android.startRingtone();
-                setInterval(function(){
-                    Android.stopRingtone();
-                },10000);
-          /////Request for Refresh Pre Ride Call List///////
-          $.post('/india/preRideRefreshCallList',{driverBusy:dat.driverBusy,pilotID:dat.pilotID},function(d){
-            console.log(d);
-          });
+        console.log("Call Accepted", dat);  
       });
 
   }
   });
+  socket.on('StartRingtone', function (data) {
+    if(data){
+      ////////Play Ringtone for 30Sec in Android Device//////
+      Android.startRingtone();
+      setInterval(function(){
+          Android.stopRingtone();
+      },10000);
+    }
+  });
+  
+
+ 

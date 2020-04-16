@@ -16,7 +16,7 @@ router.get('/rider', function(req, res, next) {
 });
 
 router.get('/cust', function(req, res, next) {
-  res.render('appCust', { title: 'Paacab' });
+  res.render('appCust', { title: 'Paacab',YOUR_API_KEY:process.env.API_KEY });
 });
 
 

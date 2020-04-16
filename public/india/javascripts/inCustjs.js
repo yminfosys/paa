@@ -1,3 +1,4 @@
+var socket = io('//'+document.location.hostname+':'+document.location.port);
 //////cookie Setting////
 function getCookie(cname) {
     var name = cname + "=";
@@ -379,7 +380,7 @@ function loginprocess(){
           },15000);
   
             ///Check Socket For Driver Accepttance////
-            var socket = io('//'+document.location.hostname+':'+document.location.port);
+            //var socket = io('//'+document.location.hostname+':'+document.location.port);
             socket.on('DriverAccepeCall', function (data) {
               if(CustID==data.CustID){
                 clearInterval(timere);
@@ -457,13 +458,9 @@ function loginprocess(){
 
    }
 
-
-
-
  
-   var DriverList=[];
-   function continuePreBooking(payMode){ 
-    DriverList=[];
+   
+   function continuePreBooking(payMode){   
         var originAds=getCookie("picuplocation") ;
         var distAds=getCookie("droplocation") ;
         var origin=JSON.parse(getCookie("pickuplatlong")) ;
@@ -473,6 +470,7 @@ function loginprocess(){
         var travelmod=$("#ModeofTravel").val();
         var totalAmt= $("#tmPreRidePrice"+travelmod+"").val();
         var totalDistance= $("#totalDistance").val();
+        var timere;
         $("#prebooking-process").css({"display":"block"});
         $("#prerideCnfBtn").css({"display":"none"});
         $("#preridesBackbtn").css({"display":"none"});
@@ -487,63 +485,64 @@ function loginprocess(){
         },function(data){
           console.log("Filter Driver",data);
           if(data.drivers.length > 0){
-            //alert(data.bookingID)
-            $.post('/india/newPreRideBooking',{
-              bookingID:data.bookingID,
-              originAds:originAds,
-              distAds:distAds,
-              originLat:origin.lat,
-              originLng:origin.lng,
-              distLat:dist.lat,
-              distLng:dist.lng,
-              travelmod:travelmod,
-              CustID:CustID,
-              DriverType:"preRide",
-              totalAmt:Number(totalAmt) * Number(totalDistance),
-              totalDistance:totalDistance,
-              travalTime:travalTime,
-              payMode:payMode,              
-            },function(booking){               
-              
-                    ////Send DriverCallRequiest////
-                    var cou=0;
-                    const callRequiestinit = async _ => {                                        
-                      for (let index = 0; index < data.drivers.length; index++) {                       
-                        const numFruit =  checkDriverorder({pilotID:data.drivers[index].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID,index:index});
-                        await numFruit;
-                        
-                      }
+           /////Call to Driver///
+           var count=0; 
+           $.post('/india/CallPreRideDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID},function(result){
+              console.log(result);
+            }); 
+           count++;
+           timere=setInterval(function(){ 
+             if(count<data.drivers.length ){
+              $.post('/india/CallPreRideDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID},function(result){
+                console.log(result);
+              }); 
+             count++;
+           }else{
+             clearInterval(timere);
+             ////////feedbace to customer/////
+             console.log("Driver Busy")
+             alert("All Drivers Are Busy with other Cline Please try again");
+             window.location='/india/'
+           }
+           },10000);
+   
+             ///Check Socket For Driver Accepttance////
+            // var socket = io('//'+document.location.hostname+':'+document.location.port);
+             socket.on('PreRideDriverAccepeCall', function (incomdata) {
+               if(CustID==incomdata.CustID){
+                 clearInterval(timere);
+                 console.log("PreRideDriverAccepeCall",incomdata)
+                 //////Save and Generate Booking////
+                 $.post('/india/savePreRideCallAndBooking',{
+                  pilotID:incomdata.pilotID,
+                  CustID:incomdata.CustID,
+                  /////For create booking////                   
+                  originAds:originAds,
+                  distAds:distAds,
+                  originLat:origin.lat,
+                  originLng:origin.lng,
+                  distLat:dist.lat,
+                  distLng:dist.lng,
+                  travelmod:travelmod,
+                  CustID:CustID,
+                  DriverType:"preRide",
+                  totalAmt:Number(totalAmt) * Number(totalDistance),
+                  totalDistance:totalDistance,
+                  travalTime:travalTime,
+                  payMode:payMode,
+                  
+                 },function(resp){
+                  if(resp){
+                    alert(resp)
+                    window.location='../india/ride'
+                  }
+                 });
+                
+                
+               }
+             });
 
-                      ////Loop End///
-                      processCallRequiestArray(DriverList);
-                    } 
-                    callRequiestinit();
 
-                    async function checkDriverorder (requiest){
-                      console.log("InputData Data",requiest)
-                      await $.post('/india/bookingAndtimeDetails',{
-                        pilotID:requiest.pilotID,
-                        CustID:requiest.CustID,
-                        pickuoAddress:requiest.originAds,
-                        bookingID:requiest.bookingID
-                      },  function(datas){
-                        console.log("Incomming Data",datas)
-                         if(Number(datas.totaltime)  < 30){
-                           cou++;                      
-                          DriverList.push(datas)
-                          if(cou>4){
-                              processCallRequiestArray(DriverList);
-                            callRequiestinit.close();
-                          }                          
-                                                               
-                        }                      
-
-                       });
-                       
-                     }
-
-                    
-            });
           }else{
             ///////Driver ot Found
             alert("Driver Not Found Try Again");
@@ -551,55 +550,12 @@ function loginprocess(){
           }
         });
   }
-  var timererr;
- function processCallRequiestArray(driverList){
-
-    console.log("Driver List",driverList.length);
-      if(driverList.length  >0){
-        var count=0; 
-        $.post('/india/CallPreRideDriver',{pilotID:driverList[count].pilotID,CustID:driverList[count].CustID,pickuoAddress:driverList[count].pickuoAddress,bookingID:driverList[count].bookingID},function(result){
-          console.log(result);
-        }); 
-        count++;
-        timererr=setInterval(function(){ 
-          if(count<driverList.length){
-            $.post('/india/CallPreRideDriver',{pilotID:driverList[count].pilotID,CustID:driverList[count].CustID,pickuoAddress:driverList[count].pickuoAddress,bookingID:driverList[count].bookingID},function(result){
-              console.log(result);
-          });
-          count++;
-        }else{
-          clearInterval(timere);
-          ////////feedbace to customer/////
-          console.log("Driver Busy")
-          alert("All Drivers Are Busy with other Cline Please try again");
-          window.location='/india/'
-        }
-        },10000);
-
-          
-      }else{
-        alert("Driver Not Found");
-        backPreride();
-      }
-    }
- /// /Check Socket For PreRide Driver Accepttance////
-  var socket = io('//'+document.location.hostname+':'+document.location.port);
-  socket.on('PreRideDriverAccepeCall', function (data) {
-    var CustID=getCookie("CustID");
-    if(CustID==data.CustID){     
-      //////Log Call Booling ////////
-      clearInterval(timererr);
-      console.log("Call accept by :",JSON.stringify(data))
-      setCookie("RideDetails",JSON.stringify(data),30);
-      OrderConfrm="ok";
-      window.location='../india/ride'
-    }
-  });
 
 
-  
-
-
+ 
+             socket.on('PreRideDriverAccepeCall', function (incomdata) {
+               console.log("test communication",incomdata)
+             }             )
   ////// await for loop testing//////
 // var ary=[1,2,3,4,5,6,7,8,9]
 //   const forLoop = async _ => {

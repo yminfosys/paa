@@ -438,7 +438,7 @@ console.log(req.body)
     router.get('/ride', function(req, res, next) {
       if(req.cookies.CustID){         
         database.customer.findOne({CustID:req.cookies.CustID},function(err,cust){     
-        res.render('india/inCustRideConfrm',{YOUR_API_KEY:process.env.API_KEY,orderStage:cust.orderStage})
+        res.render('india/inCustRideConfrm',{YOUR_API_KEY:process.env.API_KEY,orderStage:cust.orderStage,bookingID:cust.bookingID})
         })
       }else{
         res.redirect('/india/login')
@@ -448,13 +448,14 @@ console.log(req.body)
 
   
 ////////Call Driver Requiest notification/////
-router.post('/rideDriverBookingDetails', function(req, res, next) {
-  database.pilot.findOne({pilotID:req.body.pilotID},function(err,driver){
-    database.ride.findOne({bookingID:req.body.bookingID},function(err,ride){
-      res.send({driver:driver,ride:ride});
-    });  
-  }); 
- 
+router.post('/rideDriverBookingDetails', function(req, res, next) { 
+  database.ride.findOne({bookingID:req.body.bookingID},function(err,ride){
+    if(ride){
+      database.pilot.findOne({pilotID:ride.pilotID},function(err,driver){
+        res.send({driver:driver,ride:ride});
+      });
+    }
+  });
 });
 
 ////////getDriverposition/////
@@ -602,6 +603,7 @@ router.post('/drv/driverReg', function(req, res, next) {
       mobileNumber:req.body.mobile,
       isdCode:'+91',
       pilotRating:'0',
+      preRideTotalTime:0,
       location:{type:'Point',coordinates:[req.body.lng, req.body.lat]}
       //location:{type:'Point',coordinates:[1.00001, 1.0001]}
     }).save(function(err){
@@ -1182,6 +1184,7 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
   res.redirect('/india/preDrv')
 
 });
+
 /////For Neareast PreRide Driver//////
 router.post('/nearbyPrerideDriver', function(req, res, next) {
   database.index2Ddriver({},function(ss){
@@ -1194,14 +1197,11 @@ router.post('/nearbyPrerideDriver', function(req, res, next) {
                coordinates: [Number(req.body.lng), Number(req.body.lat)]
             },$maxDistance : 3000
           }
-        },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,
+        },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,preRideTotalTime:{$lt:30}
       },function(e, driver3km){
         if(driver3km.length > 0){
-             ///select this driver//////
-          GenbookingID({},function(bokid){
-            console.log("BokID",bokid)
-            res.send({drivers:driver3km,bookingID:bokid.bookingID});
-          })
+          res.send({drivers:driver3km});
+             
         }else{
            /////Check  Driver for 10KM //////
            database.driverlocation.find({
@@ -1212,16 +1212,13 @@ router.post('/nearbyPrerideDriver', function(req, res, next) {
                    coordinates: [Number(req.body.lng), Number(req.body.lat)]
                 },$maxDistance : 10000
               }
-            },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,
+            },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,preRideTotalTime:{$lt:30}
           },function(e, driver10km){
             if(driver10km.length > 0){
-                ///select this driver//////
-                GenbookingID({},function(bokid){
-                  console.log("BokID",bokid)
-                  res.send({drivers:driver10km,bookingID:bokid.bookingID});
-                })
+              res.send({drivers:driver10km});
+                
             }else{
-              res.send({drivers:[],bookingID:0});
+              res.send({drivers:[]});
             }
           });
 
@@ -1232,36 +1229,36 @@ router.post('/nearbyPrerideDriver', function(req, res, next) {
 
   });
 
-  
-  
-
-  function GenbookingID(rq,cb){
-            database.rideCounter.findOne({},function(e, d){
-          if(d){
-            var newId=Number(d.bookingID)+1;
-            database.rideCounter.findOneAndUpdate({bookingID:d.bookingID},{$set:{bookingID:newId}},function(e, dd){
-              cb({bookingID:newId}); 
-            })
-          }else{
-            database.rideCounter({bookingID:1}).save(function(er){
-             cb({bookingID:1});
-            });
-          }
-        });
-  }
-
 });
 
+/////////Generate Booking ID///////
+function GenbookingID(rq,cb){
+  database.rideCounter.findOne({},function(e, d){
+if(d){
+  var newId=Number(d.bookingID)+1;
+  database.rideCounter.findOneAndUpdate({bookingID:d.bookingID},{$set:{bookingID:newId}},function(e, dd){
+    cb({bookingID:newId}); 
+  })
+}else{
+  database.rideCounter({bookingID:1}).save(function(er){
+   cb({bookingID:1});
+  });
+}
+});
+}
 
 
 
 
 
 ////////Create New Pre Ride Booking/////
-router.post('/newPreRideBooking', function(req, res, next) {  
+router.post('/savePreRideCallAndBooking', function(req, res, next) {  
   console.log(req.body)
+
+  ///////Create Bookinng////
+  GenbookingID({},function(NewBookinid){
     database.ride({
-      bookingID:req.body.bookingID,   
+      bookingID:NewBookinid.bookingID,   
       CustID:req.body.CustID,
       pilotID:req.body.pilotID,
       DriverType:req.body.DriverType,
@@ -1272,128 +1269,49 @@ router.post('/newPreRideBooking', function(req, res, next) {
       kmtravels:req.body.totalDistance,
       totalamount:req.body.totalAmt,
       paymentBy:req.body.payMode,
-      travalTime:req.body.travalTime,
-      discount:"",
-      driverpayout:"",
-      driverIncentiv:"",
-      callbookingStatus:"waiting"    
-    }).save(function(err){     
-      res.send("new Booking Created")
+      travalTime:Number(req.body.travalTime)+2 ,     
+      callbookingStatus:"Accept",
+      driverBusy:"busy",
+      preRideOTP:randamNumber(),    
+    }).save(function(err){ 
+      //////CUST data////
+      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{
+        orderStage:'accept',
+        bookingID:NewBookinid.bookingID
+      }},function(er,cust){
+        database.pilot.findOne({pilotID:req.body.pilotID},function(er, pilot){ 
+          var newtotalTime=pilot.preRideTotalTime + Number(req.body.travalTime) + 2           
+          database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
+            preRideTotalTime: newtotalTime
+          }},function(er,pil){
+            ////Requiest for Preride  List refresh/////
+            res.io.emit("refreshPreRideList",{driverBusy:"busy",pilotID:req.body.pilotID});
+            res.emit("StartRingtone",{play:1});
+            res.send("Final order Save");    
+          });
+        }); 
+      });
+
+      
     });
+  })
+   
     }); 
     
-    ////PreRide Driver Call//////
+    ////PreRide Driver Call Emit//////
   router.post('/CallPreRideDriver', function(req, res, next) {
-  res.io.emit("preRideinCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
+  res.io.emit("preRideinCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID});
   res.send('ReqEmited');
   });
 
-  router.post('/bookingAndtimeDetails', function(req, res, next) {
-    database.ride.find({pilotID:req.body.pilotID,DriverType:"preRide",driverBusy:"busy",callbookingStatus:{$ne: "complete"}},function(er,data){
-      console.log("TotalNumber of Rids",data)
-      var totaltime=0; 
-      if(data.length > 0){       
-        data.forEach(function(val,i,ary){
-          totaltime=Number(totaltime)+ Number(val.travalTime)+2;
-          if(i === ary.length - 1){
-            res.send({ 
-              pilotID:req.body.pilotID,
-              CustID:req.body.CustID,
-              pickuoAddress:req.body.pickuoAddress,
-              bookingID:req.body.bookingID,
-              totaltime:totaltime
-            });
-          }
-        });
-
-      }else{
-        res.send({ 
-          pilotID:req.body.pilotID,
-          CustID:req.body.CustID,
-          pickuoAddress:req.body.pickuoAddress,
-          bookingID:req.body.bookingID,
-          totaltime:totaltime
-        });
-      }
-    });
-   
-    
-    });
-
   
-
     ////////Call Driver accept notification/////
-router.post('/preRideAutoAccepeCall', function(req, res, next) { 
-  var OTP=randamNumber(); 
+router.post('/preRideAutoAccepeCall', function(req, res, next) {    
   console.log('incomecalldetails',req.body)
-  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept',preRideOTP:OTP,driverBusy:"busy"}},function(err, ride){
-    database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept',}},function(er,cust){
-    res.io.emit("PreRideDriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
-    res.send({driverBusy:"busy",CustID:req.body.CustID,RideOTP:OTP,pilotID:req.body.pilotID,bookingID:req.body.bookingID});
-    });
+  res.io.emit("PreRideDriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID});
+  res.send("emited Call Accept by driver");  
   });
-    // if(req.body.driverBusy=="busy"){
-    //   /////write for Busy Ddriver//////      
-    //   var totalTime=0; 
-    //    var count=0;
-    //    var countArray=[];   
-    //   database.ride.find({pilotID:req.body.pilotID,driverBusy:req.body.driverBusy},function(err,booking){        
-    //     booking.forEach(function(val, index, arr){
-    //       var org=''+Number(val.picuklatlng[0])+', '+Number(val.picuklatlng[1])+'';
-    //       var dist=''+Number(val.droplatlng[0])+', '+Number(val.droplatlng[1])+''; 
-    //       count++;       
-    //       preRideTimeCalculation({
-    //         orig:org,
-    //         diste:dist,                        
-    //         travelmod:val.travelmod,
-    //         index:count
-    //       },function(result){
-    //         //console.log("total Time",time)
-    //         totalTime=Number(totalTime)+ Number(result.time);
-    //         countArray.push(result.count);
-    //         console.log("index",result.count)
-    //         console.log("arr.length",arr.length)
-    //         console.log("countArray",countArray.length)
-    //         if(countArray.length == arr.length){
-    //           if(totalTime <= 1800 ){
-    //           database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept',driverBusy:"busy",DriverType:"preRide",preRideOTP:OTP}},function(err, ride){
-    //             if(ride){
-    //               database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept',}},function(er,cust){
-    //                // database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{orderStage:'accept'}},function(re, ou){
-    //                   database.driverLocationArea.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
-    //                     driverBusy:'busy',
-    //                    // droplocation:{type:'Point',coordinates:[Number(ride.droplatlng[1]), Number(ride.droplatlng[0])]}
-    //                   }},function(re, drvloc){
-    //                     database.driverdroplocation.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
-    //                       driverBusy:'busy',
-    //                       droplocation:{type:'Point',coordinates:[Number(ride.droplatlng[1]), Number(ride.droplatlng[0])]}
-    //                     }},function(re, drvloc){
-    //                       res.io.emit("PreRideDriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP,DriverType:"preRide",time:totalTime});
-    //                       res.send({ride:ride,cust:cust,RideOTP:OTP,pilotID:req.body.pilotID,time:totalTime});
-    //                       database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
-    //                       console.log("Reset Demand")
-    //                     });
-    //                     });
-                        
-    //                   });
-                     
-    //                 //});
-                   
-    //               });
-    //             }
-    //           });
-    //         }
-    //           /////
-    //         }
-    //       })
-    //     });
-    //   })
    
-    // } 
- 
- 
-  });
-
  
 
 /////CHECK EXISTING PRE RIDE CALL DETAILS/////
@@ -1759,7 +1677,8 @@ router.post('/driverLocationUpdate', function(req, res, next) {
             DriverType:req.body.DriverType,
             rating:pilot.rating,
             travelmod:pilot.travelmod,
-            accountStatus:pilot.accountStatus,                    
+            accountStatus:pilot.accountStatus, 
+            preRideTotalTime:pilot.preRideTotalTime,                  
             location:{type:'Point',coordinates:[req.body.lng, req.body.lat]},
           }},function(er, dd){
             res.send(req.body)
@@ -1770,7 +1689,8 @@ router.post('/driverLocationUpdate', function(req, res, next) {
             DriverType:req.body.DriverType,
             rating:pilot.rating,
             travelmod:pilot.travelmod,
-            accountStatus:pilot.accountStatus,                    
+            accountStatus:pilot.accountStatus, 
+            preRideTotalTime:pilot.preRideTotalTime,                   
             location:{type:'Point',coordinates:[req.body.lng, req.body.lat]},
           }).save(function(err){
             res.send(req.body)
@@ -1783,13 +1703,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
 
 });
 
-////////Refresh Pre Ride Drive Call List From Bacground //////
 
-router.post('/preRideRefreshCallList', function(req, res, next) {
-  res.io.emit("refreshPreRideList",{driverBusy:req.body.driverBusy,pilotID:req.body.pilotID});
-res.send("emit refreshPreRideList")
-
-}),
 
 
 

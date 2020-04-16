@@ -136,10 +136,9 @@ function initMap() {
     }   
 
 ///////////Initiate page Parametter///////
-        function pageInit(){
-         var RideDetails=JSON.parse(getCookie("RideDetails"));
-         console.log('rRideDetails',RideDetails);
-         $.post('/india/rideDriverBookingDetails',RideDetails,function(data){
+        function pageInit(){         
+         var bookingID=$("#bookingID").val();
+         $.post('/india/rideDriverBookingDetails',{bookingID:bookingID},function(data){
             console.log('rider',data);
              /////Add pickup Marker///// 
           
@@ -190,7 +189,7 @@ function initMap() {
                     <div class="driver-details">\
                         <p>'+data.driver.name+'</p>\
                             <p>Rating: '+data.driver.pilotRating+' <i class="fa fa-star" aria-hidden="true"></i></p>\
-                            <p class="otp">OTP: '+RideDetails.RideOTP+'</p>\
+                            <p class="otp">OTP: '+data.ride.preRideOTP+'</p>\
                     </div>\
                     <div class="car-details">\
                         <p class="text-center">'+data.driver.rtoRegno+'</p>\
