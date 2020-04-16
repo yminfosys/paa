@@ -1254,8 +1254,9 @@ if(d){
 ////////Create New Pre Ride Booking/////
 router.post('/savePreRideCallAndBooking', function(req, res, next) {  
   console.log(req.body)
-
-  ///////Create Bookinng////
+  database.ride.findOne({CustID:req.body.CustID, pilotID:req.body.pilotID, driverBusy:"busy"},function(exist){
+    if(!exist){  
+ ///////Create Bookinng////
   GenbookingID({},function(NewBookinid){
     database.ride({
       bookingID:NewBookinid.bookingID,   
@@ -1295,8 +1296,10 @@ router.post('/savePreRideCallAndBooking', function(req, res, next) {
       
     });
   })
-   
-    }); 
+}
+});
+
+}); 
     
     ////PreRide Driver Call Emit//////
   router.post('/CallPreRideDriver', function(req, res, next) {

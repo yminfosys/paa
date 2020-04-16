@@ -553,9 +553,7 @@ function loginprocess(){
 
 
  
-             socket.on('PreRideDriverAccepeCall', function (incomdata) {
-               console.log("test communication",incomdata)
-             }             )
+
   ////// await for loop testing//////
 // var ary=[1,2,3,4,5,6,7,8,9]
 //   const forLoop = async _ => {
