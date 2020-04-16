@@ -534,7 +534,7 @@ function loginprocess(){
                  },function(resp){
                   if(resp){
                     //alert(resp)
-                    window.location='../india/ride'
+                   // window.location='../india/ride'
                   }
                  });
                 
