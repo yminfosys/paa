@@ -1286,7 +1286,7 @@ router.post('/savePreRideCallAndBooking', function(req, res, next) {
           }},function(er,pil){
             ////Requiest for Preride  List refresh/////
             res.io.emit("refreshPreRideList",{driverBusy:"busy",pilotID:req.body.pilotID});
-            res.emit("StartRingtone",{play:1});
+            res.io.emit("startRingtone",{play:"1"});
             res.send("Final order Save");    
           });
         }); 
@@ -1462,7 +1462,13 @@ router.post('/preRideFinish', function(req, res, next) {
       if(driver){
         var endTime=new Date();
         database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:"finishRide",endTime:endTime}},function(er, Booking){      
-        //// Calculate Distance Last positio driver///////
+        ///////Update pilot TotalTime///////
+        var newTotaltime=Number(driver.preRideTotalTime) - (Number(Booking.travalTime)+2);
+        database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
+          preRideTotalTime:newTotaltime
+        }},function(e, dddddd){ });
+        
+          //// Calculate Distance Last positio driver///////
          database.driverlocation.findOne({pilotID:req.cookies.pilotID},function(er, driverLoc){        
         var finishLocation=driverLoc.location.coordinates;
         console.log("finishLocation",finishLocation);

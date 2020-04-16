@@ -47,7 +47,6 @@ function initMap() {
  ///////Handel Socket io  parameter/////// 
 
   socket.on('preRideinCommingCall', function (data) {
-
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
     console.log("inCommingCall data",data);
@@ -60,13 +59,11 @@ function initMap() {
 
   }
   });
-  socket.on('StartRingtone', function (data) {
+  socket.on('startRingtone', function (data) {
     if(data){
+      console.log("Call Accepted", dat); 
       ////////Play Ringtone for 30Sec in Android Device//////
-      Android.startRingtone();
-      setInterval(function(){
-          Android.stopRingtone();
-      },10000);
+     // Android.startRingtone();      
     }
   });
   
