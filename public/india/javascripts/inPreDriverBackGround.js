@@ -46,6 +46,7 @@ function initMap() {
 
  ///////Handel Socket io  parameter/////// 
  var socket = io('//'+document.location.hostname+':'+document.location.port);
+ var tt;
   socket.on('preRideinCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
@@ -55,7 +56,11 @@ function initMap() {
         CustID:data.CustID,                        
       },function(dat){
         console.log("Call Accepted", dat);
-        Android.startRingtone();  
+        clearTimeout(tt);
+        tt=setTimeout(function(){
+          Android.startRingtone();
+        },500);
+          
       });
 
   }
