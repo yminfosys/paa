@@ -480,8 +480,9 @@ router.post('/getDriverposition', function(req, res, next) {
 
  //////////setAllNormalandFinished //////
  router.post('/setAllNormalandFinished', function(req, res, next) {
-  database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{orderStage:" "}},function(er,data){
-   res.send("ok")
+  database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{orderStage:"",bookingID:""}},function(er,data){
+   res.clearCookie("orderCreated");
+    res.send("ok")
   });
   });   
 
@@ -1254,8 +1255,10 @@ if(d){
 ////////Create New Pre Ride Booking/////
 router.post('/savePreRideCallAndBooking', function(req, res, next) {  
   console.log(req.body)
-  database.ride.findOne({CustID:req.body.CustID, pilotID:req.body.pilotID, driverBusy:"busy"},function(exist){
-    if(!exist){  
+  /////Prevent for Double Entree////
+  if(!req.cookies.orderCreated){
+    res.cookie("orderCreated",{pilotID:req.body.pilotID, CustID:req.body.CustID},{maxAge: 30*24*60*60*1000 })
+
  ///////Create Bookinng////
   GenbookingID({},function(NewBookinid){
     database.ride({
@@ -1296,9 +1299,8 @@ router.post('/savePreRideCallAndBooking', function(req, res, next) {
       
     });
   })
-}
-});
 
+}
 }); 
     
     ////PreRide Driver Call Emit//////
