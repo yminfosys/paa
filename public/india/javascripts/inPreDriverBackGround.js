@@ -42,20 +42,18 @@ function initMap() {
 
     }
 
-    setInterval(function(){
-      $.post('/india/testint',{},function(data){
-        console.log(data);
-     });
-    
-    },1000);
+  
 
 }
 
 setInterval(function(){
-  $.post('/india/test',{},function(data){
-    console.log(data);
- });
-
+  var setSystem=getCookie("setSystem");
+  if(setSystem=="ONLINE"){
+  
+  }else{
+    window.close();
+    window.open("/endProcess");
+  }
 },1000);
 
  ///////Handel Socket io  parameter/////// 
