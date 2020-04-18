@@ -42,7 +42,21 @@ function initMap() {
 
     }
 
+    setInterval(function(){
+      $.post('/india/testint',{},function(data){
+        console.log(data);
+     });
+    
+    },1000);
+
 }
+
+setInterval(function(){
+  $.post('/india/test',{},function(data){
+    console.log(data);
+ });
+
+},1000);
 
  ///////Handel Socket io  parameter/////// 
  var socket = io('//'+document.location.hostname+':'+document.location.port);
