@@ -1675,6 +1675,13 @@ router.get('/preRideBacgroundService', function(req, res, next) {
   }
 });
 
+//////For ANDROID//////
+router.post('/locationUpdate', function(req, res, next) {
+
+console.log("Android Respons",req.body);
+res.status(200).send();
+});
+
 ////////DriverLocationUpdate/////////
 router.post('/driverLocationUpdate', function(req, res, next) {
   database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){

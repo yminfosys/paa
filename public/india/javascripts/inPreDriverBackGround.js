@@ -46,15 +46,6 @@ function initMap() {
 
 }
 
-setInterval(function(){
-  var setSystem=getCookie("setSystem");
-  if(setSystem=="ONLINE"){
-  
-  }else{
-    window.close();
-    window.open("/endProcess");
-  }
-},1000);
 
  ///////Handel Socket io  parameter/////// 
  var socket = io('//'+document.location.hostname+':'+document.location.port);
