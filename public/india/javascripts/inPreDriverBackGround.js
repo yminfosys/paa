@@ -1,5 +1,4 @@
-
-//////cookie Setting////
+/////cookie Setting////
 function getCookie(cname) {
     var name = cname + "=";
     var decodedCookie = decodeURIComponent(document.cookie);
@@ -35,8 +34,8 @@ function initMap() {
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
     } 
 
-    function LocationUpdate(position){
-        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"preRide"},function(data){
+    function LocationUpdate(position){     
+        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,DriverType:"preRide",position },function(data){
             console.log(data);
          });
 
@@ -46,6 +45,9 @@ function initMap() {
 
 }
 
+setInterval(function(){
+ console.log(JSON.parse(getCookie("position")).lat);
+},5000);
 
  ///////Handel Socket io  parameter/////// 
  var socket = io('//'+document.location.hostname+':'+document.location.port);
@@ -61,7 +63,7 @@ function initMap() {
         console.log("Call Accepted", dat);
         clearTimeout(tt);
         tt=setTimeout(function(){
-          Android.startRingtone();
+         Android.startRingtone();
         },500);
           
       });

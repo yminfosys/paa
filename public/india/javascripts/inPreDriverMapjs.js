@@ -15,22 +15,26 @@ function initMap() {
     ////////WatchLocation///////    
     var driverLocTimer;
     function wachLocation(){
-        wachID=navigator.geolocation.watchPosition(function (position){
-        ////////Call Circle Center 
+      wachID= setInterval(function(){        
+        circleMarker(JSON.parse(getCookie("position")));
+       },5000);
+        // wachID=navigator.geolocation.watchPosition(function (position){
+        // ////////Call Circle Center 
        
-        circleMarker(position);         
-        clearTimeout(driverLocTimer);
+        // circleMarker(position);         
+        // clearTimeout(driverLocTimer);
                  
         
-        },function error(msg){
-            alert('Please enable your GPS position future.');       
-        },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
+        // },function error(msg){
+        //     alert('Please enable your GPS position future.');       
+        // },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
     }
   
    
     /////////Clear Watch location////
     function clearWachposition(){
-      navigator.geolocation.clearWatch(wachID);
+      clearInterval(wachID);
+     // navigator.geolocation.clearWatch(wachID);
     }
 
     
@@ -38,7 +42,8 @@ function initMap() {
     ///////////Circle Marker/////////
   
     function circleMarker(position){
-        var pos={lat:position.coords.latitude,lng:position.coords.longitude};      
+      var pos={lat:position.lat,lng:position.lng};    
+        //var pos={lat:position.coords.latitude,lng:position.coords.longitude};      
         if(!centerMarker){
             centerMarker=new google.maps.Marker({
             position: pos, 
