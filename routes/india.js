@@ -1188,6 +1188,16 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
 
 });
 
+
+///////PreDriver Cash Collection///////
+router.get('/preDriverCash', function(req, res, next) {
+  if(req.cookies.pilotID){
+   res.render('india/inPreDriverCashCollection')    
+  }else{
+    res.redirect('/india/preDrv/login')
+  }
+});
+
 /////For Neareast PreRide Driver//////
 router.post('/nearbyPrerideDriver', function(req, res, next) {
   database.index2Ddriver({},function(ss){
