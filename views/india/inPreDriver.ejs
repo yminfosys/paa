@@ -36,7 +36,11 @@
                 <span></span>
             </div>
             <ul class="sidebar-menue">
-            <li class="Dashboard"><a href="/business"> <i class="fa fa-dashboard" aria-hidden="true"></i><span> Dashboard</span></a></li>
+                <li class="Dashboard" style="border-bottom: 1px solid #FFF;">
+                    <div style="font-size: 25px; text-align: center;"><img style="width: 60px; height: 60px; border-radius: 30px;" src="/india/<%=driver.photo%>"></div>
+                    <div class="text-center"><%=driver.name%><br><%=driver.isdCode%><%=driver.mobileNumber%>  </div>
+                    
+                </li>
             <li class="Profile">
               <a href="#ProfileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                   <i class="fa fa-cogs"></i>
