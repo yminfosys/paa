@@ -1684,7 +1684,7 @@ res.status(200).send();
 
 ////////DriverLocationUpdate/////////
 router.post('/driverLocationUpdate', function(req, res, next) { 
-  res.cookie("position",JSON.stringify({lat:req.body.lat, lng:req.body.lng}),{maxAge: 5*60*1000 });
+  res.cookie("position",JSON.stringify({lat:req.body.lat, lng:req.body.lng, accuracy:req.body.accuracy}),{maxAge: 5*60*1000 });
   database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
     if(pilot){
       database.driverlocation.findOne({pilotID:req.cookies.pilotID},function(err,data){

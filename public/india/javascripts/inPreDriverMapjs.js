@@ -42,7 +42,7 @@ function initMap() {
     ///////////Circle Marker/////////
   
     function circleMarker(position){
-      var pos={lat:position.lat,lng:position.lng};    
+      var pos={lat:Number(position.lat) ,lng:Number(position.lng) };    
         //var pos={lat:position.coords.latitude,lng:position.coords.longitude};      
         if(!centerMarker){
             centerMarker=new google.maps.Marker({
@@ -57,7 +57,7 @@ function initMap() {
           });
           circle = new google.maps.Circle({
             map: map,
-            radius:position.coords.accuracy, ///   // 10 miles in metres
+            radius:Number(position.accuracy) , ///   // 10 miles in metres
             fillColor: 'rgb(73, 136, 161)',
             strokeColor:'rgb(198, 232, 235)',
             
@@ -69,7 +69,7 @@ function initMap() {
             centerMarker.setPosition(pos);              
                 map.setCenter(pos);
                 map.setZoom(14);
-            circle.setRadius(position.coords.accuracy);
+            circle.setRadius(Number(position.accuracy));
     
             // $("#centerLocation").val(''+position.coords.latitude+','+position.coords.longitude+'');
             // $("#pickuplatlong").val('{"lat":"'+position.coords.latitude+'","lng":"'+position.coords.longitude+'"}')        
