@@ -14,11 +14,14 @@ function initMap() {
         
     ////////WatchLocation///////    
     var driverLocTimer;
-    function wachLocation(){
-      circleMarker(JSON.parse(getCookie("position")));
-      wachID= setInterval(function(){        
+    function wachLocation(){      
+      if(getCookie("position")){
         circleMarker(JSON.parse(getCookie("position")));
-       },5000);
+        wachID= setInterval(function(){        
+          circleMarker(JSON.parse(getCookie("position")));
+         },5000);
+      }
+     
         // wachID=navigator.geolocation.watchPosition(function (position){
         // ////////Call Circle Center 
        
