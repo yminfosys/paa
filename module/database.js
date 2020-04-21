@@ -76,6 +76,7 @@ var custSchema = new mongoose.Schema({
     shereRideCapacity:[],
     regdate: { type: Date, default: Date.now },
     lastLogindate: { type: Date },
+    date: { type: Date, default: Date.now },
     location: {
       type: {
         type: String, // Don't do `{ location: { type: String } }`
@@ -107,6 +108,11 @@ var pilotSchema = new mongoose.Schema({
   isdCode:String,    
   pilotID:String,
   pilotRating:String,
+  date: { type: Date, default: Date.now },
+  /////Balance Ledger Check//
+   lastCheckDate:{type:Date},
+   lastCheckCashCollcetion:Number,
+   lastCheckPayment:Number,
   /////price per km 
   pilotGetperKm:String,
   accountStatus:String,
@@ -128,7 +134,7 @@ var pilotSchema = new mongoose.Schema({
   gender:String,
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
   orderStage:String,
-  preRideTotalTime:Number,
+  preRideTotalTime:Number,  
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`
@@ -147,6 +153,15 @@ pilotSchema.plugin(autoIncrement.plugin, { model: 'pilotcollections', field: 'pi
 
 var pilotmodul = mongoose.model('pilotcollections', pilotSchema);
 
+var DriverPaymentSchema = new mongoose.Schema({
+  pilotID:String,
+  date: { type: Date, default: Date.now },
+  paymentAmount:Number,
+  
+  
+
+});
+var DriverPaymentmodul = mongoose.model('driverpaymentcollections', DriverPaymentSchema);
 
 ///Driver Attendence
 var DutyLogSchema = new mongoose.Schema({     
@@ -206,6 +221,7 @@ var rideSchema = new mongoose.Schema({
   paymentBy:String,
   driverCashCollectio:String,
   driverCashDeposit:String,
+  driverCashDepositDate:{type:Date},
   discount:String,
   driverpayout:String,
   driverIncentiv:String,
@@ -239,6 +255,8 @@ var walletOrderCountSchema = new mongoose.Schema({
 });
 
 var walletOrderCountmodul = mongoose.model('walletOrderCountcollections', walletOrderCountSchema);
+
+
 
 ///Wallet and Buy KM Recharge Schema 
 var WalletBuyKMSchema = new mongoose.Schema({ 
@@ -391,6 +409,7 @@ var driverlocationmodul = mongoose.model('driverlocationcollections', driverloca
 
 module.exports.customer=custmodul;
 module.exports.pilot=pilotmodul;
+module.exports.DriverPayment=DriverPaymentmodul;
 
 module.exports.index2Ddriver=index2Ddriver;
 module.exports.driverlocation=driverlocationmodul;

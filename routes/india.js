@@ -1192,11 +1192,141 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
 ///////PreDriver Cash Collection///////
 router.get('/preDriverCash', function(req, res, next) {
   if(req.cookies.pilotID){
-   res.render('india/inPreDriverCashCollection')    
+    preRideCashDueCalculation(req.cookies.pilotID,function(value){ 
+          
+      res.render('india/inPreDriverCashCollection',{previousDue:value.previousDue,dailyCollection:value.dailyCollection })
+    })
+       
   }else{
     res.redirect('/india/preDrv/login')
   }
 });
+
+router.get('/resetpilot', function(req, res, next) {
+  if(req.cookies.pilotID){
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{date:new Date()}},function(e,d){
+      res.send("Reset"+req.cookies.pilotID )
+    })
+  } 
+})
+
+
+
+function preRideCashDueCalculation(pilotID,cb){
+var StartTime="";
+    var EndTime="";
+    var CashCollection=0;
+    var payment=0;
+    database.pilot.findOne({pilotID:pilotID},function(e, pilot){
+      if(pilot.lastCheckDate){
+        /////Check Balance From Last Checking Date
+        StartTime=moment(pilot.lastCheckDate).utc();
+        EndTime = moment().startOf('day').utc();
+       // var todayend = moment().endOf('day').utc();
+        database.ride.find({
+          date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+          pilotID:pilotID,
+          callbookingStatus:"complete"
+        },function(er , balance){
+          if(balance.length >0){
+            balance.forEach(function(val, key ,ary){
+              if(val.driverCashCollectio){
+                CashCollection=Number(CashCollection)+Number(val.driverCashCollectio);
+              }
+              if(val.driverCashDeposit){
+                payment=Number(payment)+Number(val.driverCashDeposit)
+              }
+              if(key===ary.length -1){
+                var previousDue=Number(CashCollection)-Number(payment);
+                dailyCashCollection(pilotID,function(cash){
+                  cb({previousDue:previousDue,dailyCollection:cash});
+                })
+              }
+          });
+          }else{
+            dailyCashCollection(pilotID,function(cash){
+              cb({previousDue:0,dailyCollection:cash});
+            })
+          }
+        });
+      }else{
+        /////Check Balance From Starting
+        if(pilot.date.getDate()==new Date().getDate()){
+          dailyCashCollection(pilotID,function(cash){
+            cb({previousDue:0,dailyCollection:cash});
+          });
+        }else{       
+        StartTime=moment(pilot.date).utc();
+        EndTime = moment().startOf('day').utc();
+       // var todayend = moment().endOf('day').utc();
+        database.ride.find({
+          date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+          pilotID:pilotID,
+          callbookingStatus:"complete"
+        },function(er , balance){
+          if(balance.length >0){
+            balance.forEach(function(val,key,ary){
+              if(val.driverCashCollectio){
+                CashCollection=Number(CashCollection)+Number(val.driverCashCollectio);
+              }
+              if(val.driverCashDeposit){
+                payment=Number(payment)+Number(val.driverCashDeposit)
+              }
+
+              if(key===ary.length -1){
+                var previousDue=Number(CashCollection)-Number(payment);
+                dailyCashCollection(pilotID,function(cash){
+                  cb({previousDue:previousDue,dailyCollection:cash});
+                })
+              }
+          });
+          } else{
+            dailyCashCollection(pilotID,function(cash){
+              cb({previousDue:0,dailyCollection:cash});
+            })
+          }      
+          
+        });
+      }
+
+      }   /////
+      
+    })
+}
+
+function dailyCashCollection(pilotID,cb){
+  var CashCollection=0;  
+  var payment=0;      
+        var StartTime = moment().startOf('day').utc();
+        var EndTime = moment().endOf('day').utc();
+        database.ride.find({
+          date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+          pilotID:pilotID,
+          callbookingStatus:"complete"
+        },function(er , balance){
+          if(balance.length > 0){
+            balance.forEach(function(val,key,ary){
+              if(val.driverCashCollectio){
+                CashCollection=Number(CashCollection)+Number(val.driverCashCollectio);
+              }
+              if(val.driverCashDeposit){
+                payment=Number(payment)+Number(val.driverCashDeposit)
+              }
+  
+              if(key===ary.length -1){
+                var cash=Number(CashCollection)-Number(payment);
+                cb(cash);
+              }
+            });
+          }else{
+            cb(0);
+          }
+         
+
+        });
+
+}
+
 
 /////For Neareast PreRide Driver//////
 router.post('/nearbyPrerideDriver', function(req, res, next) {
