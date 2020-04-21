@@ -358,6 +358,6 @@ function finishride(indx){
         
 }
 
-function myTestFunction(){
-    alert("Teat Android");
-}
+///////Pre Ride Cash Collection/////////////
+
+
