@@ -1410,8 +1410,28 @@ if(d){
 });
 }
 
+////////Start Car LogBook Reading///////
 
-
+router.post('/startCarLoogbook', function(req, res, next) { 
+  database.Carlogbook.findOne({bookingID:req.body.bookingID},function(er, carlock){
+    if(!carlock){
+      database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){  
+        var position=JSON.parse(req.cookies.position) ;
+        database.Carlogbook({
+         bookingID:req.body.bookingID,
+         pilotID :pilot.pilotID,
+         travelmod:pilot.travelmod,
+         DriverType:"preRide",  
+         startlatlng: [Number(position.lat), Number(position.lng)],  
+         loogBookStatus:"start"
+        }).save(function(err){
+         res.send("LoogBook Created");
+        });   
+     
+       });
+    }
+  });
+ })
 
 
 ////////Create New Pre Ride Booking/////

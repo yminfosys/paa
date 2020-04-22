@@ -188,12 +188,19 @@ var DutyLogmodul = mongoose.model('DutyLogcollections', DutyLogSchema);
 
 ///Driver Car LogBook
 var CarlogbookSchema = new mongoose.Schema({     
-  pilotID:String, 
-  travalKM:String,
-  StartLocation:String,
-  EndLocation:String,
-  date: { type: Date, default: Date.now },
-  remarks:String 
+  bookingID:  String,
+  pilotID :String,
+  travelmod:String,
+  DriverType:String,  
+  startlatlng: [],    
+  droplatlng:[],
+  kmTravels:String,
+  perltrFulePrice:String,
+  fuleConsumption:String,
+  fuleConsumptionPaid:String,
+  fuleConsumptionPaidDate:{type:Date},
+  loogBookStatus:String,
+  date: { type: Date, default: Date.now } 
   
 });
 
