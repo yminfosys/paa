@@ -205,6 +205,7 @@ var Carlogbookmodul = mongoose.model('Carlogbookcollections', CarlogbookSchema);
 var rideSchema = new mongoose.Schema({ 
   bookingID:  String,
   pilotID :String,
+  travelmod:String,
   DriverType:String,
   CustID:String,
   picupaddress:String,

@@ -1192,10 +1192,27 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
 ///////PreDriver Cash Collection///////
 router.get('/preDriverCash', function(req, res, next) {
   if(req.cookies.pilotID){
-    preRideCashDueCalculation(req.cookies.pilotID,function(value){ 
-          
-      res.render('india/inPreDriverCashCollection',{previousDue:value.previousDue,dailyCollection:value.dailyCollection })
+    var newPreviousDue=0;
+    database.pilot.findOne({pilotID:req.cookies.pilotID},function(e,pilot){
+      preRideCashDueCalculation({pilotID:pilot.pilotID,travelmod:pilot.travelmod},function(value){
+          if(pilot.lastCheckCashCollcetion){
+            var lastCheckCashCollcetion=pilot.lastCheckCashCollcetion;
+          }else{
+            var lastCheckCashCollcetion=0;
+          }
+         
+        newPreviousDue=Number(lastCheckCashCollcetion)+Number(value.previousDue); 
+        console.log(" newPreviousDue", newPreviousDue)
+        database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{ 
+          lastCheckDate:new Date(),
+          lastCheckCashCollcetion:newPreviousDue       
+      }},function(e,d){
+        res.render('india/inPreDriverCashCollection',{previousDue:newPreviousDue,dailyCollection:value.dailyCollection })
+      })
+    });
     })
+
+    
        
   }else{
     res.redirect('/india/preDrv/login')
@@ -1212,12 +1229,12 @@ router.get('/resetpilot', function(req, res, next) {
 
 
 
-function preRideCashDueCalculation(pilotID,cb){
+function preRideCashDueCalculation(req,cb){
 var StartTime="";
     var EndTime="";
     var CashCollection=0;
     var payment=0;
-    database.pilot.findOne({pilotID:pilotID},function(e, pilot){
+    database.pilot.findOne({pilotID:req.pilotID},function(e, pilot){
       if(pilot.lastCheckDate){
         /////Check Balance From Last Checking Date
         StartTime=moment(pilot.lastCheckDate).utc();
@@ -1225,7 +1242,8 @@ var StartTime="";
        // var todayend = moment().endOf('day').utc();
         database.ride.find({
           date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
-          pilotID:pilotID,
+          pilotID:req.pilotID,
+          travelmod:req.travelmod,
           callbookingStatus:"complete"
         },function(er , balance){
           if(balance.length >0){
@@ -1238,13 +1256,13 @@ var StartTime="";
               }
               if(key===ary.length -1){
                 var previousDue=Number(CashCollection)-Number(payment);
-                dailyCashCollection(pilotID,function(cash){
+                dailyCashCollection({pilotID:req.pilotID,travelmod:req.travelmod},function(cash){
                   cb({previousDue:previousDue,dailyCollection:cash});
                 })
               }
           });
           }else{
-            dailyCashCollection(pilotID,function(cash){
+            dailyCashCollection({pilotID:req.pilotID,travelmod:req.travelmod},function(cash){
               cb({previousDue:0,dailyCollection:cash});
             })
           }
@@ -1252,7 +1270,7 @@ var StartTime="";
       }else{
         /////Check Balance From Starting
         if(pilot.date.getDate()==new Date().getDate()){
-          dailyCashCollection(pilotID,function(cash){
+          dailyCashCollection(req.pilotID,function(cash){
             cb({previousDue:0,dailyCollection:cash});
           });
         }else{       
@@ -1261,7 +1279,8 @@ var StartTime="";
        // var todayend = moment().endOf('day').utc();
         database.ride.find({
           date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
-          pilotID:pilotID,
+          pilotID:req.pilotID,
+          travelmod:req.travelmod,
           callbookingStatus:"complete"
         },function(er , balance){
           if(balance.length >0){
@@ -1275,13 +1294,13 @@ var StartTime="";
 
               if(key===ary.length -1){
                 var previousDue=Number(CashCollection)-Number(payment);
-                dailyCashCollection(pilotID,function(cash){
+                dailyCashCollection({pilotID:req.pilotID,travelmod:req.travelmod},function(cash){
                   cb({previousDue:previousDue,dailyCollection:cash});
                 })
               }
           });
           } else{
-            dailyCashCollection(pilotID,function(cash){
+            dailyCashCollection({pilotID:req.pilotID,travelmod:req.travelmod},function(cash){
               cb({previousDue:0,dailyCollection:cash});
             })
           }      
@@ -1294,14 +1313,15 @@ var StartTime="";
     })
 }
 
-function dailyCashCollection(pilotID,cb){
+function dailyCashCollection(req,cb){
   var CashCollection=0;  
   var payment=0;      
         var StartTime = moment().startOf('day').utc();
         var EndTime = moment().endOf('day').utc();
         database.ride.find({
           date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
-          pilotID:pilotID,
+          pilotID:req.pilotID,
+          travelmod:req.travelmod,
           callbookingStatus:"complete"
         },function(er , balance){
           if(balance.length > 0){
@@ -1604,7 +1624,7 @@ router.post('/preRideFinish', function(req, res, next) {
     database.pilot.findOne({pilotID:req.cookies.pilotID},function(re, driver){
       if(driver){
         var endTime=new Date();
-        database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:"finishRide",endTime:endTime}},function(er, Booking){      
+        database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:"finishRide",endTime:endTime,travelmod:driver.travelmod}},function(er, Booking){      
         ///////Update pilot TotalTime///////
         var newTotaltime=Number(driver.preRideTotalTime) - Number(Booking.travalTime);
         database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
