@@ -214,8 +214,13 @@
     list-style: none;
     color: #767676;
   }
-  #document{
-    
+  #Basic-detail{
+    width: 100%;
+    float: left;
+    padding-left: 0px;
+    padding-right: 0px; 
+  }
+  #document{    
     width: 100%;
     float: left;
     padding-left: 0px;
@@ -277,12 +282,7 @@
     margin: 0;
   }
   
-  #Basic-detail{
-    height: 210px;
-    float: left;
-    padding-left: 0px;
-    padding-right: 0px; 
-  }
+ 
   
   @media (min-width: 320px) and (max-width: 640px){
     .profile-main{

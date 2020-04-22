@@ -74,6 +74,15 @@ $(document).ready(function(){
           </div>\
           <button onclick="verifyDriver()" type="button" class="btn btn-large btn-block btn-success">Verify</button>');
 
+          $("#BacicDetals").html(' <div class="thumbnail">\
+          <img data-src="#" alt="">\
+          <div class="caption">\
+            <h5>Basic Details</h5>\
+            <hr>\
+            <p>Engine Type : '+data.vichelEnginType+'</p>\
+            <p>Mileage (KM/LTR) : '+data.enginMilege+'</p>\
+          </div>\
+        </div>');
         }else{
             $("#mobile").css({"background-color": "#c44630","color":"#FFF"});
         }
@@ -97,6 +106,19 @@ $(document).ready(function(){
               $("#mobile").css({"background-color": "#c44630","color":"#FFF"});
           }
     })   
+  }
+
+
+  function submitEngintype(){
+    var engintype=$("#engintype").val();
+    var milege=$("#milege").val();
+    var mobile=$("#mobile").val();
+    var isd='+91';
+    $.post('/admin/updateBasicDetails',{engintype:engintype,milege:milege,mobile:mobile,isd:isd},function(data){
+      console.log(data);
+      $("#mssg").html(data);
+    });
+
   }
 
   

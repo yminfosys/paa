@@ -109,10 +109,14 @@ var pilotSchema = new mongoose.Schema({
   pilotID:String,
   pilotRating:String,
   date: { type: Date, default: Date.now },
+  ///////Fule////////
+  vichelEnginType:String,  
+  enginMilege:String,
   /////Balance Ledger Check//
    lastCheckDate:{type:Date},
    lastCheckCashCollcetion:Number,
    lastCheckPayment:Number,
+   lastCheckFuleconsumption:Number,
   /////price per km 
   pilotGetperKm:String,
   accountStatus:String,
@@ -134,7 +138,9 @@ var pilotSchema = new mongoose.Schema({
   gender:String,
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
   orderStage:String,
-  preRideTotalTime:Number,  
+  preRideTotalTime:Number,
+
+   
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`
@@ -205,6 +211,15 @@ var CarlogbookSchema = new mongoose.Schema({
 });
 
 var Carlogbookmodul = mongoose.model('Carlogbookcollections', CarlogbookSchema);
+
+/// Daily Prtrol Desel prise
+var petroldeselSchema = new mongoose.Schema({     
+  petrolPerLtr:String,
+  deselPerLtr:String,
+  cngPrice: String  
+});
+
+var petroldeselmodul = mongoose.model('petroldeselcollections', petroldeselSchema);
 
 
 
@@ -418,6 +433,7 @@ var driverlocationmodul = mongoose.model('driverlocationcollections', driverloca
 module.exports.customer=custmodul;
 module.exports.pilot=pilotmodul;
 module.exports.DriverPayment=DriverPaymentmodul;
+module.exports.petroldesel=petroldeselmodul;
 
 module.exports.index2Ddriver=index2Ddriver;
 module.exports.driverlocation=driverlocationmodul;

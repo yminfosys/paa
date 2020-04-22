@@ -1742,7 +1742,7 @@ router.post('/preRideFinish', function(req, res, next) {
           travelmod:carLog.travelmod
       },function(result){
        var distance=result.rows[0].elements[0].distance.value;
-        distance=parseInt(distance/1000);
+        distance=parseInt(distance/1000)+1;
         database.Carlogbook.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{
           droplatlng:[position.lat, position.lng],
           kmTravels:distance,

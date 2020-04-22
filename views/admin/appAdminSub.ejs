@@ -107,40 +107,45 @@
                         <li class="tab-link" data-tab="bank-details">Bank Details</li>
                         <li class="tab-link" data-tab="document">Documents</li>
                       </ul>
-                      <div id="Basic-detail" class="tab-content current">
-                        <div class="skill-box">
-                          <ul>
-                          <li><strong>My Core Skills:</strong></li>
-                          <li>INBOUND MARKETING<i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></li>
-                          <li>ENTERPRENEURSHIP<i class="fa fa-star" aria-hidden="true"></i><i class="fa fa-star" aria-hidden="true"></i></li>
-                          <li>GROWTH MARKETING<i class="fa fa-star" aria-hidden="true"></i></li>
-                          </ul>		
-                        </div>
-                        <div class="bio-box">
-                          <div class="heading">
-                            <p>Professional Bio
-                            <label>10 Year Experience</label></p>
+                      <div id="Basic-detail" class="tab-content current"> 
+                        <div class="container-fluid">                          
+                          <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                              <div class="form-group">
+                                <label>Engine Type : </label>
+                                <select id="engintype" class="form-control">
+                                  <option value="Petrol">PETROL</option>
+                                  <option value="Diesel">DIESEL</option>
+                                  <option value="CNG">CNG</option>
+                                </select>                                
+                              </div>
+
+                              <div class="form-group">
+                                <label>Mileage (KM/LTR) : </label>
+                                <input type="text" id="milege" class="form-control">                                
+                              </div>
+                              <button onclick="submitEngintype()" class="btn btn-primary">Submit</button>
+                              <div id="mssg"></div>
+                            </div>
+
+                            <div id="BacicDetals" class="col-xs-12 col-sm-12 col-md-6 col-lg-6">                            
+                              
+                                <div class="thumbnail">
+                                  <img data-src="#" alt="">
+                                  <div class="caption">
+                                    <h5>Besic Details</h5>
+                                    <hr>
+                                    <p>Engin Type : Petrol</p>
+                                    <p>Milege (KM/LTR) : 55</p>
+                                   
+                                  </div>
+                                </div>
+                              
+                              
+
+                            </div>
                           </div>
-                          <div class="desc">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                            quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo.
-                          </div>
-                        </div>
-                        <div class="detail-box">
-                          <p>Detail</p>
-                          <ul class="ul-first">
-                            <li>Birth date</li>
-                            <li>City</li>
-                            <li>Country</li>
-                            <li>Contact No</li>
-                          </ul>
-                          <ul class="ul-second">
-                            <li>8 March 1997</li>
-                            <li>Jamanagar</li>
-                            <li>California</li>
-                            <li>9900990087</li>
-                          </ul>
+                          
                         </div>
                       </div>
                       <div id="bank-details" class="tab-content">

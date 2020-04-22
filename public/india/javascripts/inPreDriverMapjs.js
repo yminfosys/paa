@@ -116,9 +116,6 @@ function initMap() {
       // $.post('/preRideDutyInitiate',{},function(data){
       //   console.log(data);        
       // })
-
-      
-
       wachLocation();
       setCookie("setSystem","ONLINE",30);
       /////Android Interface

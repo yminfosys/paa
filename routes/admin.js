@@ -98,7 +98,18 @@ router.get('/sub', function(req, res, next) {
       
     });
     
-  });  
+  }); 
+  
+  router.post('/updateBasicDetails', function(req, res, next) {
+    database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile,isdCode:req.body.isd},{$set:{
+      vichelEnginType:req.body.engintype,  
+      enginMilege:req.body.milege,
+    }},function(err,data){
+      res.send("Update Successfull");
+    });
+
+  });
+  
   
 
 module.exports = router;
