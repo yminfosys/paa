@@ -287,6 +287,8 @@ function clineLocated(indx){
             $("#clineLocated"+indx+"").css({"display":"none"});
             $("#startRide"+indx+"").css({"display":"block"});
             $("#listItem"+indx+"").css({"background-color":"#91bb2f"})
+
+            $.post("/india/startCarLoogbook",{bookingID:bookingID},function(data){console.log(data)});
         }
 
     });

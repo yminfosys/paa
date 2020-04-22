@@ -1732,7 +1732,30 @@ router.post('/preRideFinish', function(req, res, next) {
       callbookingStatus:"complete",
       driverBusy:""
     }},function(err, data){
-      res.send(data);
+      //////Finish Logbook///////
+      var position=JSON.parse(req.cookies.position) ;
+      database.Carlogbook.findOne({bookingID:req.body.bookingID},function(e, carLog){
+        googleApi.distance({
+          origins:""+carLog.startlatlng[0]+","+carLog.startlatlng[1]+"",
+          destinations:""+position.lat+","+position.lng+"",
+          apik:process.env.API_KEY,
+          travelmod:carLog.travelmod
+      },function(result){
+       var distance=result.rows[0].elements[0].distance.value;
+        distance=parseInt(distance/1000);
+        database.Carlogbook.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{
+          droplatlng:[position.lat, position.lng],
+          kmTravels:distance,
+          perltrFulePrice:"75",
+          fuleConsumption:"10",          
+          loogBookStatus:"complete",
+        }},function(e, d){
+          res.send(data);
+         }) 
+
+        })
+      });
+     
     })
   });
 
