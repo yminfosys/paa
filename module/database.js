@@ -110,6 +110,8 @@ var pilotSchema = new mongoose.Schema({
   pilotRating:String,
   date: { type: Date, default: Date.now },
   ///////Fule////////
+  lastFuleCheckDate:{type:Date},
+  lastCheckFuleconsumption:Number,
   vichelEnginType:String,  
   enginMilege:String,
   fulePrice:String,
@@ -118,7 +120,7 @@ var pilotSchema = new mongoose.Schema({
    lastCheckDate:{type:Date},
    lastCheckCashCollcetion:Number,
    lastCheckPayment:Number,
-   lastCheckFuleconsumption:Number,
+  
   /////price per km 
   pilotGetperKm:String,
   accountStatus:String,
@@ -140,9 +142,7 @@ var pilotSchema = new mongoose.Schema({
   gender:String,
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
   orderStage:String,
-  preRideTotalTime:Number,
-
-   
+  preRideTotalTime:Number,   
   location: {
     type: {
       type: String, // Don't do `{ location: { type: String } }`
@@ -204,6 +204,7 @@ var CarlogbookSchema = new mongoose.Schema({
   droplatlng:[],
   kmTravels:String,
   perltrFulePrice:String,
+  enginMilege:String,
   fuleConsumption:String,
   fuleConsumptionPaid:String,
   fuleConsumptionPaidDate:{type:Date},

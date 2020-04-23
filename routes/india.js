@@ -1193,6 +1193,7 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
 router.get('/preDriverCash', function(req, res, next) {
   if(req.cookies.pilotID){
     var newPreviousDue=0;
+    var newPendingConsumption=0;
     database.pilot.findOne({pilotID:req.cookies.pilotID},function(e,pilot){
       preRideCashDueCalculation({pilotID:pilot.pilotID,travelmod:pilot.travelmod},function(value){
           if(pilot.lastCheckCashCollcetion){
@@ -1203,12 +1204,29 @@ router.get('/preDriverCash', function(req, res, next) {
          
         newPreviousDue=Number(lastCheckCashCollcetion)+Number(value.previousDue); 
         console.log(" newPreviousDue", newPreviousDue)
-        database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{ 
-          lastCheckDate:new Date(),
-          lastCheckCashCollcetion:newPreviousDue       
-      }},function(e,d){
-        res.render('india/inPreDriverCashCollection',{previousDue:newPreviousDue,dailyCollection:value.dailyCollection })
-      })
+        fuleConsumptionCalculation({pilotID:pilot.pilotID,travelmod:pilot.travelmod},function(consum){
+          if(pilot.lastCheckFuleconsumption){
+            var lastCheckFuleconsumption=pilot.lastCheckFuleconsumption;
+          }else{
+            var lastCheckFuleconsumption=0;
+          }
+          newPendingConsumption=Number(lastCheckFuleconsumption)+Number(consum.previousConsumption); 
+            database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{ 
+              lastCheckDate:new Date(),
+              lastCheckCashCollcetion:newPreviousDue,
+              lastFuleCheckDate:new Date(),
+              lastCheckFuleconsumption:newPendingConsumption       
+          }},function(e,d){
+            res.render('india/inPreDriverCashCollection',{
+              previousDue:newPreviousDue,
+              dailyCollection:value.dailyCollection,
+              PendingConsumption:newPendingConsumption,
+              dailyConsum:consum.dailyConsum
+
+            })
+          })
+        })
+        
     });
     })
 
@@ -1227,7 +1245,124 @@ router.get('/resetpilot', function(req, res, next) {
   } 
 })
 
+function fuleConsumptionCalculation(req,cb){
+  var StartTime="";
+  var EndTime="";
+  var consumption=0;
+  var paidConsumption=0;
+  database.pilot.findOne({pilotID:req.pilotID},function(e, pilot){
+    if(pilot.lastFuleCheckDate){
+      /////Check From Last Checking Date/////
+      StartTime=moment(pilot.lastFuleCheckDate).utc();
+      EndTime = moment().startOf('day').utc();
+      database.Carlogbook.find({
+        date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+        pilotID:req.pilotID,
+        travelmod:req.travelmod,
+        loogBookStatus:"complete",
+        DriverType : "preRide"
+      },function(er,logbook){
+        if(logbook.length > 0){
+          logbook.forEach(function(val, key ,ary){
+            if(val.fuleConsumption){
+              consumption=Number(consumption)+Number(val.fuleConsumption);
+            }
+            if(val.fuleConsumptionPaid){
+              paidConsumption=Number(paidConsumption)+Number(val.fuleConsumptionPaid)
+            }
+            if(key===ary.length -1){
+              var previousConsumption=Number(consumption)-Number(paidConsumption);
+              dailyConsumption({pilotID:req.pilotID,travelmod:req.travelmod},function(consum){
+                cb({previousConsumption:previousConsumption,dailyConsum:consum});
+              })
+            }
+          })
+        }else{
+          dailyConsumption({pilotID:req.pilotID,travelmod:req.travelmod},function(consum){
+            cb({previousConsumption:0,dailyConsum:consum});
+          })
+          
+        }
+      });
 
+    }else{
+      //////Check From Begining//////
+      if(pilot.date.getDate()==new Date().getDate()){
+        dailyConsumption({pilotID:req.pilotID,travelmod:req.travelmod},function(consum){
+          cb({previousConsumption:0,dailyConsum:consum});
+        })
+      }else{       
+      StartTime=moment(pilot.date).utc();
+      EndTime = moment().startOf('day').utc();
+      database.Carlogbook.find({
+        date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+        pilotID:req.pilotID,
+        travelmod:req.travelmod,
+        loogBookStatus:"complete",
+        DriverType : "preRide"
+      },function(er,logbook){
+        if(logbook.length > 0){
+          logbook.forEach(function(val, key ,ary){
+            if(val.fuleConsumption){
+              consumption=Number(consumption)+Number(val.fuleConsumption);
+            }
+            if(val.fuleConsumptionPaid){
+              paidConsumption=Number(paidConsumption)+Number(val.fuleConsumptionPaid)
+            }
+            if(key===ary.length -1){
+              var previousConsumption=Number(consumption)-Number(paidConsumption);
+              dailyConsumption({pilotID:req.pilotID,travelmod:req.travelmod},function(consum){
+                cb({previousConsumption:previousConsumption,dailyConsum:consum});
+              })
+            }
+          })
+        }else{
+          dailyConsumption({pilotID:req.pilotID,travelmod:req.travelmod},function(consum){
+            cb({previousConsumption:0,dailyConsum:consum});
+          })
+          
+        }
+      });
+
+      }
+
+
+    }
+
+  });
+}
+
+function dailyConsumption(req,cb){
+  var consumption=0;
+  var paidConsumption=0;
+
+  var StartTime = moment().startOf('day').utc();
+  var EndTime = moment().endOf('day').utc();
+  database.Carlogbook.find({
+    date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+    pilotID:req.pilotID,
+    travelmod:req.travelmod,
+    loogBookStatus:"complete",
+    DriverType : "preRide"
+  },function(er , logbook){
+    if(logbook.length > 0){
+      logbook.forEach(function(val, key ,ary){
+        if(val.fuleConsumption){
+          consumption=Number(consumption)+Number(val.fuleConsumption);
+        }
+        if(val.fuleConsumptionPaid){
+          paidConsumption=Number(paidConsumption)+Number(val.fuleConsumptionPaid)
+        }
+        if(key===ary.length -1){
+          var previousConsumption=Number(consumption)-Number(paidConsumption);          
+            cb(previousConsumption);         
+        }
+      })
+    }else{
+      cb(0);
+    }
+  });
+}
 
 function preRideCashDueCalculation(req,cb){
 var StartTime="";
@@ -1244,7 +1379,8 @@ var StartTime="";
           date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
           pilotID:req.pilotID,
           travelmod:req.travelmod,
-          callbookingStatus:"complete"
+          callbookingStatus:"complete",
+          DriverType : "preRide"
         },function(er , balance){
           if(balance.length >0){
             balance.forEach(function(val, key ,ary){
@@ -1270,7 +1406,7 @@ var StartTime="";
       }else{
         /////Check Balance From Starting
         if(pilot.date.getDate()==new Date().getDate()){
-          dailyCashCollection(req.pilotID,function(cash){
+          dailyCashCollection({pilotID:req.pilotID,travelmod:req.travelmod},function(cash){
             cb({previousDue:0,dailyCollection:cash});
           });
         }else{       
@@ -1281,7 +1417,8 @@ var StartTime="";
           date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
           pilotID:req.pilotID,
           travelmod:req.travelmod,
-          callbookingStatus:"complete"
+          callbookingStatus:"complete",
+          DriverType : "preRide"
         },function(er , balance){
           if(balance.length >0){
             balance.forEach(function(val,key,ary){
@@ -1322,7 +1459,8 @@ function dailyCashCollection(req,cb){
           date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
           pilotID:req.pilotID,
           travelmod:req.travelmod,
-          callbookingStatus:"complete"
+          callbookingStatus:"complete",
+          DriverType : "preRide"
         },function(er , balance){
           if(balance.length > 0){
             balance.forEach(function(val,key,ary){
@@ -1772,16 +1910,24 @@ router.post('/preRideFinish', function(req, res, next) {
       },function(result){
        var distance=result.rows[0].elements[0].distance.value;
         distance=parseInt(distance/1000)+1;
+        
+       database.pilot.findOne({pilotID:req.cookies.pilotID},function(e, driver){
         var fuleConsumption=0;
+         if(driver.enginMilege){
+          fuleConsumption=(Number(driver.fulePrice)/ Number(driver.enginMilege))*Number(distance);
+         }        
         database.Carlogbook.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{
           droplatlng:[position.lat, position.lng],
           kmTravels:distance,
-          perltrFulePrice:"75",
+          perltrFulePrice:driver.fulePrice,
+          enginMilege:driver.enginMilege,
           fuleConsumption:fuleConsumption,          
           loogBookStatus:"complete",
         }},function(e, d){
           res.send(data);
          }) 
+       }); 
+        
 
         })
       });
