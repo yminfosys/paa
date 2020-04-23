@@ -1362,7 +1362,7 @@ function dailyConsumption(req,cb){
         if(key===ary.length -1){
           var previousConsumption=Number(consumption)-Number(paidConsumption); 
 
-            cb({previousConsumption:previousConsumption,totalkm:totalkm,mileagr:mileage,fulePrice:fulePrice});         
+            cb({dailyConsm:previousConsumption,totalkm:totalkm,mileage:mileage,fulePrice:fulePrice});         
         }
       })
     }else{
