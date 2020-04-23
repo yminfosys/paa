@@ -106,9 +106,10 @@ function initMap() {
             console.log(data)
             setCookie("setSystem","OFFLINE",30);
           });
-          ////////Call CashCollection//////
-          window.location.href="../india/preDriverCash?offline=1";
+         
         },1000);
+         ////////Call CashCollection//////         
+         window.location.href="../india/preDriverCash?offline=1";
         
       }
     }); 
