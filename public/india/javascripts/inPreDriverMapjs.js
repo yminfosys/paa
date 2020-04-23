@@ -95,21 +95,21 @@ function initMap() {
       if(document.getElementById("toggle").checked == true){        
         onlineExicute();
       }else{
-        andRoid(0);
-        $("#Offline").css({"display":"block"});
-        $("#map").css({"display":"none"});
-        $("#nofofride").css({"display":"none"});
-        clearWachposition();
+        andRoid(0);        
                 
         setTimeout(function(){
           $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
             console.log(data)
             setCookie("setSystem","OFFLINE",30);
+            $("#Offline").css({"display":"block"});
+            $("#map").css({"display":"none"});
+            $("#nofofride").css({"display":"none"});
+            clearWachposition();
+             ////////Call CashCollection//////         
+              window.location.href="../india/preDriverCash?offline=1";
           });
-         
         },1000);
-         ////////Call CashCollection//////         
-         window.location.href="../india/preDriverCash?offline=1";
+         
         
       }
     }); 
