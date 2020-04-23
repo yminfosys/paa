@@ -1368,7 +1368,7 @@ function dailyConsumption(req,cb){
         }
       })
     }else{
-      cb(0);
+      cb({dailyConsm:0,totalkm:0,mileage:mileage,fulePrice:fulePrice});
     }
   });
 }
