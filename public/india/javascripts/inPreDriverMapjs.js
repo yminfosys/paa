@@ -105,7 +105,9 @@ function initMap() {
           $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
             console.log(data)
             setCookie("setSystem","OFFLINE",30);
-          })
+          });
+          ////////Call CashCollection//////
+          window.location.href="../india/preDriverCash?offline=1";
         },1000);
         
       }

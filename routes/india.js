@@ -1192,6 +1192,11 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
 ///////PreDriver Cash Collection///////
 router.get('/preDriverCash', function(req, res, next) {
   if(req.cookies.pilotID){
+    var offline= req.quary.offline;
+    var exit=0;
+    if(offline){
+      exit="exit";
+    }
     var newPreviousDue=0;
     var newPendingConsumption=0;
     database.pilot.findOne({pilotID:req.cookies.pilotID},function(e,pilot){
@@ -1221,7 +1226,8 @@ router.get('/preDriverCash', function(req, res, next) {
               previousDue:newPreviousDue,
               dailyCollection:value.dailyCollection,
               PendingConsumption:newPendingConsumption,
-              dailyConsum:consum.dailyConsum
+              dailyConsum:consum.dailyConsum,
+              exit:exit
 
             })
           })
