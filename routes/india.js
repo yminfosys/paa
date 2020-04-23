@@ -1335,6 +1335,9 @@ function fuleConsumptionCalculation(req,cb){
 function dailyConsumption(req,cb){
   var consumption=0;
   var paidConsumption=0;
+  var totalkm=0;
+  var mileage=0;
+  var fulePrice=0;
 
   var StartTime = moment().startOf('day').utc();
   var EndTime = moment().endOf('day').utc();
@@ -1349,13 +1352,17 @@ function dailyConsumption(req,cb){
       logbook.forEach(function(val, key ,ary){
         if(val.fuleConsumption){
           consumption=Number(consumption)+Number(val.fuleConsumption);
+          totalkm=Number(totalkm)+Number(val.kmTravels);
+          mileage=val.enginMilege;
+          fulePrice=val.perltrFulePrice;
         }
         if(val.fuleConsumptionPaid){
           paidConsumption=Number(paidConsumption)+Number(val.fuleConsumptionPaid)
         }
         if(key===ary.length -1){
-          var previousConsumption=Number(consumption)-Number(paidConsumption);          
-            cb(previousConsumption);         
+          var previousConsumption=Number(consumption)-Number(paidConsumption); 
+
+            cb({previousConsumption:previousConsumption,totalkm:totalkm,mileagr:mileage,fulePrice:fulePrice});         
         }
       })
     }else{
