@@ -112,6 +112,7 @@ var pilotSchema = new mongoose.Schema({
   ///////Fule////////
   lastFuleCheckDate:{type:Date},
   lastCheckFuleconsumption:Number,
+  
   vichelEnginType:String,  
   enginMilege:String,
   fulePrice:String,
