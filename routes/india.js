@@ -1272,6 +1272,7 @@ function fuleConsumptionCalculation(req,cb){
             }
             if(key===ary.length -1){
               var previousConsumption=Number(consumption)-Number(paidConsumption);
+              previousConsumption.toFixed(0);
               dailyConsumption({pilotID:req.pilotID,travelmod:req.travelmod},function(consum){
                 cb({previousConsumption:previousConsumption,dailyConsum:consum});
               })
@@ -1311,6 +1312,7 @@ function fuleConsumptionCalculation(req,cb){
             }
             if(key===ary.length -1){
               var previousConsumption=Number(consumption)-Number(paidConsumption);
+              previousConsumption.toFixed(0);
               dailyConsumption({pilotID:req.pilotID,travelmod:req.travelmod},function(consum){
                 cb({previousConsumption:previousConsumption,dailyConsum:consum});
               })
@@ -1361,7 +1363,7 @@ function dailyConsumption(req,cb){
         }
         if(key===ary.length -1){
           var previousConsumption=Number(consumption)-Number(paidConsumption); 
-
+          previousConsumption=previousConsumption.toFixed(0);
             cb({dailyConsm:previousConsumption,totalkm:totalkm,mileage:mileage,fulePrice:fulePrice});         
         }
       })

@@ -78,12 +78,17 @@
 
 
          <div class="row">
-            <div class="col-xs-6 col-sm-6">                
-                <button type="button" class="btn btn-warning btn-block col-xs-12 col-sm-12">Withral &#8377; 0.00</button>                
+             <%var cashColc=Number(previousDue)+ Number(dailyCollection)%>
+             <%var fulecomsum=Number(PendingConsumption)+ Number(dailyConsum.dailyConsm)%>
+             <%if( cashColc - fulecomsum > 0){%> 
+            <div class="col-xs-12 col-sm-12">                
+                <button type="button" class="btn btn-warning btn-block col-xs-12 col-sm-12">Withdrawal &#8377; <%=cashColc - fulecomsum%></button>                
             </div>
-            <div class="col-xs-6 col-sm-6">                
-                <button type="button" class="btn btn-success btn-block col-xs-12 col-sm-12">Deposit &#8377; 10.00</button>                
+            <%}else{%>
+            <div class="col-xs-12 col-sm-12">                
+                <button type="button" class="btn btn-success btn-block col-xs-12 col-sm-12">Deposit &#8377; <%=fulecomsum - cashColc%></button>                
             </div>
+            <%}%>
         </div>
 
  
