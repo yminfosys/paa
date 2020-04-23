@@ -111,16 +111,23 @@ function initMap() {
       }
     }); 
     
-    function onlineExicute(){
-      ///delete Driver location if exist /////
-      // $.post('/preRideDutyInitiate',{},function(data){
-      //   console.log(data);        
-      // })
+    function onlineExicute(){     
       wachLocation();
       setCookie("setSystem","ONLINE",30);
       /////Android Interface
         andRoid(1);
-      /////
+      ////////////////
+      var pilotID=getCookie("pilotID");
+      //////Driver City And Fule Peice Update////
+      $.post('/india/preRideCityFulepriceUpdate',{pilotID:pilotID},function(cityFule){
+        
+        if(cityFule=="0"){
+          alert("City Name Not Registert Please Contact Your local Office");
+        }else{
+          console.log(cityFule);
+        }
+      })
+
 
       $("#Offline").css({"display":"none"});
       $("#nofofride").css({"display":"block"});
@@ -128,7 +135,7 @@ function initMap() {
       //var ringTimer= setInterval(RingToneHandeler,300);
 
       ///////Page Initiate///////////////
-      var pilotID=getCookie("pilotID");
+      
 
       $.post('/india/preRidePageInitiate',{pilotID:pilotID,driverBusy:"busy"},function(rides){
         
@@ -232,23 +239,6 @@ function initMap() {
     }
 
 
-    //////Ring tone Handeler////
-  // var  myAudio= new Audio('/india/audio/car_horn.mp3');
-  // function RingToneHandeler(){
-  //   var OnOff=getCookie("ringToneControl");
-  //   if(OnOff=='ON'){
-  //     myAudio.addEventListener('ended', function() {
-  //     this.currentTime = 0;
-  //     this.play();
-  //     }, false);        
-  //     myAudio.play();
-  //     window.navigator.vibrate(200);
-  //     setTimeout(function(){
-  //       setCookie("ringToneControl","OFF",30);
-  //       myAudio.pause();
-  //     },3000)
-  //   }
-  // } 
   
   /////continueNextRide /////////
   document.getElementById("continueNextRide").addEventListener("click", function(){ 

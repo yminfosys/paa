@@ -112,6 +112,8 @@ var pilotSchema = new mongoose.Schema({
   ///////Fule////////
   vichelEnginType:String,  
   enginMilege:String,
+  fulePrice:String,
+  cityName:String ,
   /////Balance Ledger Check//
    lastCheckDate:{type:Date},
    lastCheckCashCollcetion:Number,
@@ -216,7 +218,8 @@ var Carlogbookmodul = mongoose.model('Carlogbookcollections', CarlogbookSchema);
 var petroldeselSchema = new mongoose.Schema({     
   petrolPerLtr:String,
   deselPerLtr:String,
-  cngPrice: String  
+  cngPrice: String,
+  cityName:String 
 });
 
 var petroldeselmodul = mongoose.model('petroldeselcollections', petroldeselSchema);

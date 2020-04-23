@@ -1543,7 +1543,36 @@ router.post('/preRideAutoAccepeCall', function(req, res, next) {
 
   });
 
- 
+  
+ /////PRE RIDE FULE PRICE AND CITY UPDATE/////
+ router.post('/preRideCityFulepriceUpdate', function(req, res, next) {
+   database.pilot.findOne({pilotID:req.body.pilotID},function(err, data){
+    if(data.cityName){
+        database.petroldesel.findOne({cityName:data.cityName},function(e, petrol){
+          if(data.vichelEnginType=="Petrol"){
+            var fulePrice=petrol.petrolPerLtr;
+          }else{
+            if(data.vichelEnginType=="Diesel"){
+              var fulePrice=petrol.deselPerLtr;
+            }else{
+                /////cng///////
+                var fulePrice=petrol.cngPrice;
+            }
+          }
+          database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
+            fulePrice:fulePrice
+          }},function(err, da){
+            res.send("Fule Price Update");
+          });
+
+
+        })
+    }else{
+      res.send("0");
+    }
+   })
+
+ });
 
   /////PRE RIDE PAGE INITIATE/////
   router.post('/preRidePageInitiate', function(req, res, next) {
@@ -1743,11 +1772,12 @@ router.post('/preRideFinish', function(req, res, next) {
       },function(result){
        var distance=result.rows[0].elements[0].distance.value;
         distance=parseInt(distance/1000)+1;
+        var fuleConsumption=0;
         database.Carlogbook.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{
           droplatlng:[position.lat, position.lng],
           kmTravels:distance,
           perltrFulePrice:"75",
-          fuleConsumption:"10",          
+          fuleConsumption:fuleConsumption,          
           loogBookStatus:"complete",
         }},function(e, d){
           res.send(data);
@@ -1761,116 +1791,82 @@ router.post('/preRideFinish', function(req, res, next) {
 
   //////////Update City Price/////////
   router.post('/preRideUpdateCitywisePrice', function(req, res, next){
-    googleApi.SearchGeoCodePlaceByLatLng({
-          lat:Number(req.body.lat),
-          lng:Number(req.body.lng),
-          //lat:Number(22.8895),
-          //lng:Number(88.4220),
-          apik:process.env.API_KEY,
-      },function(data){
-        console.log("City Name",data.results[0]);
-      
-      data.results[0].address_components.forEach(function(val){           
-        if(val.types[0]=='administrative_area_level_2'){
-          database.cityPrice.find({CityName:val.long_name},function(er, city){
-            database.customer.findOne({CustID:req.cookies.CustID},function(ee,cust){
-              if(cust){
-                generalPriceperKm=cust.generalPriceperKm;
-                generalMinimumprice=cust.generalMinimumprice;
-                generalMinimumKm=cust.generalMinimumKm;
-                generalBasePrice=cust.generalBasePrice;
-                preRidePriceperKm=cust.preRidePriceperKm;
-                preRideperMinutCharge=cust.preRideperMinutCharge;
-                GenarelPerMinutCharge=cust.GenarelPerMinutCharge;
-                shereRide=cust.shereRide;
-                shereRideCapacity=cust.shereRideCapacity
-                driverPayout=cust.driverPayout;
+      googleApi.SearchGeoCodePlaceByLatLng({
+        lat:Number(req.body.lat),
+        lng:Number(req.body.lng),
+        //lat:Number(22.8895),
+        //lng:Number(88.4220),
+        apik:process.env.API_KEY,
+    },function(data){
+      console.log("City Name",data.results[0]);
+    
+    data.results[0].address_components.forEach(function(val){           
+      if(val.types[0]=='administrative_area_level_2'){
+        database.cityPrice.find({CityName:val.long_name},function(er, city){
+          database.customer.findOne({CustID:req.cookies.CustID},function(ee,cust){
+            if(cust){
+              generalPriceperKm=cust.generalPriceperKm;
+              generalMinimumprice=cust.generalMinimumprice;
+              generalMinimumKm=cust.generalMinimumKm;
+              generalBasePrice=cust.generalBasePrice;
+              preRidePriceperKm=cust.preRidePriceperKm;
+              preRideperMinutCharge=cust.preRideperMinutCharge;
+              GenarelPerMinutCharge=cust.GenarelPerMinutCharge;
+              shereRide=cust.shereRide;
+              shereRideCapacity=cust.shereRideCapacity
+              driverPayout=cust.driverPayout;
 
-                city.forEach(function(value, kk, array){
-                  var key=Number(value.travelMode) - 1;
-                  generalPriceperKm[key]=Number(value.PerKMPrice);
-                  generalMinimumprice[key]=Number(value.minimumPricePer);
-                  generalMinimumKm[key]=Number(value.minimumKM);
-                  generalBasePrice[key]=Number(value.basePrice);
-                  preRidePriceperKm[key]=Number(value.preRidekmprice);
-                  preRideperMinutCharge[key]=Number(value.preRideperMinutCharge);
-                  GenarelPerMinutCharge[key]=Number(value.GenarelPerMinutCharge);
-                  shereRide[key]=Number(value.shareRide);
-                  shereRideCapacity[key]=Number(value.shereRideCapacity)
-                  driverPayout[key]=Number(value.driverpayout)
-                  
-                  if(kk===array.length -1){
-                      console.log("preRidePriceperKm",shereRide)
-                      database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{
-                        generalPriceperKm:generalPriceperKm,
-                        generalMinimumprice:generalMinimumprice,
-                        generalMinimumKm:generalMinimumKm,
-                        generalBasePrice:generalBasePrice,
-                        preRidePriceperKm:preRidePriceperKm,
-                        preRideperMinutCharge:preRideperMinutCharge,
-                        GenarelPerMinutCharge:GenarelPerMinutCharge,
-                        shereRide:shereRide,
-                        shereRideCapacity:shereRideCapacity,
-                        driverPayout:driverPayout
-                        }},function(e,d){
-                          res.send("price Update")
-                        });
-                   
-                  }
-                })
+              city.forEach(function(value, kk, array){
+                var key=Number(value.travelMode) - 1;
+                generalPriceperKm[key]=Number(value.PerKMPrice);
+                generalMinimumprice[key]=Number(value.minimumPricePer);
+                generalMinimumKm[key]=Number(value.minimumKM);
+                generalBasePrice[key]=Number(value.basePrice);
+                preRidePriceperKm[key]=Number(value.preRidekmprice);
+                preRideperMinutCharge[key]=Number(value.preRideperMinutCharge);
+                GenarelPerMinutCharge[key]=Number(value.GenarelPerMinutCharge);
+                shereRide[key]=Number(value.shareRide);
+                shereRideCapacity[key]=Number(value.shereRideCapacity)
+                driverPayout[key]=Number(value.driverpayout)
                 
-              }
-            });
-           
-          });  
-            
+                if(kk===array.length -1){
+                    console.log("preRidePriceperKm",shereRide)
+                    database.customer.findOneAndUpdate({CustID:req.cookies.CustID},{$set:{
+                      generalPriceperKm:generalPriceperKm,
+                      generalMinimumprice:generalMinimumprice,
+                      generalMinimumKm:generalMinimumKm,
+                      generalBasePrice:generalBasePrice,
+                      preRidePriceperKm:preRidePriceperKm,
+                      preRideperMinutCharge:preRideperMinutCharge,
+                      GenarelPerMinutCharge:GenarelPerMinutCharge,
+                      shereRide:shereRide,
+                      shereRideCapacity:shereRideCapacity,
+                      driverPayout:driverPayout,
+                      lastPriceCityCheckDate:new Date(),
+                      }},function(e,d){
+                        res.send("price Update")
+                      });
+                 
+                }
+              })
+              
             }
-      });
-  });
+          });
+         
+        });  
+          
+          }
+    });
+});
+    
+
 })
 
-function priceUpdate(req){
-  //////For General Driver
-  // var pric=0;
-  // for(var km =1; km < 200; km++){
-  //     if(km <= req.minimumKM){
-  //       pric=Number(req.minimumPricePer);
-  //     }else{
-  //       pric=Number(km*req.kmprice); 
-  //       pric=Number(pric) - Number(req.minimumPricePer);
-  //     }    
-  //   database.priceOffer.findOneAndUpdate({CustID:req.CustID, travelmod:req.travelMode,distanceKM:km},{$set:{
-  //     price:pric
-  //   }},function(e, d){
-  //     console.log("General Price Updated")
-  //   });     
-   
-  // }
-  /////For Pre Ride Driver////
-    var key=Number(req.travelMode)-1;
-  database.customer.findOne({CustID:req.CustID},function(ee,cust){
-    if(cust){
-      prerideprice=cust.preRidePriceperKm;
-      prerideprice[key]=req.preRidekmprice;
-      console.log("PreRide KEY",key)
-      console.log("PreRide KM",req.preRidekmprice)
-      console.log("PreRide Price Updated",prerideprice);
-      generalPrice=cust.generalPriceperKm;
-      generalPrice[key]=
 
-
-      database.customer.findOneAndUpdate({CustID:req.CustID},{$set:{
-        preRidePriceperKm:prerideprice
-      }},function(e,d){
-        console.log("PreRide Price Updated",prerideprice)
-      })
-
-    }
-  })
 
  
 
-}
+
 ////////PRE RIDE BACGROUND LOCATION UPDATE IN  NATIVE DEDICE////
 router.get('/preRideBacgroundService', function(req, res, next) {
   if(req.cookies.pilotID){   

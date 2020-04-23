@@ -79,6 +79,7 @@ $(document).ready(function(){
           <div class="caption">\
             <h5>Basic Details</h5>\
             <hr>\
+            <p>Driver &quot;s City : '+data.cityName+'</p>\
             <p>Engine Type : '+data.vichelEnginType+'</p>\
             <p>Mileage (KM/LTR) : '+data.enginMilege+'</p>\
           </div>\
@@ -113,12 +114,25 @@ $(document).ready(function(){
     var engintype=$("#engintype").val();
     var milege=$("#milege").val();
     var mobile=$("#mobile").val();
+    var driverCity=$("#driverCity").val();
     var isd='+91';
-    $.post('/admin/updateBasicDetails',{engintype:engintype,milege:milege,mobile:mobile,isd:isd},function(data){
+    $.post('/admin/updateBasicDetails',{engintype:engintype,milege:milege,mobile:mobile,isd:isd,driverCity:driverCity},function(data){
       console.log(data);
       $("#mssg").html(data);
     });
 
+  }
+
+  function updatePetrolPrice(){
+    var petrol=$("#petrol").val();
+    var diesel=$("#diesel").val();
+    var cng=$("#cng").val();
+    var city=$("#city").val();
+    $.post('/admin/updatedisealPetrol',{petrol:petrol,diesel:diesel,cng:cng,city:city},function(data){
+      if(data){
+        window.location.href="../admin/sub"
+      }
+    });
   }
 
   

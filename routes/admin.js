@@ -71,8 +71,14 @@ router.post('/getCityprice', function(req, res, next) {
 
 
 router.get('/sub', function(req, res, next) {
+  database.cityPrice.find({},function(e , city){
+    database.petroldesel.find({},function(e, petrol){
+      res.render('admin/appAdminSub', { title: 'Paacab', city:city,petrol:petrol});
+    })
+   
+  })
 
-    res.render('admin/appAdminSub', { title: 'Paacab' });
+  
 });
 
   router.post('/findDriver', function(req, res, next) {
@@ -104,11 +110,37 @@ router.get('/sub', function(req, res, next) {
     database.pilot.findOneAndUpdate({mobileNumber:req.body.mobile,isdCode:req.body.isd},{$set:{
       vichelEnginType:req.body.engintype,  
       enginMilege:req.body.milege,
+      cityName:req.body.driverCity,
     }},function(err,data){
       res.send("Update Successfull");
     });
 
   });
+
+  router.post('/updatedisealPetrol', function(req, res, next) {
+    database.petroldesel.findOne({cityName:req.body.city},function(e,dd){
+      if(dd){
+        database.petroldesel.findOneAndUpdate({cityName:req.body.city},{$set:{
+          petrolPerLtr:req.body.petrol,
+          deselPerLtr:req.body.diesel,
+          cngPrice: req.body.cng,
+          cityName:req.body.city
+        }},function(e,data){
+          res.send("ok")
+        })
+      }else{
+        database.petroldesel({
+          petrolPerLtr:req.body.petrol,
+          deselPerLtr:req.body.diesel,
+          cngPrice: req.body.cng,
+          cityName:req.body.city
+        }).save(function(er){
+          res.send("ok")
+        })
+      }
+    })
+  })
+ 
   
   
 

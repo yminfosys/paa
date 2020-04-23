@@ -55,7 +55,7 @@
                 <span></span>
             </div>
             <ul class="sidebar-menue">
-            <li class="Dashboard"><a href="/business"> <i class="fa fa-dashboard" aria-hidden="true"></i><span> Dashboard</span></a></li>
+            <li class="Dashboard"><a href="../admin/sub"> <i class="fa fa-dashboard" aria-hidden="true"></i><span> Dashboard</span></a></li>
             <li class="Profile">
               <a href="#ProfileSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">
                   <i class="fa fa-cogs"></i>
@@ -82,6 +82,52 @@
               </div>
               <button onclick="findDriver()" type="button" class="btn btn-default">Find</button>
             
+              
+              <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <br><br>
+                
+                    <label for="mobile"> Daily Fule Price Update </label>
+                    <hr>                   
+                 
+
+                  <div class="form-group">
+                    <select id="city" class="form-control">
+                      <option value="">Select City</option>
+                    <%if(city.length > 0){%>
+                      <%city.forEach(function(val){%>
+                        
+                          <option value="<%=val.CityName%>"><%=val.CityName%></option>
+                       
+                      <%})%>
+                    <%}%>
+                  </select>                    
+                   
+                  </div>
+
+                  <div class="form-group">                    
+                    <input type="text" class="form-control" id="petrol" placeholder="Petrol">
+                    <input type="text" class="form-control" id="diesel" placeholder="Diesel">
+                    <input type="text" class="form-control" id="cng" placeholder="CNG">
+                  </div>
+                  <button onclick="updatePetrolPrice()" type="button" class="btn btn-default">Update</button>
+                  
+                </div>
+                
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                  <br><br>
+                  <div class="thumbnail">
+                    <img data-src="#" alt="">
+                    <div class="caption">
+                      <%=petrol%>
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+              
+              
+
           </div> 
             <div id="verify-driver" > 
                 <div class="profile-main">
@@ -121,8 +167,22 @@
                               </div>
 
                               <div class="form-group">
-                                <label>Mileage (KM/LTR) : </label>
+                                <label>Mileage (KM/LTR) :  </label>
                                 <input type="text" id="milege" class="form-control">                                
+                              </div>
+                              <div class="form-group">
+                                <label>Select Driver City : </label>
+                                <select id="driverCity" class="form-control">
+                                  <option value="">Select City</option>
+                                <%if(city.length > 0){%>
+                                  <%city.forEach(function(val){%>
+                                    
+                                      <option value="<%=val.CityName%>"><%=val.CityName%></option>
+                                   
+                                  <%})%>
+                                <%}%>
+                              </select>                    
+                               
                               </div>
                               <button onclick="submitEngintype()" class="btn btn-primary">Submit</button>
                               <div id="mssg"></div>
