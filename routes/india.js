@@ -1217,9 +1217,9 @@ router.get('/preDriverCash', function(req, res, next) {
           }
           newPendingConsumption=Number(lastCheckFuleconsumption)+Number(consum.previousConsumption); 
             database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{ 
-              lastCheckDate:new Date(),
+              lastCheckDate:moment().startOf('day').utc().toDate(),
               lastCheckCashCollcetion:newPreviousDue,
-              lastFuleCheckDate:new Date(),
+              lastFuleCheckDate:moment().startOf('day').utc().toDate(),
               lastCheckFuleconsumption:newPendingConsumption       
           }},function(e,d){
             res.render('india/inPreDriverCashCollection',{
