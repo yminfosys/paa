@@ -112,7 +112,7 @@ function initMap() {
               dutyHourCount(0);
 
              ////////Call CashCollection//////         
-          //    window.location.href="../india/preDriverCash?offline=1";
+              window.location.href="../india/preDriverCash?offline=1";
           });
         },1000);
          
