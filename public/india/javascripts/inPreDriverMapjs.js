@@ -84,10 +84,12 @@ function initMap() {
      //////End Circle Marker//////
 
   /////Check setSystem ONLINE or OFFLINE
+  
   var setSystem=getCookie("setSystem");
   if(setSystem=="ONLINE"){
     document.getElementById("toggle").checked = true;
-    onlineExicute();
+    onlineExicute();    
+
   }
 
       /////Off line Online Button  /////////
@@ -95,7 +97,7 @@ function initMap() {
       if(document.getElementById("toggle").checked == true){        
         onlineExicute();
       }else{
-        andRoid(0);        
+      andRoid(0);        
                 
         setTimeout(function(){
           $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
@@ -105,8 +107,12 @@ function initMap() {
             $("#map").css({"display":"none"});
             $("#nofofride").css({"display":"none"});
             clearWachposition();
+
+            //////dutyHours Count//////
+              dutyHourCount(0);
+
              ////////Call CashCollection//////         
-              window.location.href="../india/preDriverCash?offline=1";
+          //    window.location.href="../india/preDriverCash?offline=1";
           });
         },1000);
          
@@ -118,8 +124,12 @@ function initMap() {
       wachLocation();
       setCookie("setSystem","ONLINE",30);
       /////Android Interface
-        andRoid(1);
+       andRoid(1);
       ////////////////
+
+      //////duty Hour Count/////
+      
+      dutyHourCount(1);
       var pilotID=getCookie("pilotID");
       //////Driver City And Fule Peice Update////
       $.post('/india/preRideCityFulepriceUpdate',{pilotID:pilotID},function(cityFule){
@@ -135,10 +145,6 @@ function initMap() {
       $("#Offline").css({"display":"none"});
       $("#nofofride").css({"display":"block"});
       $("#map").css({"display":"block"});
-      //var ringTimer= setInterval(RingToneHandeler,300);
-
-      ///////Page Initiate///////////////
-      
 
       $.post('/india/preRidePageInitiate',{pilotID:pilotID,driverBusy:"busy"},function(rides){
         
@@ -239,6 +245,37 @@ function initMap() {
 
     function andRoid(a){
      Android.onlineOffline(a);
+    }
+    
+    function dutyHourCount(a){      
+      if(a==1){
+        ////Olnune////
+        if(getCookie("dutyCount")){
+          setDytyCookie("dutyCount",getCookie("dutyCount"),20);
+        }else{
+          console.log("SDDDDDD")
+          var pilotID=getCookie("pilotID");
+          var strtlatlng=JSON.parse(getCookie("position"))
+          var dutyLogondetails={pilotID:pilotID, start:new Date(),strtlatlng:strtlatlng}
+          setDytyCookie("dutyCount",JSON.stringify(dutyLogondetails),20);          
+        }
+      }else{
+        /////Offline///       
+        var dutyLogo=JSON.parse(getCookie("dutyCount"));         
+        var stoplatlng=JSON.parse(getCookie("position"));         
+        $.post('/india/updateDutylogdetails',{
+          pilotID:dutyLogo.pilotID,
+          startTime:dutyLogo.start,
+          strtlat:dutyLogo.strtlatlng.lat,
+          strtlng:dutyLogo.strtlatlng.lng,
+          stoplat:stoplatlng.lat,
+          stoplng:stoplatlng.lng,
+        },function(data){
+          console.log("dutyLog",data);
+        });         
+
+      }
+
     }
 
 

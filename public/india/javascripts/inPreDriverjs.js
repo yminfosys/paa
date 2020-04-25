@@ -24,6 +24,13 @@ function getCookie(cname) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
 
+  function setDytyCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
 ////Randanm OTP/////////
 function randamNumber(){
     var tex="";

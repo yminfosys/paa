@@ -23,6 +23,17 @@ function getCookie(cname) {
     var expires = "expires="+ d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
   }
+
+  function setDytyCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
+  
+
+
 var wachID;
 function initMap() { 
     wachLocation();
@@ -38,16 +49,22 @@ function initMap() {
         $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"preRide" },function(data){
             console.log(data);
          });
-
+         
     }
 
-  
+  ///////Duty Hour Cound/////
+ 
+    setInterval(function(){ 
+      if(getCookie("dutyCount")){         
+        setDytyCookie("dutyCount",getCookie("dutyCount"),20);
+        console.log("dutyCount",getCookie("dutyCount")) 
+        }
+    },1000*5);
 
 }
+/////End InitMap/////
 
-setInterval(function(){
- console.log(JSON.parse(getCookie("position")).lat);
-},5000);
+
 
  ///////Handel Socket io  parameter/////// 
  var socket = io('//'+document.location.hostname+':'+document.location.port);

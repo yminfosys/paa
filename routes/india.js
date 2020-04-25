@@ -1188,6 +1188,84 @@ polu.mv('public/india/'+urlpolu+'', function(err) {
 
 });
 
+///////PreDriver Duty Hour ///////
+router.get('/dutyhoursdetails', function(req, res, next) {
+  if(req.cookies.pilotID){ 
+    database.pilot.findOne({pilotID:req.cookies.pilotID},function(er,pilot){
+      dailyDutyhour({pilotID:pilot.pilotID,travelmod:pilot.travelmod},function(dailyDuty){
+        var month=new Date().getMonth();
+        monthliDutyhour({pilotID:pilot.pilotID,travelmod:pilot.travelmod,month:month},function(monthlyDuty){
+          res.render('india/inPreDriverDutyHours',{dailyDuty:dailyDuty,monthlyDuty:monthlyDuty});
+        })        
+      })
+    });  
+  }else{
+    res.redirect('/india/preDrv/login')
+  }
+
+});
+// console.log(moment().month("February").startOf('month').utc());
+// console.log(moment().month("February").endOf('month').utc());
+// console.log(moment().month(0).startOf('month').utc());
+// console.log(moment().month(0).endOf('month').utc());
+//console.log(new Date().getMonth());
+function dailyDutyhour(req,cb){
+  var StartTime = moment().startOf('day').utc();
+  var EndTime = moment().endOf('day').utc(); 
+  var totalhour=0; 
+  var overtime=0;  
+  database.DutyLog.find({
+    date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+    pilotID:req.pilotID,
+    travelmod:req.travelmod,  
+    DriverType : "preRide"
+  },function(er,duty){
+    if(duty.length > 0){
+      duty.forEach(function(val,key,ary){
+        if(val.dutyHours){
+          totalhour=Number(totalhour)+Number(val.dutyHours);
+        }
+        if(val.overtimeDutyHours){
+          overtime=Number(overtime)+Number(val.overtimeDutyHours);
+        }
+        if(key===ary.length -1){
+          cb({duty:totalhour,overtime:overtime});
+        }
+      })
+    }else{
+      cb({duty:0,overtime:0});
+    }
+  })
+}
+
+function monthliDutyhour(req,cb){
+  var StartTime = moment().month(req.month).startOf('month').utc();
+  var EndTime = moment().month(req.month).endOf('month').utc();  
+  var totalhour=0; 
+  var overtime=0;   
+  database.DutyLog.find({
+    date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+    pilotID:req.pilotID,
+    travelmod:req.travelmod,  
+    DriverType : "preRide"
+  },function(er,duty){
+    if(duty.length > 0){
+      duty.forEach(function(val,key,ary){
+        if(val.dutyHours){
+          totalhour=Number(totalhour)+Number(val.dutyHours);
+        }
+        if(val.overtimeDutyHours){
+          overtime=Number(overtime)+Number(val.overtimeDutyHours);
+        }
+        if(key===ary.length -1){
+          cb({duty:totalhour,overtime:overtime});
+        }
+      })
+    }else{
+      cb({duty:0,overtime:0});
+    }
+  })
+}
 
 ///////PreDriver Cash Collection///////
 router.get('/preDriverCash', function(req, res, next) {
@@ -1499,6 +1577,32 @@ function dailyCashCollection(req,cb){
         });
 
 }
+
+/////Pre Ride Dutyh Logon LgoOff//////
+router.post('/updateDutylogdetails', function(req, res, next) {
+  var dutyhour=new Date().getTime() - new Date(req.body.startTime).getTime();
+  var overTime=0;
+  if(Number(dutyhour)>8*60*60*1000){
+    overTime=Number(dutyhour) -(8*60*60*1000)
+  }
+  database.pilot.findOne({ pilotID:req.body.pilotID},function(err, pilot){
+    database.DutyLog({
+      pilotID:req.body.pilotID, 
+      DriverType:"preRide",
+      travelmod:pilot.travelmod,
+      logonTime:new Date(req.body.startTime),
+      logOutTime:new Date(),
+      dutyHours:Number(dutyhour)/(1000*60*60),
+      overtimeDutyHours:Number(overTime)/(1000*60*60),
+      startlocation:[req.body.strtlat, req.body.strtlng],
+      stoplocation:[req.body.stoplat, req.body.stoplng],
+    }).save(function(err){
+      res.clearCookie("dutyCount");
+      console.log("Cookees duration",dutyhour)
+      res.send("update cookes")
+    });
+  }); 
+})
 
 
 /////For Neareast PreRide Driver//////

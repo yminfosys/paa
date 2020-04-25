@@ -175,22 +175,16 @@ var DriverPaymentmodul = mongoose.model('driverpaymentcollections', DriverPaymen
 ///Driver Attendence
 var DutyLogSchema = new mongoose.Schema({     
   pilotID:String, 
-  logonTime:String,
-  logOutTime:String,
+  travelmod:String,
+  DriverType:String,
+  logonTime:{ type: Date },
+  logOutTime:{ type: Date },
+  dutyHours:String,
+  overtimeDutyHours:String,
   logOutPurpose:String,
   date: { type: Date, default: Date.now },  
-  location: {
-    type: {
-      type: String, // Don't do `{ location: { type: String } }`
-      enum: ['Point'], // 'location.type' must be 'Point'
-      required: true
-    },
-    coordinates: {
-      type: [Number],
-      required: true,
-      
-    }
-  }
+  startlocation:[],
+  stoplocation:[],
 });
 
 var DutyLogmodul = mongoose.model('DutyLogcollections', DutyLogSchema);
