@@ -184,7 +184,7 @@ function initMap() {
       setTimeout(function(){
         $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
           console.log(data);
-
+          setCookie("setSystem","OFFLINE",30);
           $("#offline-content").css({"display":"block"});
           $("#map").css({"display":"none"});
 
