@@ -172,7 +172,7 @@ function initMap() {
       setCookie("ringToneControl","OFF",1);
       clearDemandArea();
       /////Android Interface
-      andRoid(1);
+      andRoid(0);
       ////////////////
       $("#offline-content").css({"display":"block"});
       $("#map").css({"display":"none"});
