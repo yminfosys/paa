@@ -327,7 +327,8 @@ function loginprocess(){
     var CustID=getCookie("CustID")
     var totalAmt= $("#tmPrice"+travelmod+"").val();
     var totalDistance= $("#totalDistance").val();
-    var timere; 
+    var timere;    
+
     /////Search Driver list/////
     $.post('/india/nearbyRideBooking',{
       lat:origin.lat,
@@ -336,38 +337,71 @@ function loginprocess(){
       DriverType:"General"
      },function(data){
       console.log(data);
-      $("#booking-process").css({"display":"block"});
-      $("#footer-prebooking").css({"display":"none"});
-      $("#traval-mod").css({"display":"none"});
       if(data.drivers.length > 0){
-         ///// 
-         console.log(data.drivers) 
-         /////Call to Driver///
-         var count=0; 
-         $.post('/india/CallDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds},function(result){
+        ////////Create New Ride Booking///////
+       // alert(Number(totalAmt))
+        $.post('/india/newRideBooking',{
+          bookingID:data.bookingID,
+          originAds:originAds,
+          distAds:distAds,
+          originLat:origin.lat,
+          originLng:origin.lng,
+          distLat:dist.lat,
+          distLng:dist.lng,
+          travelmod:travelmod,
+          CustID:CustID,
+          totalAmt:Number(totalAmt) ,
+          totalDistance:totalDistance,
+          payMode:payMode,
+        },function(booking){
+          console.log(booking);
+          $("#booking-process").css({"display":"block"});
+          $("#footer-prebooking").css({"display":"none"});
+          $("#traval-mod").css({"display":"none"});
+          /////Call to Driver///
+          var count=0; 
+          $.post('/india/CallDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID},function(result){
             console.log(result);
           }); 
-         count++;
-         timere=setInterval(function(){ 
-           if(count<data.drivers.length ){
-            $.post('/india/CallDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds},function(result){
+          count++;
+          timere=setInterval(function(){ 
+            if(count<data.drivers.length){
+            $.post('/india/CallDriver',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds,bookingID:data.bookingID},function(result){
               console.log(result);
-            }); 
-           count++;
-         }else{
-           clearInterval(timere);
-           ////////feedbace to customer/////
-           console.log("Driver Busy")
-           alert("All Drivers Are Busy with other Cline Please try again");
-           $("#booking-process").css({"display":"none"});
-           $("#footer-prebooking").css({"display":"block"});
-           $("#traval-mod").css({"display":"block"});
-         }
-         },15000);
+            });
+            count++;
+          }else{
+            clearInterval(timere);
+            ////////feedbace to customer/////
+            console.log("Driver Busy")
+            alert("All Drivers Are Busy with other Cline Please try again");
+            window.location='/india/'
+          }
+          },15000);
+  
+            ///Check Socket For Driver Accepttance////
+            //var socket = io('//'+document.location.hostname+':'+document.location.port);
+            socket.on('DriverAccepeCall', function (data) {
+              if(CustID==data.CustID){
+                clearInterval(timere);
+                //////Log Call Booling ////////
+                console.log("Call accept by :",JSON.stringify(data))
+                setCookie("RideDetails",JSON.stringify(data),30);
+               
+               window.location='../india/ride'
+              }
+            });
+            
+            socket.on('clinelocated', function (data) {
+              if(CustID==data.CustID){
+                alert("ok im comming")
+              }
+            });
 
+        });      
 
       }else{
-        ///////Search Pre Ride Driver //////
+        $("#bookingMsg").html('<p class="text-center">Driver Not Avaible </p><a  href="/india/" class="btn btn-primary btn-xs">Back</a>')
       }
 
      });

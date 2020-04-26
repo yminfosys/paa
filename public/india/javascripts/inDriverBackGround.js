@@ -46,20 +46,12 @@ function initMap() {
     } 
 
     function LocationUpdate(position){     
-        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"preRide" },function(data){
+        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"General" },function(data){
             console.log(data);
          });
          
     }
 
-  ///////Duty Hour Cound/////
- 
-    setInterval(function(){ 
-      if(getCookie("dutyCount")){         
-        setDytyCookie("dutyCount",getCookie("dutyCount"),20);
-        console.log("dutyCount",getCookie("dutyCount")) 
-        }
-    },1000*60*5);
 }
 /////End InitMap/////
 

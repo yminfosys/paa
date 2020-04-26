@@ -171,6 +171,9 @@ function initMap() {
       clearWachposition();
       setCookie("ringToneControl","OFF",1);
       clearDemandArea();
+      /////Android Interface
+      andRoid(1);
+      ////////////////
       $("#offline-content").css({"display":"block"});
       $("#map").css({"display":"none"});
       setTimeout(function(){
@@ -184,30 +187,35 @@ function initMap() {
   function onlineExicute(){
     wachLocation();
     clearDemandArea();
+
+    /////Android Interface
+    andRoid(1);
+    ////////////////
+
     $("#map").css({"display":"block"});
     $("#offline-content").css({"display":"none"});
     // $.post('/india/drv/dutyUpdate',{duty:'online'},function(data){
     //   console.log(data)
     // });
-     ringTimer= setInterval(RingToneHandeler,300);
+    // ringTimer= setInterval(RingToneHandeler,300);
   }
 
   //////Ring tone Handeler////
-  var  myAudio= new Audio('/india/audio/car_horn.mp3');
-  function RingToneHandeler(){
-    var OnOff=getCookie("ringToneControl");
-    if(OnOff=='ON'){
-      myAudio.addEventListener('ended', function() {
-      this.currentTime = 0;
-      this.play();
-      }, false);        
-      myAudio.play();
-      window.navigator.vibrate(200);
-    }else{
-      myAudio.pause();
-      //window.navigator.vibrate();
-    }
-  }    
+  // var  myAudio= new Audio('/india/audio/car_horn.mp3');
+  // function RingToneHandeler(){
+  //   var OnOff=getCookie("ringToneControl");
+  //   if(OnOff=='ON'){
+  //     myAudio.addEventListener('ended', function() {
+  //     this.currentTime = 0;
+  //     this.play();
+  //     }, false);        
+  //     myAudio.play();
+  //     window.navigator.vibrate(200);
+  //   }else{
+  //     myAudio.pause();
+  //     //window.navigator.vibrate();
+  //   }
+  // }    
  
 ////////Relods Driver Order Page///////
 reloadBookingStage($("#orderStage").val());
@@ -290,6 +298,9 @@ function reloadBookingStage(stage){
     
   });
 
+  function andRoid(a){
+    Android.onlineOffline(a);
+   }
 
   /////// Incentive and Booking /////////
 

@@ -332,7 +332,7 @@ router.post('/getprice', function(req, res, next) {
 /////For Neareast RideBooking//////
 router.post('/nearbyRideBooking', function(req, res, next) {    
   database.index2Ddriver({},function(ss){
-    database.driverLocationArea.find({
+    database.driverlocation.find({
           location: {
             $near: {
               $geometry: {
@@ -341,28 +341,16 @@ router.post('/nearbyRideBooking', function(req, res, next) {
               },$maxDistance : 4000
             }
           },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType
-        },function(e,data){
-        database.rideCounter.findOne({},function(e, d){
-          if(d){
-            var newId=Number(d.bookingID)+1;
-            database.rideCounter.findOneAndUpdate({bookingID:d.bookingID},{$set:{bookingID:newId}},function(e, dd){
-              res.send({drivers:data,bookingID:newId}); 
-            })
-          }else{
-            database.rideCounter({bookingID:1}).save(function(er){
-              res.send({drivers:data,bookingID:1});
-            });
-          }
+        },function(e,generalDriver){
+          res.send({drivers:generalDriver});
         });
-          
-        })
   });
 
 });
 
 ////////Call Driver Requiest notification/////
 router.post('/CallDriver', function(req, res, next) {  
-res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID});
+res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress});
 res.send('ReqEmited');
 });
 
@@ -1204,6 +1192,21 @@ router.get('/dutyhoursdetails', function(req, res, next) {
   }
 
 });
+
+/////PreDriver monthly Duty Hour//////
+router.post('/monthlyhours', function(req, res, next) {
+  if(req.cookies.pilotID){ 
+    database.pilot.findOne({pilotID:req.cookies.pilotID},function(er,pilot){      
+        var month=Number(req.body.month);
+        monthliDutyhour({pilotID:pilot.pilotID,travelmod:pilot.travelmod,month:month},function(monthlyDuty){
+          
+          res.send({monthlyDuty:monthlyDuty})
+        })
+    });  
+  }else{
+    res.redirect('/india/preDrv/login')
+  }
+})
 // console.log(moment().month("February").startOf('month').utc());
 // console.log(moment().month("February").endOf('month').utc());
 // console.log(moment().month(0).startOf('month').utc());
@@ -1417,6 +1420,7 @@ function fuleConsumptionCalculation(req,cb){
 
   });
 }
+
 
 function dailyConsumption(req,cb){
   var consumption=0;
@@ -2130,7 +2134,12 @@ router.post('/preRideFinish', function(req, res, next) {
 
 
  
-
+////////InDRIVER BACGROUND LOCATION UPDATE IN  NATIVE DEDICE////
+router.get('/driverBacgroundService', function(req, res, next) {
+  if(req.cookies.pilotID){   
+   res.render('india/inDriverBackGroundService',{YOUR_API_KEY:process.env.API_KEY}) 
+  }
+});
 
 ////////PRE RIDE BACGROUND LOCATION UPDATE IN  NATIVE DEDICE////
 router.get('/preRideBacgroundService', function(req, res, next) {
@@ -2141,7 +2150,6 @@ router.get('/preRideBacgroundService', function(req, res, next) {
 
 //////For ANDROID//////
 router.post('/locationUpdate', function(req, res, next) {
-
 console.log("Android Respons",req.body);
 res.status(200).send();
 });

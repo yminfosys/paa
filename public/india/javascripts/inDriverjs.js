@@ -1,3 +1,4 @@
+ var socket = io('//'+document.location.hostname+':'+document.location.port);
 //////cookie Setting////
 function getCookie(cname) {
     var name = cname + "=";
@@ -141,27 +142,28 @@ function loginprocess(){
  /////////Driver Page ////////////
 
  ///////Handel Socket io  parameter/////// 
-        var socket = io('//'+document.location.hostname+':'+document.location.port);
+
         socket.on('inCommingCall', function (data) {
         console.log('inCommingCall',data);
         if(data.pilotID==getCookie("pilotID")){
-        setCookie("ringToneControl","ON",1);
-        setCookie("inCommingCallDetails",JSON.stringify(data),1);
-        circlebar();
         $("#ringtone").css({"display":"block"});
         $("#pickupFrom").text(data.pickuoAddress);
+        $("#pilotID").val(data.pilotID);
+        $("#CustID").val(data.CustID);
+        
+        Android.startRingtone();
         //////Run Timer for 15sec///////
          setTimeout(function(){
          $("#ringtone").css({"display":"none"});
-         $("#pickupFrom").text('');
-         setCookie("ringToneControl","OFF",1);
-         setCookie("inCommingCallDetails"," ",1);
+         $("#pickupFrom").text(''); 
+       //  Android.stopRingtone();
          },14*1000);
         }
         });
 
          //////////Driver Accept /////////
-         function acceptRide(inp){            
+         function acceptRide(inp){ 
+              Android.stopRingtone();           
             var inCommingCallDetails=JSON.parse(getCookie("inCommingCallDetails")) ;
              console.log(inCommingCallDetails);
             $.post('/india/AcceptCallByDriver',inCommingCallDetails,function(data){
