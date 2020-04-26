@@ -162,23 +162,32 @@ function initMap() {
 
     }
 
+     /////Check setSystem ONLINE or OFFLINE  
+  var setSystem=getCookie("setSystem");
+  if(setSystem=="ONLINE"){
+    document.getElementById("toggle").checked = true;
+    onlineExicute();    
+
+  }
+
 
     /////Off line Online /////////
     document.getElementById("toggle").addEventListener("click", function(){
     if(document.getElementById("toggle").checked == true){      
       onlineExicute();
     }else{
-      clearWachposition();
-      setCookie("ringToneControl","OFF",1);
+      clearWachposition();      
       clearDemandArea();
       /////Android Interface
       andRoid(0);
-      ////////////////
-      $("#offline-content").css({"display":"block"});
-      $("#map").css({"display":"none"});
+      ////////////////      
       setTimeout(function(){
         $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
-          console.log(data)
+          console.log(data);
+
+          $("#offline-content").css({"display":"block"});
+          $("#map").css({"display":"none"});
+
         })
       },1000);
     }
@@ -187,6 +196,18 @@ function initMap() {
   function onlineExicute(){
     wachLocation();
     clearDemandArea();
+    setCookie("setSystem","ONLINE",30);
+
+    /////Check Incomming Call Accept Display Window /////
+      if(getCookie("openAcceptWindow")){
+        ///////Open accept Window/////
+        var inData=JSON.parse(getCookie("openAcceptWindow"));
+        $("#ringtone").css({"display":"block"});
+        $("#pickupFrom").text(inData.pickuoAddress);
+        $("#pilotID").val(inData.pilotID);
+        $("#CustID").val(inData.CustID);
+      }
+    
 
     /////Android Interface
     andRoid(1);
@@ -194,95 +215,12 @@ function initMap() {
 
     $("#map").css({"display":"block"});
     $("#offline-content").css({"display":"none"});
-    // $.post('/india/drv/dutyUpdate',{duty:'online'},function(data){
-    //   console.log(data)
-    // });
-    // ringTimer= setInterval(RingToneHandeler,300);
+    
   }
 
-  //////Ring tone Handeler////
-  // var  myAudio= new Audio('/india/audio/car_horn.mp3');
-  // function RingToneHandeler(){
-  //   var OnOff=getCookie("ringToneControl");
-  //   if(OnOff=='ON'){
-  //     myAudio.addEventListener('ended', function() {
-  //     this.currentTime = 0;
-  //     this.play();
-  //     }, false);        
-  //     myAudio.play();
-  //     window.navigator.vibrate(200);
-  //   }else{
-  //     myAudio.pause();
-  //     //window.navigator.vibrate();
-  //   }
-  // }    
+     
  
-////////Relods Driver Order Page///////
-reloadBookingStage($("#orderStage").val());
-function reloadBookingStage(stage){
- 
-   if(stage=='accept'){
-      wachLocation();
-      $("#map").css({"display":"block"});
-      $("#offline-content").css({"display":"none"});
-       var data=JSON.parse(getCookie("rideBookingDetails"));                
-       setCookie("ringToneControl","OFF",1);
-       $("#ringtone").css({"display":"none"});           
-       $("#pickDrop-Content").css({"display":"block"});
-       $("#orderNO").text(data.ride.bookingID);
-       $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-       <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
-       $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
-       $("#geoNav").val(1); 
-       $("#clineLocated").css({"display":"block"});
-   }else{
-       if(stage=='startRide'){
-        wachLocation();
-        $("#map").css({"display":"block"});
-        $("#offline-content").css({"display":"none"});
-         var data=JSON.parse(getCookie("rideBookingDetails"));                
-         setCookie("ringToneControl","OFF",1);
-         $("#ringtone").css({"display":"none"});           
-         $("#pickDrop-Content").css({"display":"block"});
-         $("#orderNO").text(data.ride.bookingID);
-         $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-         <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
-         $("#address").html('<p>Drop to: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.dropaddress+'</p>');
-         $("#geoNav").val(2); 
-         $("#startRide").css({"display":"none"});
-         $("#clineLocated").css({"display":"none"});
-         $("#finishride").css({"display":"block"});
 
-       }else{
-           if(stage=='finishRide'){
-            wachLocation();
-            $("#map").css({"display":"block"});
-            $("#offline-content").css({"display":"none"});
-             var data=JSON.parse(getCookie("rideBookingDetails"));                
-             setCookie("ringToneControl","OFF",1);
-             $("#ringtone").css({"display":"none"});           
-             $("#pickDrop-Content").css({"display":"none"});
-            $.post('/india/drv/getFinalBooking',{bookingID:data.ride.bookingID},function(data){
-              if(data){
-                console.log(data);
-                $("#billAndfeedback").css({"display":"block"});                  
-                $("#OTP-Content").css({"display":"none"});
-                $("#startRide").css({"display":"none"});
-                $("#finishride").css({"display":"none"});
-                $("#pickdropfooter").css({"display":"none"});
-                $("#pickdropHead").css({"display":"none"});
-                $("#amt").text(data.totalamount)
-              }
-            }); 
-            
-             
-
-           }else{
-
-           }                
-       }
-   }
- }
 
   /////continueNextRide /////////
   document.getElementById("continueNextRide").addEventListener("click", function(){    
@@ -297,6 +235,8 @@ function reloadBookingStage(stage){
     });
     
   });
+
+  ///////FOR ANDROID //////
 
   function andRoid(a){
     Android.onlineOffline(a);

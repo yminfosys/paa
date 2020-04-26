@@ -143,44 +143,27 @@ function loginprocess(){
 
  ///////Handel Socket io  parameter/////// 
 
-        socket.on('inCommingCall', function (data) {
-        console.log('inCommingCall',data);
+        socket.on('openAcceptWindow', function (data) {
+        console.log('openAcceptWindow',data);
         if(data.pilotID==getCookie("pilotID")){
         $("#ringtone").css({"display":"block"});
         $("#pickupFrom").text(data.pickuoAddress);
         $("#pilotID").val(data.pilotID);
         $("#CustID").val(data.CustID);
+        }       
         
-        Android.startRingtone();
-        //////Run Timer for 15sec///////
-         setTimeout(function(){
-         $("#ringtone").css({"display":"none"});
-         $("#pickupFrom").text(''); 
-       //  Android.stopRingtone();
-         },14*1000);
-        }
         });
 
          //////////Driver Accept /////////
          function acceptRide(inp){ 
-              Android.stopRingtone();           
-            var inCommingCallDetails=JSON.parse(getCookie("inCommingCallDetails")) ;
-             console.log(inCommingCallDetails);
-            $.post('/india/AcceptCallByDriver',inCommingCallDetails,function(data){
-            console.log(data);
-            if(data){
-            setCookie("ringToneControl","OFF",1); 
-            setCookie("rideBookingDetails",JSON.stringify(data),30);
-            
-            $("#ringtone").css({"display":"none"}); 
-            $("#pickDrop-Content").css({"display":"block"});
-            $("#orderNO").text(data.ride.bookingID);
-            $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-            <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
-            $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
-            $("#geoNav").val(1); 
-            $("#clineLocated").css({"display":"block"});       
-            }           
+            Android.stopRingtone();  
+            var pilotID= $("#pilotID").val(); 
+            var CustID= $("#CustID").val();        
+           
+            $.post('/india/AcceptCallByDriver',{pilotID:pilotID,CustID:CustID},function(data){            
+            if(data){ 
+                   
+            }          
            
             });
         } 

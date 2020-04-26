@@ -752,6 +752,15 @@ function randamNumber(){
   return tex;
 
 }
+
+  ////////requiest Display Accept Window/////
+  router.post('/requiestDisplayAcceptWindow', function(req, res, next) {
+    res.io.emit("openAcceptWindow",{CustID:req.body.CustID,pilotID:req.body.pilotID,pickuoAddress:req.body.pickuoAddress});
+    res.cookie('openAcceptWindow',JSON.stringify({CustID:req.body.CustID,pilotID:req.body.pilotID,pickuoAddress:req.body.pickuoAddress}),{maxAge: 15*1000 })
+    res.send("emitopenAcceptWindow")
+   });;
+
+
   ////////Call Driver accept notification/////
 router.post('/AcceptCallByDriver', function(req, res, next) { 
   var OTP=randamNumber(); 

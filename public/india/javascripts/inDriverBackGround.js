@@ -60,18 +60,21 @@ function initMap() {
  ///////Handel Socket io  parameter/////// 
  var socket = io('//'+document.location.hostname+':'+document.location.port);
  var tt;
-  socket.on('preRideinCommingCall', function (data) {
+  socket.on('inCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
     console.log("inCommingCall data",data);
-    $.post('/india/preRideAutoAccepeCall',{
+    $.post('/india/requiestDisplayAcceptWindow',{
         pilotID:data.pilotID,
-        CustID:data.CustID,                        
+        CustID:data.CustID,
+        pickuoAddress:data.pickuoAddress                        
       },function(dat){
         console.log("Call Accepted", dat);
         clearTimeout(tt);
         tt=setTimeout(function(){
          Android.startRingtone();
+         Android.openMainActivity();
+
         },500);
           
       });

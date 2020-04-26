@@ -83,8 +83,7 @@ function initMap() {
       }
      //////End Circle Marker//////
 
-  /////Check setSystem ONLINE or OFFLINE
-  
+  /////Check setSystem ONLINE or OFFLINE  
   var setSystem=getCookie("setSystem");
   if(setSystem=="ONLINE"){
     document.getElementById("toggle").checked = true;
