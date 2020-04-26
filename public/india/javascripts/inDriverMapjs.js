@@ -206,6 +206,13 @@ function initMap() {
         $("#pickupFrom").text(inData.pickuoAddress);
         $("#pilotID").val(inData.pilotID);
         $("#CustID").val(inData.CustID);
+        var tt=setInterval(function(){
+          if(!getCookie("openAcceptWindow")){
+            $("#ringtone").css({"display":"none"});
+            clearInterval(tt);
+          }
+
+        },300);
       }
     
 

@@ -150,6 +150,9 @@ function loginprocess(){
         $("#pickupFrom").text(data.pickuoAddress);
         $("#pilotID").val(data.pilotID);
         $("#CustID").val(data.CustID);
+        setTimeout(function(){
+            $("#ringtone").css({"display":"none"});
+        },14*1000)
         }       
         
         });
