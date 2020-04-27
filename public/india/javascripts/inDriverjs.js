@@ -161,12 +161,11 @@ function loginprocess(){
          function acceptRide(inp){ 
             Android.stopRingtone();  
             var pilotID= $("#pilotID").val(); 
-            var CustID= $("#CustID").val();        
-           
+            var CustID= $("#CustID").val(); 
             $.post('/india/AcceptCallByDriver',{pilotID:pilotID,CustID:CustID},function(data){            
             if(data){ 
-                   
-            }          
+                $("#ringtone").css({"display":"none"});     
+            }        
            
             });
         } 

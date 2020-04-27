@@ -45,8 +45,12 @@ function initMap() {
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
     } 
 
-    function LocationUpdate(position){     
-        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"General" },function(data){
+    function LocationUpdate(position){
+      var driverBusy="Free";
+      if(getCookie("driverBusy")){
+        var driverBusy=getCookie("driverBusy");
+      }           
+        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"General",driverBusy:driverBusy },function(data){
             console.log(data);
          });
          

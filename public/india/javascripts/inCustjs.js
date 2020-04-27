@@ -363,7 +363,20 @@ function loginprocess(){
            $("#footer-prebooking").css({"display":"block"});
            $("#traval-mod").css({"display":"block"});
          }
+
          },15000);
+
+         ///Handle Socket/////
+         var tt;
+         socket.on('DriverAccepeCall', function (incomdata) {
+          if(CustID==incomdata.CustID){
+            clearTimeout(tt);
+            tt=setTimeout(function(){
+              ///////Grnerate Order/////
+              alert("Order Generate")
+            },500)
+          }
+         })
 
 
       }else{

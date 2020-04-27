@@ -340,7 +340,7 @@ router.post('/nearbyRideBooking', function(req, res, next) {
                  coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
               },$maxDistance : 4000
             }
-          },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType
+          },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,driverBusy:"Free"
         },function(e,generalDriver){
           res.send({drivers:generalDriver});
         });
@@ -763,27 +763,9 @@ function randamNumber(){
 
   ////////Call Driver accept notification/////
 router.post('/AcceptCallByDriver', function(req, res, next) { 
-  var OTP=randamNumber(); 
-  
-  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{pilotID:req.body.pilotID,callbookingStatus:'Accept'}},function(err, ride){
-    if(ride){
-      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'accept',}},function(er,cust){
-        database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{orderStage:'accept'}},function(re, ou){
-          database.driverLocationArea.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{driverBusy:'busy'}},function(re, drvloc){
-            res.io.emit("DriverAccepeCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress,bookingID:req.body.bookingID,RideOTP:OTP});
-            res.send({ride:ride,cust:cust,RideOTP:OTP});
-            database.demandArea.deleteMany({CustID:req.body.CustID},function(e, d){
-              console.log("Reset Demand")
-            });
-          });
-         
-        });
-       
-      });
-    }
-  });
- 
-  });
+  res.io.emit("DriverAccepeCall",{CustID:req.body.CustID,pilotID:req.body.pilotID});
+  res.send("emitDriverAccepeCall")
+ });
  //////////Driver Cline Located //////
  router.post('/drv/clinelocated', function(req, res, next) {
  res.io.emit("clinelocated",{CustID:req.body.CustID});
@@ -2173,6 +2155,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
           database.driverlocation.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
             pilotID:req.cookies.pilotID,            
             DriverType:req.body.DriverType,
+            driverBusy:req.body.driverBusy,
             rating:pilot.rating,
             travelmod:pilot.travelmod,
             accountStatus:pilot.accountStatus, 
@@ -2185,6 +2168,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
           database.driverlocation({
             pilotID:req.cookies.pilotID,            
             DriverType:req.body.DriverType,
+            driverBusy:req.body.driverBusy,
             rating:pilot.rating,
             travelmod:pilot.travelmod,
             accountStatus:pilot.accountStatus, 
