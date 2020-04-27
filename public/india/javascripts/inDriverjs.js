@@ -160,7 +160,7 @@ function loginprocess(){
          //////////Driver Accept /////////
          function acceptRide(){ 
              alert("test")
-            Android.stopRingtone();  
+           // Android.stopRingtone();  
             var pilotID= $("#pilotID").val(); 
             var CustID= $("#CustID").val(); 
             $.post('/india/AcceptCallByDriver',{pilotID:pilotID,CustID:CustID},function(data){            
