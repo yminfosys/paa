@@ -77,7 +77,7 @@ function initMap() {
         clearTimeout(tt);
         tt=setTimeout(function(){
          Android.startRingtone();
-         Android.openMainActivity();
+        // Android.openMainActivity();
 
         },500);
           

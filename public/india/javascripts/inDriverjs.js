@@ -158,7 +158,8 @@ function loginprocess(){
         });
 
          //////////Driver Accept /////////
-         function acceptRide(inp){ 
+         function acceptRide(){ 
+             alert("test")
             Android.stopRingtone();  
             var pilotID= $("#pilotID").val(); 
             var CustID= $("#CustID").val(); 
