@@ -159,13 +159,13 @@ function loginprocess(){
 
          //////////Driver Accept /////////
          function acceptRide(){ 
-             alert("test")
-           // Android.stopRingtone();  
+             alert("test");             
             var pilotID= $("#pilotID").val(); 
             var CustID= $("#CustID").val(); 
             $.post('/india/AcceptCallByDriver',{pilotID:pilotID,CustID:CustID},function(data){            
             if(data){ 
-                $("#ringtone").css({"display":"none"});     
+                $("#ringtone").css({"display":"none"});
+                Android.stopRingtone();     
             }        
            
             });

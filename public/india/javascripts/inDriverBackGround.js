@@ -78,6 +78,7 @@ function initMap() {
         tt=setTimeout(function(){
          Android.startRingtone();
         // Android.openMainActivity();
+        
 
         },500);
           
