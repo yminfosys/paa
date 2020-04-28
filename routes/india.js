@@ -753,6 +753,8 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
 
       res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
       console.log("Emit saveDriverCallAndBooking");
+      res.cookie("driverBusy", "busy",{maxAge: 30*24*60*60*1000 });
+      console.log("Cookie Create");
       res.send("Order Grnerate sucellfully")
       // database.ride({
       //   bookingID:NewBookinid.bookingID,   
