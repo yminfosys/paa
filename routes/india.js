@@ -2189,10 +2189,11 @@ router.post('/driverLocationUpdate', function(req, res, next) {
   res.cookie("position",JSON.stringify({lat:req.body.lat, lng:req.body.lng, accuracy:req.body.accuracy}),{maxAge: 5*60*1000 });
   if(req.cookies.driverBusy){
     var driverBusy=req.cookies.driverBusy;
+   
   }else{
     var driverBusy="Free";
   }
-
+  console.log("req.cookies.driverBusy",req.cookies.driverBusy)
   database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
     if(pilot){
       database.driverlocation.findOne({pilotID:req.cookies.pilotID},function(err,data){
