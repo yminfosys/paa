@@ -169,7 +169,8 @@ function loginprocess(){
                     $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
                     <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
                     $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
-                    $("#geoNav").val(1); 
+                    $("#mapBtn").html('<button onclick="googlemapbtn(\'' + 1 + '\',\'' + data.ride.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>'); 
+
                     $("#clineLocated").css({"display":"block"});
 
                 })
@@ -192,34 +193,35 @@ function loginprocess(){
            
             });
         } 
-  ///////Open Google Map///////
-        function openMap(data){
-            var a =$("#geoNav").val(); 
-            
-            if(a==1){
-                if /* if we're on iOS, open in Apple Maps */
-                ((navigator.platform.indexOf("iPhone") != -1) || 
-                 (navigator.platform.indexOf("iPad") != -1) || 
-                 (navigator.platform.indexOf("iPod") != -1)){
-                    window.open("maps://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+" &amp;ll=");
-                 }else{
-                    window.open("https://maps.google.com/maps?daddr="+data.ride.picuklatlng[0]+","+data.ride.picuklatlng[1]+"&amp;ll=");
-                 } /* else use Google */
-            }else{
-                if(a==2){
-               // alert("drop")
-                if /* if we're on iOS, open in Apple Maps */
-            ((navigator.platform.indexOf("iPhone") != -1) || 
-             (navigator.platform.indexOf("iPad") != -1) || 
-             (navigator.platform.indexOf("iPod") != -1)){
-                window.open("maps://maps.google.com/maps?daddr="+data.ride.droplatlng[0]+","+data.ride.droplatlng[1]+" &amp;ll=");
-             }else{
-                window.open("https://maps.google.com/maps?daddr="+data.ride.droplatlng[0]+","+data.ride.droplatlng[1]+"&amp;ll=");
-             } /* else use Google */
-            }
-        }
-            
-     }
+  ///////Google Map BTN //////////
+  function googlemapbtn(a,b){
+    var lanlng=[b];
+   console.log("picuklatlng",lanlng)
+  if(a==1){
+      if /* if we're on iOS, open in Apple Maps */
+      ((navigator.platform.indexOf("iPhone") != -1) || 
+       (navigator.platform.indexOf("iPad") != -1) || 
+       (navigator.platform.indexOf("iPod") != -1)){
+          window.open("maps://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+", &amp;ll=");
+       }else{
+          window.open("https://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+"&amp;ll=");
+       } /* else use Google */
+       
+       
+  }else{
+      if(a==2){
+     // alert("drop")
+      if /* if we're on iOS, open in Apple Maps */
+  ((navigator.platform.indexOf("iPhone") != -1) || 
+   (navigator.platform.indexOf("iPad") != -1) || 
+   (navigator.platform.indexOf("iPod") != -1)){
+      window.open("maps://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+" &amp;ll=");
+   }else{
+      window.open("https://maps.google.com/maps?daddr="+lanlng[0]+","+lanlng[1]+"&amp;ll=");
+   } /* else use Google */
+  }
+}
+}
 
 
      ////////// On Cline Clocated/////////

@@ -266,10 +266,26 @@ function initMap() {
   ////////Page INit/////
   function pageInitiate(){
     var bookingID=$("#bookingID").val();
-         $.post('/india/drv/getPageInitiateDetails',{bookingID:bookingID},function(data){
-       
+         $.post('/india/drv/getPageInitiateDetails',{bookingID:bookingID},function(data){       
          if($("#orderStage").val()=='accept'){
-           
+          $("#pickDrop-Content").css({"display":"block"});
+          $("#orderNO").text(data.ride.bookingID);
+          $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+          <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
+          $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
+          $("#mapBtn").html('<button onclick="googlemapbtn(\'' + 1 + '\',\'' + data.ride.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>'); 
+
+          $("#clineLocated").css({"display":"block"});
+         }else{
+          if($("#orderStage").val()=='startRide'){
+
+          }else{
+            if($("#orderStage").val()=='finishRide'){
+
+            }
+
+          }
+
          }
         })
    

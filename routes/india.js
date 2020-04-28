@@ -796,10 +796,11 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
    });
 
    ////////Driver Page Initiate Data details///
-   router.post('/drv/getPageInitiateDetails', function(req, res, next) {
-    driverBusy
-    database.ride.findOne({driverBusy:"busy",pilotID:req.cookies.pilotID},function(err,ride){
-
+   router.post('/drv/getPageInitiateDetails', function(req, res, next) {   
+    database.ride.findOne({bookingID:req.body.bookingID},function(err,ride){
+      database.customer.findOne({CustID:ride.CustID},function(err,cust){
+        res.send({cust:cust,ride:ride});
+      });
     })
    });
    
