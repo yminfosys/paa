@@ -748,15 +748,7 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
  
  router.post('/saveDriverCallAndBooking', function(req, res, next) { 
      ///////Create Bookinng////
-     GenbookingID({},function(NewBookinid){
-      //  console.log("saveDriverCallAndBooking");
-
-      // res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
-      // console.log("Emit saveDriverCallAndBooking");
-      
-      
-      // console.log("ALL COOKIES",req.cookies);
-      // res.send("Order Grnerate sucellfully")
+     GenbookingID({},function(NewBookinid){      
       database.ride({
         bookingID:NewBookinid.bookingID,   
         CustID:req.body.CustID,
@@ -778,8 +770,15 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
         orderStage:'accept',
         bookingID:NewBookinid.bookingID
       }},function(er,cust){
-        res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
+        database.pilot.findOneAndUpdate({CustID:req.body.CustID},{$set:{
+          orderStage:'accept',
+          bookingID:NewBookinid.bookingID
+        }},function(e,d){
+          res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
           res.send("Order Grnerate sucellfully");
+        })
+        
+        
       });
         
       })
@@ -795,6 +794,15 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
       })
     });
    });
+
+   ////////Driver Page Initiate Data details///
+   router.post('/drv/getPageInitiateDetails', function(req, res, next) {
+    driverBusy
+    database.ride.findOne({driverBusy:"busy",pilotID:req.cookies.pilotID},function(err,ride){
+
+    })
+   });
+   
  
  //////////Driver Cline Located //////
  router.post('/drv/clinelocated', function(req, res, next) {

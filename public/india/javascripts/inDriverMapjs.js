@@ -193,27 +193,29 @@ function initMap() {
     }
   }); 
   
-  function onlineExicute(){
+  function onlineExicute(){   
     wachLocation();
     clearDemandArea();
     setCookie("setSystem","ONLINE",30);
+    ///Check Incomming Call Accept Display Window /////
+      if(getCookie("openAcceptWindow")){
+        ///////Open accept Window/////
+        var inData=JSON.parse(getCookie("openAcceptWindow"));
+        $("#ringtone").css({"display":"block"});
+        $("#pickupFrom").text(inData.pickuoAddress);
+        $("#pilotID").val(inData.pilotID);
+        $("#CustID").val(inData.CustID);
+        var tt=setInterval(function(){
+          if(!getCookie("openAcceptWindow")){
+            $("#ringtone").css({"display":"none"});
+            clearInterval(tt);
+          }
 
-    /////Check Incomming Call Accept Display Window /////
-      // if(getCookie("openAcceptWindow")){
-      //   ///////Open accept Window/////
-      //   var inData=JSON.parse(getCookie("openAcceptWindow"));
-      //   $("#ringtone").css({"display":"block"});
-      //   $("#pickupFrom").text(inData.pickuoAddress);
-      //   $("#pilotID").val(inData.pilotID);
-      //   $("#CustID").val(inData.CustID);
-      //   var tt=setInterval(function(){
-      //     if(!getCookie("openAcceptWindow")){
-      //       $("#ringtone").css({"display":"none"});
-      //       clearInterval(tt);
-      //     }
+        },300);
+      }
 
-      //   },300);
-      // }
+       /////Page Initiate////
+        pageInitiate();
     
 
     /////Android Interface
@@ -260,6 +262,18 @@ function initMap() {
   }
 
   incetiveAndBooking();
+
+  ////////Page INit/////
+  function pageInitiate(){
+    var bookingID=$("#bookingID").val();
+         $.post('/india/drv/getPageInitiateDetails',{bookingID:bookingID},function(data){
+       
+         if($("#orderStage").val()=='accept'){
+           
+         }
+        })
+   
+  }
 
   
 } /////End IntMap////////

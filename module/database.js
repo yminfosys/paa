@@ -143,6 +143,7 @@ var pilotSchema = new mongoose.Schema({
   gender:String,
   photo:String,Idproof:String,dl:String,rto:String,insurence:String,polution:String,
   orderStage:String,
+  bookingID:String,
   preRideTotalTime:Number,   
   location: {
     type: {

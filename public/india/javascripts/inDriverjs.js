@@ -193,9 +193,9 @@ function loginprocess(){
             });
         } 
   ///////Open Google Map///////
-        function openMap(){
+        function openMap(data){
             var a =$("#geoNav").val(); 
-            var data=JSON.parse(getCookie("rideBookingDetails")) ;
+            
             if(a==1){
                 if /* if we're on iOS, open in Apple Maps */
                 ((navigator.platform.indexOf("iPhone") != -1) || 
