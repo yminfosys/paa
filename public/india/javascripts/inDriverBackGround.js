@@ -1,3 +1,4 @@
+var socket = io('//'+document.location.hostname+':'+document.location.port);
 /////cookie Setting////
 function getCookie(cname) {
     var name = cname + "=";
@@ -61,8 +62,7 @@ function initMap() {
 
 
 
- ///////Handel Socket io  parameter/////// 
- var socket = io('//'+document.location.hostname+':'+document.location.port);
+ ///////Handel Socket io  parameter///////  
  var tt;
   socket.on('inCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
