@@ -68,21 +68,18 @@ function initMap() {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
     console.log("inCommingCall data",data);
+    clearTimeout(tt);
+    tt=setTimeout(function(){
     $.post('/india/requiestDisplayAcceptWindow',{
         pilotID:data.pilotID,
         CustID:data.CustID,
         pickuoAddress:data.pickuoAddress                        
       },function(dat){
         console.log("Call Accepted", dat);
-        clearTimeout(tt);
-        tt=setTimeout(function(){
-         Android.startRingtone();
+        Android.startRingtone();
         // Android.openMainActivity();
-        
-
-        },500);
-          
       });
+    },500);
 
   }
   });
