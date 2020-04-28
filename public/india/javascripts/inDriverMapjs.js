@@ -199,21 +199,21 @@ function initMap() {
     setCookie("setSystem","ONLINE",30);
 
     /////Check Incomming Call Accept Display Window /////
-      if(getCookie("openAcceptWindow")){
-        ///////Open accept Window/////
-        var inData=JSON.parse(getCookie("openAcceptWindow"));
-        $("#ringtone").css({"display":"block"});
-        $("#pickupFrom").text(inData.pickuoAddress);
-        $("#pilotID").val(inData.pilotID);
-        $("#CustID").val(inData.CustID);
-        var tt=setInterval(function(){
-          if(!getCookie("openAcceptWindow")){
-            $("#ringtone").css({"display":"none"});
-            clearInterval(tt);
-          }
+      // if(getCookie("openAcceptWindow")){
+      //   ///////Open accept Window/////
+      //   var inData=JSON.parse(getCookie("openAcceptWindow"));
+      //   $("#ringtone").css({"display":"block"});
+      //   $("#pickupFrom").text(inData.pickuoAddress);
+      //   $("#pilotID").val(inData.pilotID);
+      //   $("#CustID").val(inData.CustID);
+      //   var tt=setInterval(function(){
+      //     if(!getCookie("openAcceptWindow")){
+      //       $("#ringtone").css({"display":"none"});
+      //       clearInterval(tt);
+      //     }
 
-        },300);
-      }
+      //   },300);
+      // }
     
 
     /////Android Interface
