@@ -773,7 +773,10 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
         database.driverlocation.findOneAndUpdate({ pilotID:req.body.pilotID},{$set:{driverBusy:"busy"}},function(e, dd){
            res.cookie("driverBusy", "busy",{maxAge: 30*24*60*60*1000 });
           ////Requiest for Driver display Call Accept List/////
+
+          console.log("order generat",req.cookies.driverBusy)
            res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
+          
            res.send("Order Grnerate sucellfully")
         })
 
