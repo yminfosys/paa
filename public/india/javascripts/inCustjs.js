@@ -370,10 +370,11 @@ function loginprocess(){
          var tt;
          socket.on('DriverAccepeCall', function (incomdata) {
           if(CustID==incomdata.CustID){
+            console.log("Order Gen")
             clearTimeout(tt);
             tt=setTimeout(function(){
               ///////Grnerate Order/////
-              alert("Order Generate")
+              console.log("Order Gen in Timer")
             },500)
           }
          })
