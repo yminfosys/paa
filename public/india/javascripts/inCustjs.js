@@ -292,6 +292,7 @@ function loginprocess(){
 
    ///////Confrim Booking/////
    function confirmBooking(){
+    $('#confrmBtn').prop('disabled', true);
       //////check Wallet and BuyKM and Cash//////
       if($("#payBycash").prop("checked") == true){        
         continueBooking(1);      
@@ -359,9 +360,12 @@ function loginprocess(){
            ////////feedbace to customer/////
            console.log("Driver Busy")
            alert("All Drivers Are Busy with other Cline Please try again");
-           $("#booking-process").css({"display":"none"});
-           $("#footer-prebooking").css({"display":"block"});
-           $("#traval-mod").css({"display":"block"});
+          //  $("#booking-process").css({"display":"none"});
+          //  $("#footer-prebooking").css({"display":"block"});
+          //  $("#traval-mod").css({"display":"block"});
+
+          window.location='/india/'
+
          }
 
          },15000);
