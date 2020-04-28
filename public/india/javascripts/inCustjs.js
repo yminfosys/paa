@@ -372,6 +372,7 @@ function loginprocess(){
           if(CustID==incomdata.CustID){
             console.log("Order Gen")
             clearTimeout(tt);
+            
             tt=setTimeout(function(){
               ///////Grnerate Order/////
               console.log("Order Gen in Timer")
