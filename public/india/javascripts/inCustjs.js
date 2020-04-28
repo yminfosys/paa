@@ -376,7 +376,7 @@ function loginprocess(){
             tttt=setTimeout(function(){
               ///////Grnerate Order/////
 
-              $.post('/india/createTest',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds},function(result){
+              $.post('/india/createTest',{},function(result){
               console.log(result);
             }); 
             },10000)
