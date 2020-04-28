@@ -376,7 +376,7 @@ function loginprocess(){
             tttt=setTimeout(function(){
               ///////Grnerate Order/////
               console.log("Order Gen in Timer")
-            },500)
+            },10000)
           }
          })
 
