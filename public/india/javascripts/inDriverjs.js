@@ -157,6 +157,26 @@ function loginprocess(){
         
         });
 
+        ///////Display List Accept Call Details /////
+        socket.on('CallAcceptListDisplay', function (resp) {
+            console.log('openAcceptWindow',data);
+            if(resp.pilotID==getCookie("pilotID")){
+                $.post('/india/drv/clineDetalls',{pilotID:resp.pilotID,CustID:resp.CustID,bookingID:resp.bookingID},function(data){
+                    $("#pickDrop-Content").css({"display":"block"});
+                    $("#orderNO").text(data.ride.bookingID);
+                    $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+                    <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
+                    $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
+                    $("#geoNav").val(1); 
+                    $("#clineLocated").css({"display":"block"});
+
+                })
+
+            }
+        });
+
+        
+
          //////////Driver Accept /////////
          function acceptRide(){ 
                         

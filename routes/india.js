@@ -355,28 +355,7 @@ res.send('ReqEmited');
 });
 
 
-////////Create New Ride Booking/////
-router.post('/newRideBooking', function(req, res, next) {  
-console.log(req.body)
-  database.ride({
-    bookingID:req.body.bookingID,   
-    CustID:req.body.CustID,
-    picupaddress:req.body.originAds,
-    picuklatlng: [req.body.originLat, req.body.originLng],    
-    dropaddress:req.body.distAds,     
-    droplatlng:[req.body.distLat, req.body.distLng],        
-    kmtravels:req.body.totalDistance,
-    totalamount:req.body.totalAmt,
-    paymentBy:req.body.payMode,
-    discount:"",
-    driverpayout:"",
-    driverIncentiv:"",
-    callbookingStatus:"waiting"
-  }).save(function(err){
-    
-    res.send("new Booking Created");
-  });
-  });  
+  
 
 
   ///////Update Demand Location /////
@@ -767,11 +746,52 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   res.send("emitDriverAccepeCall")
  });
 
- router.post('/createTest', function(req, res, next) { 
+ router.post('/saveDriverCallAndBooking', function(req, res, next) { 
+     ///////Create Bookinng////
+     GenbookingID({},function(NewBookinid){
+      database.ride({
+        bookingID:NewBookinid.bookingID,   
+        CustID:req.body.CustID,
+        pilotID:req.body.pilotID,
+        DriverType:req.body.DriverType,
+        picupaddress:req.body.originAds,
+        picuklatlng: [req.body.originLat, req.body.originLng],    
+        dropaddress:req.body.distAds,     
+        droplatlng:[req.body.distLat, req.body.distLng],        
+        kmtravels:req.body.totalDistance,
+        totalamount:req.body.totalAmt,
+        paymentBy:req.body.payMode,           
+        callbookingStatus:"Accept",
+        driverBusy:"busy",        
+        preRideOTP:randamNumber(), 
+      }).save(function(err){
+        //////CUST data////
+      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{
+        orderStage:'accept',
+        bookingID:NewBookinid.bookingID
+      }},function(er,cust){
+        database.driverlocation.findOneAndUpdate({ pilotID:req.body.pilotID},{$set:{driverBusy:"busy"}},function(e, dd){
+           res.cookie("driverBusy", "busy",{maxAge: 30*24*60*60*1000 });
+          ////Requiest for Driver display Call Accept List/////
+           res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
+           res.send("Order Grnerate sucellfully")
+        })
+
+      });
+        
+      })
+    });
   
-  res.send("Order Grnerate sucellfully")
  });
 
+  //////////Driver Cline Details //////
+  router.post('/drv/clineDetalls', function(req, res, next) {
+    database.customer.findOne({CustID:req.body.CustID},function(err,cust){
+      database.ride.findOne({bookingID:req.body.bookingID},function(e,ride){
+        res.send({cust:cust,ride:ride});
+      })
+    });
+   });
  
  //////////Driver Cline Located //////
  router.post('/drv/clinelocated', function(req, res, next) {

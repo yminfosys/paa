@@ -380,8 +380,26 @@ function loginprocess(){
             tttt=setTimeout(function(){
               ///////Grnerate Order/////
 
-              $.post('/india/createTest',{},function(result){
+              $.post('/india/saveDriverCallAndBooking',{
+                originAds:originAds,
+                distAds:distAds,
+                originLat:origin.lat,
+                originLng:origin.lng,
+                distLat:dist.lat,
+                distLng:dist.lng,
+                travelmod:travelmod,
+                CustID:CustID,
+                pilotID:incomdata.pilotID,
+                DriverType:"General",
+                totalAmt:Number(totalAmt) ,
+                totalDistance:totalDistance,
+                payMode:payMode,
+              },function(result){
               console.log(result);
+              if(result){
+                //alert(resp)
+                window.location='../india/ride'
+              }
             }); 
             },500)
           }
