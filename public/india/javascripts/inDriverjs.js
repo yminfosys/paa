@@ -160,6 +160,8 @@ function loginprocess(){
         ///////Display List Accept Call Details /////
         socket.on('CallAcceptListDisplay', function (resp) {
             alert(resp.bookingID);
+            ///////Genareate Driver Busy Coockes/////
+            setCookie("driverBusy","busy",30);
             if(resp.pilotID==getCookie("pilotID")){
                 $.post('/india/drv/clineDetalls',{pilotID:resp.pilotID,CustID:resp.CustID,bookingID:resp.bookingID},function(data){
                     $("#pickDrop-Content").css({"display":"block"});
