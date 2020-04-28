@@ -375,7 +375,10 @@ function loginprocess(){
 
             tttt=setTimeout(function(){
               ///////Grnerate Order/////
-              console.log("Order Gen in Timer")
+
+              $.post('/india/createTest',{pilotID:data.drivers[count].pilotID,CustID:CustID,pickuoAddress:originAds},function(result){
+              console.log(result);
+            }); 
             },10000)
           }
          })

@@ -766,11 +766,19 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   res.io.emit("DriverAccepeCall",{CustID:req.body.CustID,pilotID:req.body.pilotID});
   res.send("emitDriverAccepeCall")
  });
+
+ router.post('/createTest', function(req, res, next) { 
+  
+  res.send("Order Grnerate sucellfully")
+ });
+
+ 
  //////////Driver Cline Located //////
  router.post('/drv/clinelocated', function(req, res, next) {
  res.io.emit("clinelocated",{CustID:req.body.CustID});
  res.send("emitClinelocated")
 });
+
 
 //////////Driver Cline Located //////
 router.post('/drv/startRide', function(req, res, next) {
