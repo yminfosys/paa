@@ -379,7 +379,7 @@ function loginprocess(){
               $.post('/india/createTest',{},function(result){
               console.log(result);
             }); 
-            },10000)
+            },500)
           }
          })
 

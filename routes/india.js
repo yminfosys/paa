@@ -349,9 +349,12 @@ router.post('/nearbyRideBooking', function(req, res, next) {
 });
 
 ////////Call Driver Requiest notification/////
-router.post('/CallDriver', function(req, res, next) {  
+router.post('/CallDriver', function(req, res, next) { 
+ 
 res.io.emit("inCommingCall",{pilotID:req.body.pilotID,CustID:req.body.CustID,pickuoAddress:req.body.pickuoAddress});
+res.io.disconnect(true); 
 res.send('ReqEmited');
+
 });
 
 
