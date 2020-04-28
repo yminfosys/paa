@@ -63,13 +63,13 @@ function initMap() {
 
 
  ///////Handel Socket io  parameter///////  
- var tt;
+
   socket.on('inCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
     console.log("inCommingCall data",data);
-    clearTimeout(tt);
-    tt=setTimeout(function(){
+   
+   
     $.post('/india/requiestDisplayAcceptWindow',{
         pilotID:data.pilotID,
         CustID:data.CustID,
@@ -79,7 +79,7 @@ function initMap() {
         Android.startRingtone();
         // Android.openMainActivity();
       });
-    },500);
+  
 
   }
   });
