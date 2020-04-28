@@ -2187,6 +2187,12 @@ res.status(200).send();
 ////////DriverLocationUpdate/////////
 router.post('/driverLocationUpdate', function(req, res, next) { 
   res.cookie("position",JSON.stringify({lat:req.body.lat, lng:req.body.lng, accuracy:req.body.accuracy}),{maxAge: 5*60*1000 });
+  if(req.cookies.driverBusy){
+    var driverBusy=req.cookies.driverBusy;
+  }else{
+    var driverBusy="Free";
+  }
+
   database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
     if(pilot){
       database.driverlocation.findOne({pilotID:req.cookies.pilotID},function(err,data){
@@ -2194,7 +2200,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
           database.driverlocation.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{
             pilotID:req.cookies.pilotID,            
             DriverType:req.body.DriverType,
-            driverBusy:req.body.driverBusy,
+            driverBusy:driverBusy,
             rating:pilot.rating,
             travelmod:pilot.travelmod,
             accountStatus:pilot.accountStatus, 
@@ -2207,7 +2213,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
           database.driverlocation({
             pilotID:req.cookies.pilotID,            
             DriverType:req.body.DriverType,
-            driverBusy:req.body.driverBusy,
+            driverBusy:driverBusy,
             rating:pilot.rating,
             travelmod:pilot.travelmod,
             accountStatus:pilot.accountStatus, 

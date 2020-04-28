@@ -46,7 +46,7 @@ function initMap() {
     } 
 
     function LocationUpdate(position){     
-        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"preRide",driverBusy:"ok" },function(data){
+        $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"preRide" },function(data){
             console.log(data);
          });
          
