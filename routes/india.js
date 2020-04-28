@@ -745,44 +745,49 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   res.io.emit("DriverAccepeCall",{CustID:req.body.CustID,pilotID:req.body.pilotID});
   res.send("emitDriverAccepeCall")
  });
-
+ 
  router.post('/saveDriverCallAndBooking', function(req, res, next) { 
      ///////Create Bookinng////
      GenbookingID({},function(NewBookinid){
-      database.ride({
-        bookingID:NewBookinid.bookingID,   
-        CustID:req.body.CustID,
-        pilotID:req.body.pilotID,
-        DriverType:req.body.DriverType,
-        picupaddress:req.body.originAds,
-        picuklatlng: [req.body.originLat, req.body.originLng],    
-        dropaddress:req.body.distAds,     
-        droplatlng:[req.body.distLat, req.body.distLng],        
-        kmtravels:req.body.totalDistance,
-        totalamount:req.body.totalAmt,
-        paymentBy:req.body.payMode,           
-        callbookingStatus:"Accept",
-        driverBusy:"busy",        
-        preRideOTP:randamNumber(), 
-      }).save(function(err){
-        //////CUST data////
-      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{
-        orderStage:'accept',
-        bookingID:NewBookinid.bookingID
-      }},function(er,cust){
-        database.driverlocation.findOneAndUpdate({ pilotID:req.body.pilotID},{$set:{driverBusy:"busy"}},function(e, dd){
-           res.cookie("driverBusy", "busy",{maxAge: 30*24*60*60*1000 });
-          ////Requiest for Driver display Call Accept List/////
+       console.log("saveDriverCallAndBooking");
 
-          console.log("order generat",req.cookies.driverBusy)
-           res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
+      res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
+      console.log("Emit saveDriverCallAndBooking");
+      res.send("Order Grnerate sucellfully")
+      // database.ride({
+      //   bookingID:NewBookinid.bookingID,   
+      //   CustID:req.body.CustID,
+      //   pilotID:req.body.pilotID,
+      //   DriverType:req.body.DriverType,
+      //   picupaddress:req.body.originAds,
+      //   picuklatlng: [req.body.originLat, req.body.originLng],    
+      //   dropaddress:req.body.distAds,     
+      //   droplatlng:[req.body.distLat, req.body.distLng],        
+      //   kmtravels:req.body.totalDistance,
+      //   totalamount:req.body.totalAmt,
+      //   paymentBy:req.body.payMode,           
+      //   callbookingStatus:"Accept",
+      //   driverBusy:"busy",        
+      //   preRideOTP:randamNumber(), 
+      // }).save(function(err){
+      //   //////CUST data////
+      // database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{
+      //   orderStage:'accept',
+      //   bookingID:NewBookinid.bookingID
+      // }},function(er,cust){
+      //   database.driverlocation.findOneAndUpdate({ pilotID:req.body.pilotID},{$set:{driverBusy:"busy"}},function(e, dd){
+      //      res.cookie("driverBusy", "busy",{maxAge: 30*24*60*60*1000 });
+      //     ////Requiest for Driver display Call Accept List/////
+
+      //     console.log("order generat",req.cookies.driverBusy)
+      //      res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
           
-           res.send("Order Grnerate sucellfully")
-        })
+      //      res.send("Order Grnerate sucellfully")
+      //   })
 
-      });
+      // });
         
-      })
+      // })
     });
   
  });
