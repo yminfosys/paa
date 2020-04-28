@@ -371,7 +371,7 @@ function loginprocess(){
          socket.on('DriverAccepeCall', function (incomdata) {
           if(CustID==incomdata.CustID){
             console.log("Order Gen")
-            clearTimeout(tt);
+            clearTimeout(tttt);
 
             tttt=setTimeout(function(){
               ///////Grnerate Order/////
