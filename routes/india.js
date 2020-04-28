@@ -2193,7 +2193,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
   }else{
     var driverBusy="Free";
   }
-  console.log("req.cookies.driverBusy",req.cookies.driverBusy)
+  console.log("req.cookies.driverBusy",req.cookies)
   database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
     if(pilot){
       database.driverlocation.findOne({pilotID:req.cookies.pilotID},function(err,data){
