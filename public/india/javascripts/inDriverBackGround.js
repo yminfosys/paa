@@ -63,10 +63,10 @@ function initMap() {
   socket.on('inCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
-    console.log("inCommingCall data",data);
-   
-   
-    $.post('/india/requiestDisplayAcceptWindow',{
+    console.log("inCommingCall data",data); 
+    
+    if(!getCookie("driverBusy")){
+      $.post('/india/requiestDisplayAcceptWindow',{
         pilotID:data.pilotID,
         CustID:data.CustID,
         pickuoAddress:data.pickuoAddress                        
@@ -75,8 +75,7 @@ function initMap() {
         Android.startRingtone();
         // Android.openMainActivity();
       });
-  
-
+    }
   }
   });
 

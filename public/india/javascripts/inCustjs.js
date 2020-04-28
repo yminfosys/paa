@@ -398,7 +398,7 @@ function loginprocess(){
               console.log(result);
               if(result){
                 //alert(resp)
-               // window.location='../india/ride'
+                window.location='../india/ride'
               }
             }); 
             },500)
