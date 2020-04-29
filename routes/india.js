@@ -827,95 +827,18 @@ router.post('/drv/startRide', function(req, res, next) {
   
   });
 
-  //////////Driver Cline Located //////
+  //////////Driver Finish Ride //////
 router.post('/drv/finishRide', function(req, res, next) {
   database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'finishRide'}},function(er,cust){
     database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'finishRide'}},function(re, driver){
       if(driver){
-        database.ride.findOne({bookingID:req.body.bookingID},function(er, Booking){      
-        //// Calculate Distance Last positio driver///////
-         database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er, driverLoc){        
-        var finishLocation=driverLoc.location.coordinates;
-        var travelmod=driver.travelmod;
-            googleApi.distance({
-              origins:''+Number(Booking.picuklatlng[0])+', '+Number(Booking.picuklatlng[1])+'',              
-              destinations:''+Number(finishLocation[1])+','+Number(finishLocation[0])+'',
-              apik:process.env.API_KEY,
-              travelmod:travelmod
-          },function(result){
-            var distance=result.rows[0].elements[0].distance.value;                        
-              distance=parseInt(distance/1000) + 1;               
-              console.log("distance",distance)
-                var endTime=new Date();
-                var totalTime=endTime.getTime()- moment(Booking.startTime).utc().toDate().getTime();
-                totalTime= parseInt(totalTime/(1000*60)) + 1;
-                var travelm=Number(travelmod)-1; 
-                var timefare=Number(cust.GenarelPerMinutCharge[travelm])* Number(totalTime);
-                timefare=timefare.toFixed(0);
-               // database.priceOffer.findOne({travelmod:travelmod,distanceKM:distance},function(e,price){
-                  
-                  var billAmount=0;                  
-                  var price=0;
-                  var driverpayout=0;
-
-                  if(Number(distance) <= Number(cust.generalMinimumKm[travelm])){
-                    price=Number(cust.generalMinimumprice[travelm])  + Number(cust.generalBasePrice[travelm]);
-                    driverpayout=Number(cust.generalMinimumKm[travelm]) * Number(cust.driverPayout[travelm])
-                  }else{
-                    var dist=Number(distance) - Number(cust.generalMinimumKm[travelm]);
-                   price= (Number(dist) * Number(cust.generalPriceperKm[travelm])) + (Number(cust.generalMinimumprice[travelm]) + Number(cust.generalBasePrice[travelm])) 
-                   driverpayout=Number(distance) * Number(cust.driverPayout[travelm])
-                  }
-                                   
-                  if(price >= Booking.totalamount){
-                     billAmount=Number(price) + Number(timefare)  ;
-                    
-                  }else{
-                     billAmount=Number(Booking.totalamount)+ Number(timefare);                     
-                  }
-                  /////send  and update bill details/////
-                  database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{totalamount:billAmount,driverpayout:driverpayout,totalTime:totalTime,timefare:timefare,generalBasePrice:Number(cust.generalBasePrice[travelm])}},function(er, updatbooking){ 
-                    if(updatbooking){
-                      //////Wallet Update ////
-                      if(Number(updatbooking.paymentBy)==2){
-                        var walletAmt=Number(cust.walletBalance)-billAmount;
-                        database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{walletBalance:walletAmt}},function(er,cu){
-                          res.io.emit("finishRide",{CustID:req.body.CustID});
-                          res.send({billAmount:0}); 
-                        });
-                      }else{
-                        if(Number(updatbooking.paymentBy)==3){
-                          var buykmAmt=Number(cust.walletBalance)-Number(distance);
-                          database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{BuyKM:buykmAmt}},function(er,n){
-                            res.io.emit("finishRide",{CustID:req.body.CustID});
-                          res.send({billAmount:0}); 
-                          });
-                        }else{
-                          database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{driverCashCollectio:billAmount,DriverType:"General"}},function(er, cashcollec){
-                            res.io.emit("finishRide",{CustID:req.body.CustID});
-                            res.send({billAmount:billAmount});
-                          }) ;
- 
-                           
-                        }
-                      }
-                    }
-                  });
-                  
-
-               // }); /////          
-           
-          });
-
-        });
-
+        database.ride.findOne({bookingID:req.body.bookingID},function(er, Booking){
+            console,log("cust",cust,"Booking",Booking)
         });
       }
-      
     });
-   
   });
-  });
+});
 
  
 

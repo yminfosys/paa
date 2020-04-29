@@ -298,7 +298,10 @@ function initMap() {
          }else{
            if($("#orderStage").val()=='finishRide'){
             $("#pickDrop-Content").css({"display":"none"});
-            $("#billAndfeedback").css({"display":"block"});                  
+            $("#billAndfeedback").css({"display":"block"}); 
+            $("#orderNO").text(data.ride.bookingID);
+            $("#CustID").val(data.ride.CustID);
+            $("#OrderOTP").val(data.ride.preRideOTP);                 
                 $("#OTP-Content").css({"display":"none"});
                 $("#startRide").css({"display":"none"});
                 $("#finishride").css({"display":"none"});
