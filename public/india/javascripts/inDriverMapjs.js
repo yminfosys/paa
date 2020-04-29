@@ -235,9 +235,9 @@ function initMap() {
       bookingID: $("#orderNO").text() 
     },function(data){
       if(data){
-        onlineExicute();
+       
         $("#billAndfeedback").css({"display":"none"});
-        document.getElementById("toggle").checked = true;
+        
         incetiveAndBooking();
       }
       
