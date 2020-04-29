@@ -258,7 +258,9 @@ function initMap() {
 
   incetiveAndBooking();
 
-  alert('<%=JSON.stringify(driver)%>')
+  alert(JSON.stringify('<%=driver%>'))
+
+  alert($("#orderStage").val())
 
   ////////Page INit/////
   function pageInitiate(){
