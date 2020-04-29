@@ -359,10 +359,7 @@ function loginprocess(){
            clearInterval(timere);
            ////////feedbace to customer/////
            console.log("Driver Busy")
-           alert("All Drivers Are Busy with other Cline Please try again");
-          //  $("#booking-process").css({"display":"none"});
-          //  $("#footer-prebooking").css({"display":"block"});
-          //  $("#traval-mod").css({"display":"block"});
+           alert("All Drivers Are Busy with other Cline Please try again");        
 
           window.location='/india/'
 

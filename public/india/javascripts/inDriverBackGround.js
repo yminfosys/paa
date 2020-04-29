@@ -59,22 +59,30 @@ function initMap() {
 
 
  ///////Handel Socket io  parameter///////  
-
+   var thotting=0;
   socket.on('inCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
     console.log("inCommingCall data",data); 
     
     if(!getCookie("driverBusy")){
-      $.post('/india/requiestDisplayAcceptWindow',{
-        pilotID:data.pilotID,
-        CustID:data.CustID,
-        pickuoAddress:data.pickuoAddress                        
-      },function(dat){
-        console.log("Call Accepted", dat);
-        Android.startRingtone();
-        // Android.openMainActivity();
-      });
+      if(thotting==0){
+        thotting=1;
+        setTimeout(function(){
+          thotting=0;
+        }, 1000*15);
+        
+        $.post('/india/requiestDisplayAcceptWindow',{
+          pilotID:data.pilotID,
+          CustID:data.CustID,
+          pickuoAddress:data.pickuoAddress                        
+        },function(dat){
+          console.log("Call Accepted", dat);
+          Android.startRingtone();
+          // Android.openMainActivity();
+        });
+      }      
+
     }
   }
   });
