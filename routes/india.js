@@ -937,14 +937,17 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
   database.ride.find({
     date:{$gte: todayStart.toDate(), $lte:todayend.toDate() },
     pilotID:req.cookies.pilotID,
-    callbookingStatus:"Accept"
+    callbookingStatus:"complete",
+    DriverType:"General"
   },function(er , data){
       data.forEach(function(val,indx,arry){
-      totalErning+=Number(val.driverpayout)
-      totalIncentive+=Number(val.driverIncentiv)
+        if(val.driverpayout){
+          totalErning+=Number(val.driverpayout)
+        }
+        if(val.driverIncentiv){
+          totalIncentive+=Number(val.driverIncentiv)
+        }
       if(indx===arry.length - 1){
-        console.log("Earnings",totalErning);
-        console.log("Incentive",totalIncentive)
         res.send({noOfBooking:arry.length,totalErning:totalErning,totalIncentive:totalIncentive})
       }
     });
