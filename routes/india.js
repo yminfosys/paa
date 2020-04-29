@@ -855,7 +855,7 @@ router.post('/drv/finishRide', function(req, res, next) {
               var distancefare=Number(cust.generalPriceperKm[travelm])* Number(distance);
               var billAmount=0;
               var totalamount=0;
-              totalamount= Number(distancefare) + (Number(cust.generalMinimumprice[travelm])+ Number(cust.generalBasePrice[travelm]))
+              totalamount= (Number(distance) * Number(cust.generalPriceperKm[travelm])) + (Number(cust.generalMinimumprice[travelm]) + Number(cust.generalBasePrice[travelm]))
               var driverpayout=Number(distance) * Number(cust.driverPayout[travelm]);
               if(totalamount >= Booking.totalamount){
                 billAmount=Number(totalamount) + Number(timefare);                    

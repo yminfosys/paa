@@ -303,7 +303,7 @@ function initMap() {
                 $("#finishride").css({"display":"none"});
                 $("#pickdropfooter").css({"display":"none"});
                 $("#pickdropHead").css({"display":"none"});
-                $("#amt").text(data.totalamount)
+                $("#amt").text(data.ride.totalamount)
 
            }
 
