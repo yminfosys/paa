@@ -853,15 +853,25 @@ router.post('/drv/finishRide', function(req, res, next) {
               timefare=timefare.toFixed(0);
               distance=parseInt(distance/1000) + 1;
               var distancefare=Number(cust.generalPriceperKm[travelm])* Number(distance);
-              var billAmount=0;
-              var totalamount=0;
-              totalamount= (Number(distance) * Number(cust.generalPriceperKm[travelm])) + (Number(cust.generalMinimumprice[travelm]) + Number(cust.generalBasePrice[travelm]))
-              var driverpayout=Number(distance) * Number(cust.driverPayout[travelm]);
-              if(totalamount >= Booking.totalamount){
-                billAmount=Number(totalamount) + Number(timefare);                    
-             }else{
-                billAmount= Number(Booking.totalamount) + Number(timefare);                 
-             }
+              var billAmount=0;                  
+              var price=0;
+              var driverpayout=0;
+
+              if(Number(distance) <= Number(cust.generalMinimumKm[travelm])){
+                price=Number(cust.generalMinimumprice[travelm])  + Number(cust.generalBasePrice[travelm]);
+                driverpayout=Number(cust.generalMinimumKm[travelm]) * Number(cust.driverPayout[travelm])
+              }else{
+                var dist=Number(distance) - Number(cust.generalMinimumKm[travelm]);
+               price= (Number(dist) * Number(cust.generalPriceperKm[travelm])) + (Number(cust.generalMinimumprice[travelm]) + Number(cust.generalBasePrice[travelm])) 
+               driverpayout=Number(distance) * Number(cust.driverPayout[travelm])
+              }
+                               
+              if(price >= Booking.totalamount){
+                 billAmount=Number(price) + Number(timefare)  ;
+                
+              }else{
+                 billAmount=Number(Booking.totalamount)+ Number(timefare);                     
+              }
                 /////send  and update bill details/////
                 database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{totalamount:billAmount,driverpayout:driverpayout,totalTime:totalTime,timefare:timefare,generalBasePrice:Number(cust.generalBasePrice[travelm])}},function(er, updatbooking){
                   if(updatbooking){
