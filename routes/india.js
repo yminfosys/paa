@@ -914,14 +914,20 @@ router.post('/drv/finishRide', function(req, res, next) {
 
    //////////Driver finishEverythingAndSetNormal //////
 router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
-    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:""}},function(e,data){
-    // console.log("Find all cook",req.cookies);
-    //////delete all cookes/////
-    res.send("ok") 
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:"",bookingID:""}},function(e,data){
+      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:"",bookingID:""}},function(e,data){
+        database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{
+          callbookingStatus:"complete",
+          driverBusy:""}},function(e,data){
+            res.clearCookie("driverBusy");          
+            res.send("ok") 
+        });
+      })
+    
     });
   });
 
-   //////////Driver finishEverythingAndSetNormal //////
+   //////////Driver bookingIncentiveDetails  //////
    router.post('/drv/bookingIncentiveDetails', function(req, res, next) {
     var totalErning=0;
     var totalIncentive=0;

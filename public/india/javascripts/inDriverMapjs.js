@@ -230,7 +230,10 @@ function initMap() {
 
   /////continueNextRide /////////
   document.getElementById("continueNextRide").addEventListener("click", function(){    
-    $.post('/india/drv/finishEverythingAndSetNormal',{},function(data){
+    $.post('/india/drv/finishEverythingAndSetNormal',{
+      CustID:$("#CustID").val(),
+      bookingID: $("#orderNO").text() 
+    },function(data){
       if(data){
         onlineExicute();
         $("#billAndfeedback").css({"display":"none"});
