@@ -63,8 +63,7 @@ function initMap() {
         
         circle.setRadius(position.coords.accuracy);
 
-        // $("#centerLocation").val(''+position.coords.latitude+','+position.coords.longitude+'');
-        // $("#pickuplatlong").val('{"lat":"'+position.coords.latitude+'","lng":"'+position.coords.longitude+'"}')        
+        
       }
     
   }
@@ -215,7 +214,7 @@ function initMap() {
       }
 
        /////Page Initiate////
-        pageInitiate();
+      //  pageInitiate();
     
 
     /////Android Interface
