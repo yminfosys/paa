@@ -213,10 +213,6 @@ function initMap() {
         },300);
       }
 
-       /////Page Initiate////
-      //  pageInitiate();
-    
-
     /////Android Interface
     andRoid(1);
     ////////////////
@@ -262,9 +258,12 @@ function initMap() {
 
   incetiveAndBooking();
 
+  alert('<%=JSON.stringify(driver)%>')
+
   ////////Page INit/////
   function pageInitiate(){
     var bookingID=$("#bookingID").val();
+
          $.post('/india/drv/getPageInitiateDetails',{bookingID:bookingID},function(data){       
          if($("#orderStage").val()=='accept'){
           $("#pickDrop-Content").css({"display":"block"});
