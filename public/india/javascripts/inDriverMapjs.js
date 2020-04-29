@@ -219,6 +219,8 @@ function initMap() {
 
     $("#map").css({"display":"block"});
     $("#offline-content").css({"display":"none"});
+    ////////Page INit/////
+   pageInitiate();
     
   }
 
@@ -264,31 +266,32 @@ function initMap() {
 
   ////////Page INit/////
   function pageInitiate(){
-    var bookingID=$("#bookingID").val();
+    
+    if($("#bookingID").val()){
+      $.post('/india/drv/getPageInitiateDetails',{bookingID:$("#bookingID").val()},function(data){       
+        if($("#orderStage").val()=='accept'){
+         $("#pickDrop-Content").css({"display":"block"});
+         $("#orderNO").text(data.ride.bookingID);
+         $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+         <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
+         $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
+         $("#mapBtn").html('<button onclick="googlemapbtn(\'' + 1 + '\',\'' + data.ride.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>'); 
 
-         $.post('/india/drv/getPageInitiateDetails',{bookingID:bookingID},function(data){       
-         if($("#orderStage").val()=='accept'){
-          $("#pickDrop-Content").css({"display":"block"});
-          $("#orderNO").text(data.ride.bookingID);
-          $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
-          <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
-          $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
-          $("#mapBtn").html('<button onclick="googlemapbtn(\'' + 1 + '\',\'' + data.ride.picuklatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>'); 
+         $("#clineLocated").css({"display":"block"});
+        }else{
+         if($("#orderStage").val()=='startRide'){
 
-          $("#clineLocated").css({"display":"block"});
          }else{
-          if($("#orderStage").val()=='startRide'){
+           if($("#orderStage").val()=='finishRide'){
 
-          }else{
-            if($("#orderStage").val()=='finishRide'){
-
-            }
-
-          }
+           }
 
          }
-        })
-   
+
+        }
+       })
+
+    }
   }
 
   

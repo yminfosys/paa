@@ -770,14 +770,13 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
         orderStage:'accept',
         bookingID:NewBookinid.bookingID
       }},function(er,cust){
-        database.pilot.findOneAndUpdate({CustID:req.body.CustID},{$set:{
+        database.pilot.findOneAndUpdate({pilotID:req.body.pilotID},{$set:{
           orderStage:'accept',
           bookingID:NewBookinid.bookingID
         }},function(e,d){
           res.io.emit("CallAcceptListDisplay",{ pilotID:req.body.pilotID,CustID:req.body.CustID,bookingID:NewBookinid.bookingID});
           res.send("Order Grnerate sucellfully");
-        })
-        
+        });        
         
       });
         
