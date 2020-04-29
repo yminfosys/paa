@@ -280,9 +280,27 @@ function initMap() {
          $("#clineLocated").css({"display":"block"});
         }else{
          if($("#orderStage").val()=='startRide'){
+          $("#ringtone").css({"display":"none"});           
+          $("#pickDrop-Content").css({"display":"block"});
+          $("#orderNO").text(data.ride.bookingID);
+          $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
+          <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
+          $("#address").html('<p>Drop to: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.dropaddress+'</p>');
+          $("#mapBtn").html('<button onclick="googlemapbtn(\'' + 2 + '\',\'' + data.ride.droplatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>'); 
+          $("#startRide").css({"display":"none"});
+          $("#clineLocated").css({"display":"none"});
+          $("#finishride").css({"display":"block"});
 
          }else{
            if($("#orderStage").val()=='finishRide'){
+            $("#pickDrop-Content").css({"display":"none"});
+            $("#billAndfeedback").css({"display":"block"});                  
+                $("#OTP-Content").css({"display":"none"});
+                $("#startRide").css({"display":"none"});
+                $("#finishride").css({"display":"none"});
+                $("#pickdropfooter").css({"display":"none"});
+                $("#pickdropHead").css({"display":"none"});
+                $("#amt").text(data.totalamount)
 
            }
 

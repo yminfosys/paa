@@ -919,12 +919,7 @@ router.post('/drv/finishRide', function(req, res, next) {
   });
   });
 
-  //////////Driver getFinalBooking For Billing //////
-router.post('/drv/getFinalBooking', function(req, res, next) {
-  database.ride.findOne({bookingID:req.body.bookingID},function(e,data){
-    res.send(data);
-  });
-  });
+ 
 
    //////////Driver finishEverythingAndSetNormal //////
 router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
