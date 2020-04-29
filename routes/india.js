@@ -832,8 +832,68 @@ router.post('/drv/finishRide', function(req, res, next) {
   database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'finishRide'}},function(er,cust){
     database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'finishRide'}},function(re, driver){
       if(driver){
-        database.ride.findOne({bookingID:req.body.bookingID},function(er, Booking){
-            console.log("cust",cust,"Booking",Booking);
+        var endTime=new Date();
+        database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{callbookingStatus:"finishRide",endTime:endTime,travelmod:driver.travelmod}},function(er, Booking){ 
+          
+          //// Calculate Distance Last positio driver///////
+         database.driverlocation.findOne({pilotID:req.cookies.pilotID},function(er, driverLoc){        
+          var finishLocation=driverLoc.location.coordinates;         
+          var travelmod=driver.travelmod;
+              googleApi.distance({
+                origins:''+Number(Booking.picuklatlng[0])+', '+Number(Booking.picuklatlng[1])+'',              
+                destinations:''+Number(finishLocation[1])+','+Number(finishLocation[0])+'',
+                apik:process.env.API_KEY,
+                travelmod:travelmod
+            },function(result){
+              var distance=result.rows[0].elements[0].distance.value;
+              var totalTime=endTime.getTime()- moment(Booking.startTime).utc().toDate().getTime();
+              totalTime= parseInt(totalTime/(1000*60)) + 1;
+              var travelm=Number(travelmod)-1; 
+              var timefare=Number(cust.GenarelPerMinutCharge[travelm])* Number(totalTime);
+              timefare=timefare.toFixed(0);
+              distance=parseInt(distance/1000) + 1;
+              var distancefare=Number(cust.generalPriceperKm[travelm])* Number(distance);
+              var billAmount=0;
+              var totalamount=0;
+              totalamount= Number(distancefare) + (Number(cust.generalMinimumprice[travelm])+ Number(cust.generalBasePrice[travelm]))
+              var driverpayout=Number(distance) * Number(cust.driverPayout[travelm]);
+              if(totalamount >= Booking.totalamount){
+                billAmount=Number(totalamount) + Number(timefare);                    
+             }else{
+                billAmount= Number(Booking.totalamount) + Number(timefare);                 
+             }
+                /////send  and update bill details/////
+                database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{totalamount:billAmount,driverpayout:driverpayout,totalTime:totalTime,timefare:timefare,generalBasePrice:Number(cust.generalBasePrice[travelm])}},function(er, updatbooking){
+                  if(updatbooking){
+                    //////Wallet Update ////
+                    if(Number(updatbooking.paymentBy)==2){
+                      var walletAmt=Number(cust.walletBalance)-billAmount;
+                      database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{walletBalance:walletAmt}},function(er,cu){
+                        res.io.emit("finishRide",{CustID:req.body.CustID});
+                        res.send({billAmount:0}); 
+                      });
+                    }else{
+                      if(Number(updatbooking.paymentBy)==3){
+                        var buykmAmt=Number(cust.walletBalance)-Number(distance);
+                        database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{BuyKM:buykmAmt}},function(er,n){
+                          res.io.emit("finishRide",{CustID:req.body.CustID});
+                        res.send({billAmount:0}); 
+                        });
+                      }else{
+                        database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{driverCashCollectio:billAmount}},function(er, cash){
+                          res.io.emit("finishRide",{CustID:req.body.CustID});
+                          res.send({billAmount:billAmount}); 
+                        }); 
+             
+                      }
+                    }
+                  }
+
+                 }); 
+
+            })
+          });  
+
         });
       }
     });
