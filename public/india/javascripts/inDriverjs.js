@@ -166,6 +166,8 @@ function loginprocess(){
                 $.post('/india/drv/clineDetalls',{pilotID:resp.pilotID,CustID:resp.CustID,bookingID:resp.bookingID},function(data){
                     $("#pickDrop-Content").css({"display":"block"});
                     $("#orderNO").text(data.ride.bookingID);
+                    $("#CustID").val(data.ride.CustID);
+                    $("#OrderOTP").val(data.ride.preRideOTP);                    
                     $("#telsms").html('<a href="tel:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-phone" aria-hidden="true"></i></button></a>\
                     <a href="sms:'+data.cust.isdCode+data.cust.mobileNumber+'"><button type="button" class="btn btn-warning btn-xs"><i class="fa fa-comments" aria-hidden="true"></i></button></a>');
                     $("#address").html('<p>Pick up: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.picupaddress+'</p>');
@@ -225,10 +227,8 @@ function loginprocess(){
 
 
      ////////// On Cline Clocated/////////
-     function clineLocated(){
-            var data=JSON.parse(getCookie("rideBookingDetails"));
-            console.log(data)
-            $.post('/india/drv/clinelocated',{CustID:data.cust.CustID},function(respon){
+     function clineLocated(){ 
+            $.post('/india/drv/clinelocated',{CustID:$("#CustID").val()},function(respon){
             console.log("respon",respon)
                 if(respon){                    
                     $("#clineLocated").css({"display":"none"});
@@ -236,23 +236,24 @@ function loginprocess(){
                 }
 
             });
+
     }
             
      function otpinput(){        
          var valu=$("#otpp").val()
         if(valu.length >3){
-            var data=JSON.parse(getCookie("rideBookingDetails"));
-            if(data.RideOTP==valu){
-                $.post('/india/drv/startRide',{CustID:data.cust.CustID,bookingID:data.ride.bookingID},function(respon){
-                    console.log("respon",respon)
-                        if(respon){
+            
+            if($("#OrderOTP").val()==valu){
+                $.post('/india/drv/startRide',{CustID:$("#CustID").val(),bookingID: $("#orderNO").text()},function(data){
+                    
+                        if(data){
                             $("#address").html('<p>Drop To: <br> <strong>'+data.cust.name+'</strong> <br>'+data.ride.dropaddress+'</p>');
-                            $("#geoNav").val(2);
+                            $("#mapBtn").html('<button onclick="googlemapbtn(\'' + 2 + '\',\'' + data.ride.droplatlng + '\')" type="button" class="btn btn-info mybtn"><i class="fa fa-location-arrow" aria-hidden="true"></i></button>');
                             $("#OTP-Content").css({"display":"none"});
                             $("#startRide").css({"display":"none"});
                             $("#finishride").css({"display":"block"});
-                            $("#otpp").val("");
-                            openMap();    
+                            $("#otpp").val("");                            
+                            googlemapbtn( 2 , data.ride.droplatlng);    
                            
                         }
         

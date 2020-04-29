@@ -814,10 +814,10 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
 //////////Driver Cline Located //////
 router.post('/drv/startRide', function(req, res, next) {
   database.customer.findOneAndUpdate({CustID:req.body.CustID},{$set:{orderStage:'startRide'}},function(er,cust){
-    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'startRide'}},function(re, ou){
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'startRide'}},function(re, pilot){
       database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{startTime:new Date()}},function(re, ride){
         res.io.emit("StartRide",{CustID:req.body.CustID});
-        res.send("emitStartRide") 
+        res.send({cust:cust,ride:ride}); 
       });
 
     });
