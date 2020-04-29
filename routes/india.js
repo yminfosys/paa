@@ -836,11 +836,9 @@ router.post('/drv/finishRide', function(req, res, next) {
         //// Calculate Distance Last positio driver///////
          database.driverLocationArea.findOne({pilotID:req.cookies.pilotID},function(er, driverLoc){        
         var finishLocation=driverLoc.location.coordinates;
-        console.log("finishLocation",finishLocation);
-        console.log("pickuplocation",req.body.picuklat)
         var travelmod=driver.travelmod;
             googleApi.distance({
-              origins:''+Number(req.body.picuklat)+', '+Number(req.body.picuklng)+'',              
+              origins:''+Number(Booking.picuklatlng[0])+', '+Number(Booking.picuklatlng[1])+'',              
               destinations:''+Number(finishLocation[1])+','+Number(finishLocation[0])+'',
               apik:process.env.API_KEY,
               travelmod:travelmod

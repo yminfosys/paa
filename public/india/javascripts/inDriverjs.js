@@ -269,16 +269,11 @@ function loginprocess(){
         $("#OTP-Content").css({"display":"block"});
     }
  ////////Finish Ride///////   
- function finishride(){
-    var data=JSON.parse(getCookie("rideBookingDetails"));
-    console.log("finisf data",data)
-    //alert(data.ride.picuklatlng[0])    
+ function finishride(){    
+       
         $.post('/india/drv/finishRide',{
-            CustID:data.cust.CustID,
-            bookingID:data.ride.bookingID,
-            picuklat:data.ride.picuklatlng[0], 
-            picuklng:data.ride.picuklatlng[1]
-            
+            CustID:$("#CustID").val(),
+            bookingID: $("#orderNO").text()            
         },function(respon){
             console.log("respon",respon)
                 if(respon){ 
