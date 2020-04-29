@@ -833,7 +833,7 @@ router.post('/drv/finishRide', function(req, res, next) {
     database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{orderStage:'finishRide'}},function(re, driver){
       if(driver){
         database.ride.findOne({bookingID:req.body.bookingID},function(er, Booking){
-            console,log("cust",cust,"Booking",Booking)
+            console.log("cust",cust,"Booking",Booking);
         });
       }
     });
