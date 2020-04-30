@@ -122,9 +122,9 @@ function initMap() {
     
     function onlineExicute(){     
       wachLocation();
-      if(!getCookie("setSystem")){
+    
         setCookie("setSystem","ONLINE",1);
-      }
+      
      
       /////Android Interface
        andRoid(1);
