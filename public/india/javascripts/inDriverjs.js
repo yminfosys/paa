@@ -147,6 +147,15 @@ function loginprocess(){
 
  ///////End Login and Register///////
 
+ //////Logout/////////
+ function logout(){
+    if(getCookie("setSystem")){
+     alert("1st Go OffLine and Try Again")
+    }else{
+        setCookie("pilotID","",1);
+    }
+ }
+
 
 
  /////////Driver Page ////////////

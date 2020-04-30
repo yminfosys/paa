@@ -161,7 +161,7 @@ function initMap() {
 
     }
 
-    alert(getCookie("setSystem"));
+    
      /////Check setSystem ONLINE or OFFLINE  
   var setSystem=getCookie("setSystem");
   if(setSystem=="ONLINE"){
@@ -170,13 +170,13 @@ function initMap() {
 
   }
 
-
     /////Off line Online /////////
     document.getElementById("toggle").addEventListener("click", function(){
     if(document.getElementById("toggle").checked == true){      
       onlineExicute();
     }else{
       setCookie("setSystem","",1);
+      setCookie("driverBusy","",1);
       clearWachposition();      
       clearDemandArea();
       /////Android Interface
@@ -185,8 +185,6 @@ function initMap() {
       setTimeout(function(){
         $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
           console.log(data);
-          
-          setCookie("driverBusy","",1);
           $("#offline-content").css({"display":"block"});
           $("#map").css({"display":"none"});
 
@@ -199,7 +197,7 @@ function initMap() {
     wachLocation();
     clearDemandArea();
     if(!getCookie("setSystem")){
-      setCookie("setSystem","ONLINE",30);
+      setCookie("setSystem","ONLINE",1);
     }
     
     ///Check Incomming Call Accept Display Window /////
