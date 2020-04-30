@@ -762,6 +762,14 @@ function randamNumber(){
     
    });;
 
+   //////Reset Ringtone value to "0"////
+   router.post('/drv/resetRingtone', function(req, res, next) {
+    database.driverlocation.findOneAndUpdate({pilotID:req.body.pilotID,DriverType:"General"},{$set:{ringtone:"0"}},function(e,d){
+      res.send("ringtone Reset to 0");
+    })
+   });
+   
+
 
   ////////Call Driver accept notification/////
 router.post('/AcceptCallByDriver', function(req, res, next) { 
