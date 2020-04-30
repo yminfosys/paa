@@ -36,8 +36,9 @@ router.use(fileUpload({
 
 ///////////////SET COOKIES For javascript//////
 router.post('/setCookies', function(req, res, next) {
-  res.cookie(req.body.cname, req.body.cvalue, {maxAge: Number(req.body.expires) }); 
-  res.send();
+  res.cookie(req.body.cname, req.body.cvalue, {maxAge: Number(req.body.expires) });
+  console.log("setCookies",req.cookies.req.body.cname) 
+  res.send(req.cookies.req.body.cname);
 })
 
 ///////////////GET COOKIES For javascript//////
@@ -47,7 +48,8 @@ router.post('/setCookies', function(req, res, next) {
 ///////////////CLEAR COOKIES//////
 router.post('/clerCookies', function(req, res, next) {
   res.clearCookie(req.body.cname);
-  res.send();
+  console.log("clerCookies",req.cookies.req.body.cname)
+  res.send(req.body.cname);
 })
 
 
@@ -2206,7 +2208,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
   }else{
     var driverBusy="Free";
   }
-  console.log("req.cookies.driverBusy",req.cookies)
+  
   database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
     if(pilot){
       database.driverlocation.findOne({pilotID:req.cookies.pilotID},function(err,data){
