@@ -89,7 +89,7 @@ function initMap() {
       },function(dat){
         console.log("Call Accepted", dat);
          Android.startRingtone(); 
-         vibrateApi(1000*10) 
+        
       });
     }
 
@@ -98,21 +98,7 @@ function initMap() {
 
 
 
-  //////Vibrate Control API//////
-  function vibrateApi(duretion){
-    var  loop=0, count=0;
-    loop=parseInt(duretion/1500);
-    var timeInt=setInterval(function(){
-      count++;
-      navigator.vibrate(500);
-      if(count==loop){
-        clearInterval(timeInt);
-        navigator.vibrate(0);
-      }
-    },1000)
-
-    
-  }
+ 
 
   
 

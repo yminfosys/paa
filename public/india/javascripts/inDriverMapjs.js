@@ -11,16 +11,22 @@ function initMap() {
           map:map
         });
     ////////WatchLocation///////    
-     var driverLocTimer;
+     
     function wachLocation(){
-        wachID=navigator.geolocation.watchPosition(function (position){
-        ////////Call Circle Center Marker
-        circleMarker(position);
-        clearTimeout(driverLocTimer);
+
+      wachID= setInterval(function(){        
+        if(getCookie("position")){
+          circleMarker(JSON.parse(getCookie("position")));
+        }
+       },5000);
+        // wachID=navigator.geolocation.watchPosition(function (position){
+        // ////////Call Circle Center Marker
+        // circleMarker(position);
+        // clearTimeout(driverLocTimer);
               
-        },function error(msg){
-            alert('Please enable your GPS position future.');       
-        },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
+        // },function error(msg){
+        //     alert('Please enable your GPS position future.');       
+        // },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
     }
   
     /////////Clear Watch location////
@@ -31,7 +37,7 @@ function initMap() {
     ///////////Circle Marker/////////
   
   function circleMarker(position){
-    var pos={lat:position.coords.latitude,lng:position.coords.longitude};      
+    var pos={lat:Number(position.lat) ,lng:Number(position.lng) };     
     if(!centerMarker){
         centerMarker=new google.maps.Marker({
         position: pos, 
@@ -45,7 +51,7 @@ function initMap() {
       });
       circle = new google.maps.Circle({
         map: map,
-        radius:position.coords.accuracy, ///   // 10 miles in metres
+        radius:Number(position.accuracy), ///   // 10 miles in metres
         fillColor: 'rgb(73, 136, 161)',
         strokeColor:'rgb(198, 232, 235)',
         
@@ -61,7 +67,7 @@ function initMap() {
           }
           console.log("stopMapSetCenter",getCookie("stopMapSetCenter"))
         
-        circle.setRadius(position.coords.accuracy);
+        circle.setRadius(Number(position.accuracy));
 
         
       }

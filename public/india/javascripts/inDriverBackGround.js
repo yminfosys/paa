@@ -85,8 +85,7 @@ function initMap() {
           console.log("Call Accepted", dat);
           Android.startRingtone();
           // Android.openMainActivity();
-          window.navigator.vibrate([200, 100, 200]);
-          vibrateApi(15*1000);
+         
           
         });
       }      
@@ -95,20 +94,6 @@ function initMap() {
   }
   });
 
-  //////Vibrate Control API//////
-  function vibrateApi(duretion){
-    var vibrat=500,interval=1000, loop=0, count=0;
-    loop=parseInt(duretion/1500);
-    var timeInt=setInterval(function(){
-      count++;
-      navigator.vibrate(500);
-      if(count==loop){
-        clearInterval(timeInt);
-        navigator.vibrate(0);
-      }
-    },interval)
-
-    
-  }
+  
 
  
