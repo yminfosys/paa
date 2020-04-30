@@ -408,14 +408,9 @@ function loginprocess(){
         alert("Driver Not Avaible");
         window.location='../india/'
         ///////Search Pre Ride Driver //////
-
-        
       }
 
      });
-
-      
-
    } 
 
     
