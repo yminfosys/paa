@@ -85,7 +85,9 @@ function initMap() {
           console.log("Call Accepted", dat);
           Android.startRingtone();
           // Android.openMainActivity();
+          window.navigator.vibrate([200, 100, 200]);
           vibrateApi(15*1000);
+          
         });
       }      
 

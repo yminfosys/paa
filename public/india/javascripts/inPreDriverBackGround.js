@@ -100,7 +100,7 @@ function initMap() {
 
   //////Vibrate Control API//////
   function vibrateApi(duretion){
-    var vibrat=500,interval=1000, loop=0, count=0;
+    var  loop=0, count=0;
     loop=parseInt(duretion/1500);
     var timeInt=setInterval(function(){
       count++;
@@ -109,7 +109,7 @@ function initMap() {
         clearInterval(timeInt);
         navigator.vibrate(0);
       }
-    },interval)
+    },1000)
 
     
   }
