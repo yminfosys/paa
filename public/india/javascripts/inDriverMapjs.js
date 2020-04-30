@@ -218,7 +218,7 @@ function initMap() {
         var tt=setInterval(function(){
           if(!getCookie("openAcceptWindow")){
             $("#ringtone").css({"display":"none"});
-            $.post('/india/drv/resetRingtone',{pilotID:data.pilotID},function(dat){
+            $.post('/india/drv/resetRingtone',{pilotID:inData.pilotID},function(dat){
               console.log(dat);
             })
             clearInterval(tt);

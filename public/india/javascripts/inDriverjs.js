@@ -173,7 +173,7 @@ function loginprocess(){
             $("#ringtone").css({"display":"none"});
             $.post('/india/drv/resetRingtone',{pilotID:data.pilotID},function(dat){
                 console.log(dat);
-            })
+            });
         },14*1000)
         }       
         

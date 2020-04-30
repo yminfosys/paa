@@ -20,7 +20,7 @@ function initMap() {
           if(getCookie("position")){
             circleMarker(JSON.parse(getCookie("position")));
           }
-         },5000);
+         },2000);
       
      
         // wachID=navigator.geolocation.watchPosition(function (position){
