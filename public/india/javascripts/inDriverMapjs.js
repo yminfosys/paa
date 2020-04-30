@@ -176,6 +176,7 @@ function initMap() {
     if(document.getElementById("toggle").checked == true){      
       onlineExicute();
     }else{
+      setCookie("setSystem","",1);
       clearWachposition();      
       clearDemandArea();
       /////Android Interface
@@ -184,7 +185,7 @@ function initMap() {
       setTimeout(function(){
         $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
           console.log(data);
-          setCookie("setSystem","",1);
+          
           setCookie("driverBusy","",1);
           $("#offline-content").css({"display":"block"});
           $("#map").css({"display":"none"});
@@ -253,7 +254,7 @@ function initMap() {
   ///////FOR ANDROID //////
 
   function andRoid(a){
-    Android.onlineOffline(a);
+   Android.onlineOffline(a);
    }
 
   /////// Incentive and Booking /////////

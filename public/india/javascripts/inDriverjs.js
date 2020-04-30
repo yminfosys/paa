@@ -19,14 +19,17 @@ function getCookie(cname) {
   
 
   function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays*24*60*60*1000));
-     var expires = "expires="+ d.toUTCString();
+    //var d = new Date();
+   // d.setTime(d.getTime() + (exdays*24*60*60*1000));
+     //var expires = "expires="+ d.toUTCString();
     // document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    console.log("cvalue.length",cvalue.length,"cvalue",cvalue)
         if(cvalue.length > 0){
-         $.post('/india/setCookies',{cname:cname,cvalue:cvalue,expires:expires},function(data){ })
+         $.post('/india/setCookies',{cname:cname,cvalue:cvalue,expires:exdays*24*60*60*1000},function(data){
+             console.log(data)
+          })
         }else{
-         $.post('/india/clerCookies',{cname:cname},function(data){ })
+         $.post('/india/clerCookies',{cname:cname},function(data){  console.log(data)})
         }
     
   }

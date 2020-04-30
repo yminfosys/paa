@@ -35,10 +35,10 @@ router.use(fileUpload({
 }));
 
 ///////////////SET COOKIES For javascript//////
-router.post('/setCookies', function(req, res, next) {
-  res.cookie(req.body.cname, req.body.cvalue, {maxAge: Number(req.body.expires) });
-  console.log("setCookies",req.cookies.req.body.cname) 
-  res.send(req.cookies.req.body.cname);
+router.post('/setCookies', function(req, res, next) {  
+   res.cookie(req.body.cname, req.body.cvalue, {maxAge: Number(req.body.expires) });
+   
+  res.send(req.body);
 })
 
 ///////////////GET COOKIES For javascript//////
@@ -48,8 +48,8 @@ router.post('/setCookies', function(req, res, next) {
 ///////////////CLEAR COOKIES//////
 router.post('/clerCookies', function(req, res, next) {
   res.clearCookie(req.body.cname);
-  console.log("clerCookies",req.cookies.req.body.cname)
-  res.send(req.body.cname);
+  
+  res.send(req.body);
 })
 
 
