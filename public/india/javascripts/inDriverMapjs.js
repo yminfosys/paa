@@ -18,7 +18,7 @@ function initMap() {
         if(getCookie("position")){
           circleMarker(JSON.parse(getCookie("position")));
         }
-       },5000);
+       },2000);
         // wachID=navigator.geolocation.watchPosition(function (position){
         // ////////Call Circle Center Marker
         // circleMarker(position);
@@ -31,7 +31,8 @@ function initMap() {
   
     /////////Clear Watch location////
     function clearWachposition(){
-      navigator.geolocation.clearWatch(wachID);
+      clearInterval(wachID);
+     // navigator.geolocation.clearWatch(wachID);
     }
 
     ///////////Circle Marker/////////

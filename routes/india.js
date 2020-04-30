@@ -2203,7 +2203,7 @@ res.status(200).send();
 
 ////////DriverLocationUpdate/////////
 router.post('/driverLocationUpdate', function(req, res, next) { 
-  res.cookie("position",JSON.stringify({lat:req.body.lat, lng:req.body.lng, accuracy:req.body.accuracy}),{maxAge: 5*60*1000 });
+  res.cookie("position",JSON.stringify({lat:req.body.lat, lng:req.body.lng, accuracy:req.body.accuracy}),{maxAge: 30*24*60*60*1000 });
   if(req.cookies.driverBusy){
     var driverBusy=req.cookies.driverBusy; 
   }else{
