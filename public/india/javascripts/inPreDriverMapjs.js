@@ -96,12 +96,13 @@ function initMap() {
       if(document.getElementById("toggle").checked == true){        
         onlineExicute();
       }else{
+        setCookie("setSystem","",1);
       andRoid(0);        
                 
         setTimeout(function(){
           $.post('/india/drv/dutyUpdate',{duty:'offline'},function(data){
             console.log(data)
-            setCookie("setSystem","OFFLINE",30);
+           
             $("#Offline").css({"display":"block"});
             $("#map").css({"display":"none"});
             $("#nofofride").css({"display":"none"});
@@ -121,7 +122,10 @@ function initMap() {
     
     function onlineExicute(){     
       wachLocation();
-      setCookie("setSystem","ONLINE",30);
+      if(!getCookie("setSystem")){
+        setCookie("setSystem","ONLINE",1);
+      }
+     
       /////Android Interface
        andRoid(1);
       ////////////////

@@ -165,6 +165,7 @@ function loginprocess(){
      alert("1st Go OffLine and Try Again")
     }else{
         setCookie("pilotID","",1);
+        window.location="../india/login"
     }
  }
 
