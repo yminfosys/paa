@@ -355,6 +355,7 @@ var driverlocationSchema = new mongoose.Schema({
   travelmod:String,
   accountStatus:String,
   driverBusy:String,
+  ringtone:String,
   preRideTotalTime:Number,
   location: {
     type: {

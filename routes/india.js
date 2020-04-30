@@ -360,7 +360,7 @@ router.post('/nearbyRideBooking', function(req, res, next) {
                  coordinates: [ Number(req.body.lng), Number(req.body.lat) ]
               },$maxDistance : 4000
             }
-          },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,driverBusy:"Free"
+          },accountStatus:'Active',travelmod:req.body.travelmod,DriverType:req.body.DriverType,driverBusy:"Free",ringtone:"0"
         },function(e,generalDriver){
           res.send({drivers:generalDriver});
         });
@@ -756,7 +756,10 @@ function randamNumber(){
   router.post('/requiestDisplayAcceptWindow', function(req, res, next) {
     res.io.emit("openAcceptWindow",{CustID:req.body.CustID,pilotID:req.body.pilotID,pickuoAddress:req.body.pickuoAddress});
     res.cookie('openAcceptWindow',JSON.stringify({CustID:req.body.CustID,pilotID:req.body.pilotID,pickuoAddress:req.body.pickuoAddress}),{maxAge: 15*1000 })
-    res.send("emitopenAcceptWindow")
+    database.driverlocation.findOneAndUpdate({pilotID:req.body.pilotID,DriverType:"General"},{$set:{ringtone:"1"}},function(e,d){
+      res.send("emitopenAcceptWindow");
+    })
+    
    });;
 
 
@@ -941,8 +944,11 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
         database.ride.findOneAndUpdate({bookingID:req.body.bookingID},{$set:{
           callbookingStatus:"complete",
           driverBusy:""}},function(e,data){
-            res.clearCookie("driverBusy");          
-            res.send("ok") 
+            database.driverlocation.findOneAndUpdate({pilotID:req.cookies.pilotID, DriverType:"General"},{$set:{ringtone:"0"}},function(er,df){
+              res.clearCookie("driverBusy");          
+              res.send("ok") 
+            })
+
         });
       })
     
@@ -2231,6 +2237,7 @@ router.post('/driverLocationUpdate', function(req, res, next) {
             pilotID:req.cookies.pilotID,            
             DriverType:req.body.DriverType,
             driverBusy:driverBusy,
+            ringtone:"0",
             rating:pilot.rating,
             travelmod:pilot.travelmod,
             accountStatus:pilot.accountStatus, 
