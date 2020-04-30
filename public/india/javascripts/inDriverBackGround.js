@@ -63,15 +63,14 @@ function initMap() {
   socket.on('inCommingCall', function (data) {
   if(data.pilotID==getCookie("pilotID")){
     console.log("call Neeed to be accept");
-    console.log("inCommingCall data",data); 
-    
+    console.log("inCommingCall data",data);    
     if(!getCookie("driverBusy")){
       if(thotting==0){
         thotting=1;
         setTimeout(function(){
           thotting=0;
         }, 1000*15);
-        
+
         $.post('/india/requiestDisplayAcceptWindow',{
           pilotID:data.pilotID,
           CustID:data.CustID,
