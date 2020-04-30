@@ -197,7 +197,10 @@ function initMap() {
   function onlineExicute(){   
     wachLocation();
     clearDemandArea();
-    setCookie("setSystem","ONLINE",30);
+    if(!getCookie("setSystem")){
+      setCookie("setSystem","ONLINE",30);
+    }
+    
     ///Check Incomming Call Accept Display Window /////
       if(getCookie("openAcceptWindow")){
         ///////Open accept Window/////
