@@ -161,6 +161,7 @@ function initMap() {
 
     }
 
+    alert(getCookie("setSystem"));
      /////Check setSystem ONLINE or OFFLINE  
   var setSystem=getCookie("setSystem");
   if(setSystem=="ONLINE"){
