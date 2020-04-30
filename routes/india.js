@@ -34,6 +34,24 @@ router.use(fileUpload({
     tempFileDir : '/tmp/'
 }));
 
+///////////////SET COOKIES For javascript//////
+router.post('/setCookies', function(req, res, next) {
+  res.cookie(req.body.cname, req.body.cvalue, {maxAge: Number(req.body.expires) }); 
+  res.send();
+})
+
+///////////////GET COOKIES For javascript//////
+// router.post('/getCookies', function(req, res, next) {
+// res.send(req.cookies.req.body.cName)  
+// })
+///////////////CLEAR COOKIES//////
+router.post('/clerCookies', function(req, res, next) {
+  res.clearCookie(req.body.cname);
+  res.send();
+})
+
+
+
 ///////////////////////////////////////
 ///* CUSTOMER LISTING. *///////////////
 ///////////////////////////////////////
@@ -789,7 +807,7 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
   router.post('/drv/clineDetalls', function(req, res, next) {
     database.customer.findOne({CustID:req.body.CustID},function(err,cust){
       database.ride.findOne({bookingID:req.body.bookingID},function(e,ride){       
-        res.cookie("driverBusy", "busy",{maxAge: 1*24*60*60*1000 }); 
+       // res.cookie("driverBusy", "busy",{maxAge: 1*24*60*60*1000 }); 
         res.send({cust:cust,ride:ride});
       })
     });

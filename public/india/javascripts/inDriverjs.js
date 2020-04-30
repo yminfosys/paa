@@ -1,4 +1,4 @@
- var socket = io('//'+document.location.hostname+':'+document.location.port);
+var socket = io('//'+document.location.hostname+':'+document.location.port);
 //////cookie Setting////
 function getCookie(cname) {
     var name = cname + "=";
@@ -14,14 +14,21 @@ function getCookie(cname) {
       }
     }
     return "";
+   
   }
   
 
   function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays*24*60*60*1000));
-    var expires = "expires="+ d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+     var expires = "expires="+ d.toUTCString();
+    // document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        if(cvalue.length > 0){
+         $.post('/india/setCookies',{cname:cname,cvalue:cvalue,expires:expires},function(data){ })
+        }else{
+         $.post('/india/clerCookies',{cname:cname},function(data){ })
+        }
+    
   }
 
 ////Randanm OTP/////////
@@ -161,7 +168,7 @@ function loginprocess(){
         socket.on('CallAcceptListDisplay', function (resp) {
             
             ///////Genareate Driver Busy Coockes/////
-            //setCookie("driverBusy","busy",30);
+            setCookie("driverBusy","busy",30);
             if(resp.pilotID==getCookie("pilotID")){
                 $.post('/india/drv/clineDetalls',{pilotID:resp.pilotID,CustID:resp.CustID,bookingID:resp.bookingID},function(data){
                     $("#pickDrop-Content").css({"display":"block"});
