@@ -807,9 +807,10 @@ router.post('/AcceptCallByDriver', function(req, res, next) {
 
   //////////Driver Cline Details //////
   router.post('/drv/clineDetalls', function(req, res, next) {
+    res.cookie("driverBusy", "busy",{maxAge: 1*24*60*60*1000 });
     database.customer.findOne({CustID:req.body.CustID},function(err,cust){
       database.ride.findOne({bookingID:req.body.bookingID},function(e,ride){       
-       // res.cookie("driverBusy", "busy",{maxAge: 1*24*60*60*1000 }); 
+      
         res.send({cust:cust,ride:ride});
       })
     });

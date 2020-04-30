@@ -23,7 +23,7 @@ function getCookie(cname) {
    // d.setTime(d.getTime() + (exdays*24*60*60*1000));
      //var expires = "expires="+ d.toUTCString();
     // document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    console.log("cvalue.length",cvalue.length,"cvalue",cvalue)
+   // console.log("cvalue.length",cvalue.length,"cvalue",cvalue)
         if(cvalue.length > 0){
          $.post('/india/setCookies',{cname:cname,cvalue:cvalue,expires:exdays*24*60*60*1000},function(data){
              console.log(data)
@@ -171,7 +171,7 @@ function loginprocess(){
         socket.on('CallAcceptListDisplay', function (resp) {
             
             ///////Genareate Driver Busy Coockes/////
-            setCookie("driverBusy","busy",30);
+            //setCookie("driverBusy","busy",30);
             if(resp.pilotID==getCookie("pilotID")){
                 $.post('/india/drv/clineDetalls',{pilotID:resp.pilotID,CustID:resp.CustID,bookingID:resp.bookingID},function(data){
                     $("#pickDrop-Content").css({"display":"block"});
