@@ -161,7 +161,7 @@ function loginprocess(){
         socket.on('CallAcceptListDisplay', function (resp) {
             
             ///////Genareate Driver Busy Coockes/////
-            setCookie("driverBusy","busy",30);
+            //setCookie("driverBusy","busy",30);
             if(resp.pilotID==getCookie("pilotID")){
                 $.post('/india/drv/clineDetalls',{pilotID:resp.pilotID,CustID:resp.CustID,bookingID:resp.bookingID},function(data){
                     $("#pickDrop-Content").css({"display":"block"});
@@ -183,8 +183,7 @@ function loginprocess(){
         
 
          //////////Driver Accept /////////
-         function acceptRide(){ 
-                        
+         function acceptRide(){                        
             var pilotID= $("#pilotID").val(); 
             var CustID= $("#CustID").val(); 
             $.post('/india/AcceptCallByDriver',{pilotID:pilotID,CustID:CustID},function(data){            
