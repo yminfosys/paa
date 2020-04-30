@@ -163,9 +163,8 @@ function loginprocess(){
  function logout(){
     if(getCookie("setSystem")){
      alert("1st Go OffLine and Try Again")
-    }else{
-        setCookie("pilotID","",1);
-        window.location="../india/login"
+    }else{       
+        window.location="../india/preDrv/logout"
     }
  }
 
