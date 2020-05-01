@@ -980,7 +980,7 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
         if(val.driverpayout){
           totalErning+=Number(val.driverpayout)
         }
-        if(val.driverIncentiv){
+        if(val.driverCashCollectio){
           driverCashCollectio+=Number(val.driverCashCollectio)
         }
       if(indx===arry.length - 1){
