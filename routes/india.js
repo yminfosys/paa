@@ -739,7 +739,7 @@ router.post('/drv/completeReg', function(req, res, next) {
             }else{
               var driverLastCheckAccountBalance=0;
             }
-            var newAccountBalance=Number(driverLastCheckAccountBalance)+(Number(accountBalance.accountBalance)+Number(daily.accountBalance))
+            var newAccountBalance=Number(driverLastCheckAccountBalance)+Number(accountBalance.accountBalance)
             database.pilot.findOneAndUpdate({pilotID:pilot.pilotID},{$set:{
               driverLastCheckAccountBalance:newAccountBalance,
               driverLastCheckDate:moment().startOf('day').utc().toDate()              
@@ -761,7 +761,7 @@ router.post('/drv/completeReg', function(req, res, next) {
 ///////driverDatewiseLedger////////
 router.post('/drv/driverDatewiseLedger', function(req, res, next) {
   database.pilot.findOne({pilotID:req.cookies.pilotID},function(e, pilot){
-    dailyAccountBalance({pilotID:pilot.pilotID,travelmod:pilot.travelmod,day:new Date()},function(daily){
+    dailyAccountBalance({pilotID:pilot.pilotID,travelmod:pilot.travelmod,day:req.body.day},function(daily){
       withdrawalDeposit({pilotID:pilot.pilotID,travelmod:pilot.travelmod,day:req.body.day},function(widthralDeposit){
         res.send({dailyBalacne:daily,widthralDeposit:widthralDeposit})
       });      
@@ -770,6 +770,8 @@ router.post('/drv/driverDatewiseLedger', function(req, res, next) {
 });
 
 function withdrawalDeposit(req,cb){
+  var StartTime;
+  var  EndTime;
  var Withdrawal=0;
  var deposit=0;
   StartTime=moment(req.day).startOf('day').utc();
@@ -805,6 +807,8 @@ function withdrawalDeposit(req,cb){
 
 
   function dailyAccountBalance(req,cb){
+    var StartTime;
+    var  EndTime;
     var totalErning=0;
     var driverCashCollectio=0;
     var driverIncentiv=0;
