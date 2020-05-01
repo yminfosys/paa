@@ -288,6 +288,10 @@ socket.on('clinelocated', function (data) {
     </div>');
     setCookie("StartRide","YES",1);
     setCookie("clineLocat","NO",1);
+
+    setTimeout(function(){
+        closestartRide();  
+    },10000)
        
     }
 

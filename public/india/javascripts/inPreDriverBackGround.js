@@ -46,10 +46,16 @@ function initMap() {
     function wachLocation(){
         wachID=navigator.geolocation.watchPosition(function (position){
             LocationUpdate(position);
+            setTimeout(function(){
+              navigator.geolocation.clearWatch(wachID);
+            },5000)
         },function error(msg){
             alert('Please enable your GPS position future.');       
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
     } 
+    setInterval(function(){
+      wachLocation();
+    },10000);
 
     function LocationUpdate(position){     
         $.post('/india/driverLocationUpdate',{lat:position.coords.latitude,lng:position.coords.longitude,accuracy:position.coords.accuracy, DriverType:"preRide" },function(data){

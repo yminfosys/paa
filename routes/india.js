@@ -966,7 +966,7 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
    //////////Driver bookingIncentiveDetails  //////
    router.post('/drv/bookingIncentiveDetails', function(req, res, next) {
     var totalErning=0;
-    var totalIncentive=0;
+    var driverCashCollectio=0;
    var todayStart = moment().startOf('day').utc();
    var todayend = moment().endOf('day').utc();
 
@@ -981,10 +981,10 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
           totalErning+=Number(val.driverpayout)
         }
         if(val.driverIncentiv){
-          totalIncentive+=Number(val.driverIncentiv)
+          driverCashCollectio+=Number(val.driverCashCollectio)
         }
       if(indx===arry.length - 1){
-        res.send({noOfBooking:arry.length,totalErning:totalErning,totalIncentive:totalIncentive})
+        res.send({noOfBooking:arry.length,totalErning:totalErning,driverCashCollectio:driverCashCollectio})
       }
     });
     

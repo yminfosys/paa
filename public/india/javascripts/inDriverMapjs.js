@@ -271,7 +271,7 @@ function initMap() {
     $.post('/india/drv/bookingIncentiveDetails',{},function(data){
       $("#booking").text(data.noOfBooking);
       $("#earning").text(data.totalErning);
-      $("#inct").text(data.totalIncentive);
+      $("#cash").text(data.driverCashCollectio);
     });
   }
 
