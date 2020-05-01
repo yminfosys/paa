@@ -731,19 +731,207 @@ router.post('/drv/completeReg', function(req, res, next) {
   ///////////Driver Account Ledger///////
   router.get('/drv/account', function(req, res, next) {
     if(req.cookies.pilotID){
-      res.render('india/inDriverAccount')
+      database.pilot.findOne({pilotID:req.cookies.pilotID},function(e, pilot){
+        pendingAccountBalance({pilotID:pilot.pilotID,travelmod:pilot.travelmod},function(accountBalance){
+          dailyAccountBalance({pilotID:pilot.pilotID,travelmod:pilot.travelmod,day:new Date()},function(daily){
+            if(pilot.driverLastCheckAccountBalance){
+              var driverLastCheckAccountBalance=pilot.driverLastCheckAccountBalance;
+            }else{
+              var driverLastCheckAccountBalance=0;
+            }
+            var newAccountBalance=Number(driverLastCheckAccountBalance)+(Number(accountBalance.accountBalance)+Number(daily.accountBalance))
+            database.pilot.findOneAndUpdate({pilotID:pilot.pilotID},{$set:{
+              driverLastCheckAccountBalance:newAccountBalance,
+              driverLastCheckDate:moment().startOf('day').utc().toDate()              
+            }},function(er,fd){
+              res.render('india/inDriverAccount',{accountBalance:newAccountBalance,dailyBalacne:daily});
+            });
+            
+          });
+          
+        }) 
+      });
+      
       
     }else{
       res.redirect('/india/drv/login')
     }
   })
 
+///////driverDatewiseLedger////////
+router.post('/drv/driverDatewiseLedger', function(req, res, next) {
+  database.pilot.findOne({pilotID:req.cookies.pilotID},function(e, pilot){
+    dailyAccountBalance({pilotID:pilot.pilotID,travelmod:pilot.travelmod,day:new Date()},function(daily){
+      withdrawalDeposit({pilotID:pilot.pilotID,travelmod:pilot.travelmod,day:req.body.day},function(widthralDeposit){
+        res.send({dailyBalacne:daily,widthralDeposit:widthralDeposit})
+      });      
+    });
+  })
+});
+
+function withdrawalDeposit(req,cb){
+ var Withdrawal=0;
+ var deposit=0;
+  StartTime=moment(req.day).startOf('day').utc();
+    EndTime = moment(req.day).endOf('day').utc();
+    database.DriverPayment.find({
+      date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+      pilotID:req.pilotID,
+      travelmod:req.travelmod,     
+      DriverType : "General"  
+    },function(er , balance){
+      if(balance.length >0){
+        balance.forEach(function(val,indx,arry){
+          if(val.Withdrawal){
+            Withdrawal+=Number(val.Withdrawal)
+          }
+          if(val.deposit){
+            deposit+=Number(val.deposit)
+          }
+          
+        if(indx===arry.length - 1){             
+          cb({deposit:deposit,Withdrawal:Withdrawal});
+        }
+      });
+
+      }else{
+        cb({deposit:0,Withdrawal:0});
+      }
+
+
+    })
+
+}
+
+
   function dailyAccountBalance(req,cb){
-    
+    var totalErning=0;
+    var driverCashCollectio=0;
+    var driverIncentiv=0;
+    StartTime=moment(req.day).startOf('day').utc();
+    EndTime = moment(req.day).endOf('day').utc();
+    database.ride.find({
+      date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+      pilotID:req.pilotID,
+      travelmod:req.travelmod,
+      callbookingStatus:"complete",
+      DriverType : "General"
+    },function(er , balance){
+      if(balance.length >0){
+        balance.forEach(function(val,indx,arry){
+          if(val.driverpayout){
+            totalErning+=Number(val.driverpayout)
+          }
+          if(val.driverCashCollectio){
+            driverCashCollectio+=Number(val.driverCashCollectio)
+          }
+          if(val.driverIncentiv){
+            driverIncentiv+=Number(val.driverIncentiv)
+          }
+        if(indx===arry.length - 1){             
+          cb({
+            accountBalance:Number(totalErning)+Number(driverIncentiv)-Number(driverCashCollectio),
+            totalErning:Number(totalErning),
+            driverIncentiv:Number(driverIncentiv),
+            driverCashCollectio:Number(driverCashCollectio)
+
+          });
+        }
+      });
+
+      }else{
+        cb({
+          accountBalance:0,
+          totalErning:0,
+          driverIncentiv:0,
+          driverCashCollectio:0
+
+        });
+      }
+    }); 
+
   }
 
   function pendingAccountBalance(req,cb){
+    var StartTime="";
+    var EndTime="";   
+    var totalErning=0;
+    var driverCashCollectio=0;
+    var driverIncentiv=0;
+    database.pilot.findOne({pilotID:req.pilotID},function(e, pilot){
+      if(pilot.driverLastCheckDate){
+        /////Check Balance From Last Check
+        StartTime=moment(pilot.driverLastCheckDate).utc();
+        EndTime = moment().startOf('day').utc();
+        database.ride.find({
+          date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+          pilotID:req.pilotID,
+          travelmod:req.travelmod,
+          callbookingStatus:"complete",
+          DriverType : "General"
+        },function(er , balance){
+          if(balance.length >0){
+            balance.forEach(function(val,indx,arry){
+              if(val.driverpayout){
+                totalErning+=Number(val.driverpayout)
+              }
+              if(val.driverCashCollectio){
+                driverCashCollectio+=Number(val.driverCashCollectio)
+              }
+              if(val.driverIncentiv){
+                driverIncentiv+=Number(val.driverIncentiv)
+              }
+            if(indx===arry.length - 1){             
+              cb({accountBalance:Number(totalErning)+Number(driverIncentiv)-Number(driverCashCollectio)});
+            }
+          });
 
+          }else{
+            cb({accountBalance:0});
+          }
+        });
+
+      }else{
+        /////Check Balance From Starting
+        if(pilot.date.getDate()==new Date().getDate()){
+          dailyCashCollection({pilotID:req.pilotID,travelmod:req.travelmod},function(cash){
+            cb({accountBalance:0});
+          });
+        }else{       
+        StartTime=moment(pilot.date).utc();
+        EndTime = moment().startOf('day').utc();
+        database.ride.find({
+          date:{$gte: StartTime.toDate(), $lte:EndTime.toDate() },
+          pilotID:req.pilotID,
+          travelmod:req.travelmod,
+          callbookingStatus:"complete",
+          DriverType : "General"
+        },function(er , balance){
+          if(balance.length >0){
+            balance.forEach(function(val,indx,arry){
+              if(val.driverpayout){
+                totalErning+=Number(val.driverpayout)
+              }
+              if(val.driverCashCollectio){
+                driverCashCollectio+=Number(val.driverCashCollectio)
+              }
+              if(val.driverIncentiv){
+                driverIncentiv+=Number(val.driverIncentiv)
+              }
+            if(indx===arry.length - 1){             
+              cb({accountBalance:Number(totalErning)+Number(driverIncentiv)-Number(driverCashCollectio)});
+            }
+          });
+
+          }else{
+            cb({accountBalance:0});
+          }
+        });
+        }
+
+      }
+    });
+    
   }
 
    //////////Update Driver Duty Offline and online//////
@@ -986,26 +1174,29 @@ router.post('/drv/finishEverythingAndSetNormal', function(req, res, next) {
     var driverCashCollectio=0;
    var todayStart = moment().startOf('day').utc();
    var todayend = moment().endOf('day').utc();
-
-  database.ride.find({
-    date:{$gte: todayStart.toDate(), $lte:todayend.toDate() },
-    pilotID:req.cookies.pilotID,
-    callbookingStatus:"complete",
-    DriverType:"General"
-  },function(er , data){
-      data.forEach(function(val,indx,arry){
-        if(val.driverpayout){
-          totalErning+=Number(val.driverpayout)
-        }
-        if(val.driverCashCollectio){
-          driverCashCollectio+=Number(val.driverCashCollectio)
-        }
-      if(indx===arry.length - 1){
-        res.send({noOfBooking:arry.length,totalErning:totalErning,driverCashCollectio:driverCashCollectio})
-      }
+    database.pilot.findOne({pilotID:req.cookies.pilotID},function(err,pilot){
+      database.ride.find({
+        date:{$gte: todayStart.toDate(), $lte:todayend.toDate() },
+        pilotID:req.cookies.pilotID,
+        travelmod:pilot.travelmod,
+        callbookingStatus:"complete",
+        DriverType:"General"
+      },function(er , data){
+          data.forEach(function(val,indx,arry){
+            if(val.driverpayout){
+              totalErning+=Number(val.driverpayout)
+            }
+            if(val.driverCashCollectio){
+              driverCashCollectio+=Number(val.driverCashCollectio)
+            }
+          if(indx===arry.length - 1){
+            res.send({noOfBooking:arry.length,totalErning:totalErning,driverCashCollectio:driverCashCollectio})
+          }
+        });
+        
+        });
     });
-    
-    });
+  
   });
 
 /////getDemadndArea count and find //////
@@ -1348,6 +1539,16 @@ function monthliDutyhour(req,cb){
   })
 }
 
+
+router.get('/resetpilot', function(req, res, next) {
+  if(req.cookies.pilotID){
+    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{date:new Date()}},function(e,d){
+      res.send("Reset"+req.cookies.pilotID )
+    })
+  } 
+})
+
+
 ///////PreDriver Cash Collection///////
 router.get('/preDriverCash', function(req, res, next) {
   if(req.cookies.pilotID){    
@@ -1402,13 +1603,7 @@ router.get('/preDriverCash', function(req, res, next) {
   }
 });
 
-router.get('/resetpilot', function(req, res, next) {
-  if(req.cookies.pilotID){
-    database.pilot.findOneAndUpdate({pilotID:req.cookies.pilotID},{$set:{date:new Date()}},function(e,d){
-      res.send("Reset"+req.cookies.pilotID )
-    })
-  } 
-})
+
 
 function fuleConsumptionCalculation(req,cb){
   var StartTime="";
