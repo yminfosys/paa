@@ -117,10 +117,14 @@ var pilotSchema = new mongoose.Schema({
   enginMilege:String,
   fulePrice:String,
   cityName:String ,
-  /////Balance Ledger Check//
+  /////Pre Ride Balance Ledger Check//
    lastCheckDate:{type:Date},
    lastCheckCashCollcetion:Number,
    lastCheckPayment:Number,
+
+    /////Driver Balance Ledger Check//
+   driverLastCheckDate:{type:Date},
+   driverLastCheckAccountBalance:Number,    
   
   /////price per km 
   pilotGetperKm:String,
@@ -165,8 +169,14 @@ var pilotmodul = mongoose.model('pilotcollections', pilotSchema);
 
 var DriverPaymentSchema = new mongoose.Schema({
   pilotID:String,
+  travelmod:String,
+  DriverType:String,
   date: { type: Date, default: Date.now },
   paymentAmount:Number,
+  Withdrawal:Number,
+  deposit:Number,
+  
+
   
   
 

@@ -728,6 +728,23 @@ router.post('/drv/completeReg', function(req, res, next) {
   });
 
 
+  ///////////Driver Account Ledger///////
+  router.get('/drv/account', function(req, res, next) {
+    if(req.cookies.pilotID){
+      res.render('india/inDriverAccount')
+      
+    }else{
+      res.redirect('/india/drv/login')
+    }
+  })
+
+  function dailyAccountBalance(req,cb){
+    
+  }
+
+  function pendingAccountBalance(req,cb){
+
+  }
 
    //////////Update Driver Duty Offline and online//////
    router.post('/drv/dutyUpdate', function(req, res, next) {
