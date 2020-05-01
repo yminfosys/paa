@@ -744,7 +744,7 @@ router.post('/drv/completeReg', function(req, res, next) {
               driverLastCheckAccountBalance:newAccountBalance,
               driverLastCheckDate:moment().startOf('day').utc().toDate()              
             }},function(er,fd){
-              res.render('india/inDriverAccount',{accountBalance:newAccountBalance,dailyBalacne:daily});
+              res.render('india/inDriverAccount',{accountBalance:Number(newAccountBalance)+Number(daily.accountBalance),dailyBalacne:daily});
             });
             
           });
