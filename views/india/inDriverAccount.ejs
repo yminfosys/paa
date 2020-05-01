@@ -75,27 +75,20 @@
          <div class="row">
              
              <%if( Number(accountBalance) < 0){%> 
-            <div class="col-xs-12 col-sm-12">                
-                <button type="button" class="btn btn-success btn-block col-xs-12 col-sm-12">Deposit &#8377; <%=accountBalance.toFixed(2)%></button>                
+            <div class="col-xs-12 col-sm-12"> 
+                <label>You need to deposit bellow amount to company account</label>               
+                <button type="button" class="btn btn-success btn-block col-xs-12 col-sm-12">Deposit &#8377; <%= Math.abs(accountBalance).toFixed(2)%></button>                
             </div>
             <%}else{%>
             <div class="col-xs-12 col-sm-12"> 
-                <button type="button" class="btn btn-warning btn-block col-xs-12 col-sm-12">Withdrawal &#8377; <%=accountBalance.toFixed(2)%></button>               
+                <button type="button" class="btn btn-warning btn-block col-xs-12 col-sm-12">Withdrawal &#8377; <%= Math.abs(accountBalance).toFixed(2)%></button>               
                                
             </div>
             <%}%>
         </div>
 
         
-        <div style="margin-top: 20px;" class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                <%if(1==0){%> 
-                <a href="../india/Drv"><button  type="button" class="btn btn-danger col-xs-4 col-sm-4 col-xs-offset-4 col-sm-offset-4">Go to Offline</button> </a>              
-                <%}else{%> 
-                <a href="../india/Drv"><button  type="button" class="btn btn-danger  col-xs-4 col-sm-4 col-xs-offset-4 col-sm-offset-4">Back</button>  </a>              
-                <%}%>
-            </div>
-        </div>
+       
         
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" >
             <div class="form-group col-xs-8 col-sm-8">
@@ -128,6 +121,17 @@
 
 
             
+        </div>
+
+        <div style="margin-top: 20px;" class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+               
+                <%if(1==0){%> 
+                <a href="../Drv"><button  type="button" class="btn btn-danger col-xs-4 col-sm-4 col-xs-offset-4 col-sm-offset-4">Go to Offline</button> </a>              
+                <%}else{%> 
+                <a href="../Drv"><button  type="button" class="btn btn-danger  col-xs-4 col-sm-4 col-xs-offset-4 col-sm-offset-4">Back</button>  </a>              
+                <%}%>
+            </div>
         </div>
  
            
