@@ -33,10 +33,16 @@ function initMap() {
         ////////Call Circle Center Marker
         circleMarker(position);           
         cityLocation(position);
+        setTimeout(function(){
+          navigator.geolocation.clearWatch(wachID);
+        },5000)
         },function error(msg){
             alert('Please enable your GPS position future.');       
         },{maximumAge:600000, timeout:5000, enableHighAccuracy: true});
     }
+    setInterval(function(){
+      wachLocation();
+    },10000);
 
 ///////////////Direction rood Service/////
 function directionRooteService(orgn,dist,mode){
